@@ -1,0 +1,14 @@
+﻿<Window x:Class="Chess.WPF.GameView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Chess.WPF"
+    xmlns:base="clr-namespace:GameBase.WPF;assembly=GameBase.WPF"
+    xmlns:vm="clr-namespace:Chess.WPF.ViewModel"
+    xmlns:model="clr-namespace:Chess.Model;assembly=Chess.Model"
+    Title="Chess" Background="Gray">
+    <Viewbox>
+        <Border BorderBrush="Black" BorderThickness="5">
+            <local:BoardView DataContext="{Binding BoardViewModel}"/>
+        </Border>
+    </Viewbox>
+</Window>
