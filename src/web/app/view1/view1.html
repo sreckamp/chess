@@ -1,0 +1,9 @@
+<div class="board">
+    <div ng-repeat="x in [].constructor(64) track by $index" class="square"
+         ng-class="{
+            'white': $index % 8 % 2 <= ($index / 8) % 2 && $index % 8 % 2 + 1 > ($index / 8) % 2,
+            'floatme': !($index % 8)
+        }"
+    >&#x265E
+    </div>
+</div>
