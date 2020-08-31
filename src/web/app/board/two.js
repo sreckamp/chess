@@ -1,18 +1,18 @@
 'use strict';
 
-angular.module('myApp.view1', ['ngRoute'])
+angular.module('chess.two', ['ngRoute'])
 
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/board/:perspective', {
+  $routeProvider.when('/two/:perspective', {
       templateUrl: 'board/board.html',
-      controller: 'View1Ctrl'
+      controller: 'TwoPlayerController'
     })
-    .when('/board', {
-      redirectTo: '/board/white'
+    .when('/two', {
+      redirectTo: '/two/white'
     });
 }])
 
-.controller('View1Ctrl', ['$scope', '$routeParams', function($scope, $routeParams) {
+.controller('TwoPlayerController', ['$scope', '$routeParams', function($scope, $routeParams) {
   $scope.board = {
     'name': 'Two-Player Game',
     'corners': 0,
