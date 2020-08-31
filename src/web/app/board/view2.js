@@ -4,7 +4,7 @@ angular.module('myApp.view2', ['ngRoute'])
 
     .config(['$routeProvider', function($routeProvider) {
       $routeProvider.when('/view2/:perspective', {
-        templateUrl: 'view1/view1.html',
+        templateUrl: 'board/board.html',
         controller: 'View2Ctrl'
       })
           .when('/view2', {

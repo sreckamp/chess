@@ -3,12 +3,12 @@
 angular.module('myApp.view1', ['ngRoute'])
 
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/view1/:perspective', {
-      templateUrl: 'view1/view1.html',
+  $routeProvider.when('/board/:perspective', {
+      templateUrl: 'board/board.html',
       controller: 'View1Ctrl'
     })
-    .when('/view1', {
-      redirectTo: '/view1/white'
+    .when('/board', {
+      redirectTo: '/board/white'
     });
 }])
 
