@@ -25,23 +25,76 @@
 }
 
 .square{
-  background-color: #003;
   color: #fff;
   cursor: pointer;
   float: left;
-  font-size: 40px;
-  font-weight: bold;
-  height: 30px;
-  line-height: 30px;
-  margin: 0;
-  padding: 30px;
-  text-align: center;
-  width: 30px;
+  height: 100px;
+  width: 100px;
 }
-.white {
+
+.dark {
+  background-color: #003;
+}
+
+.light {
   background-color: #55F;
+}
+
+.transparent {
+  background-color: transparent !important;
 }
 
 .square.floatme{
   clear:both;
+}
+
+svg.piece {
+  width: 100px;
+  height: 100px;
+}
+
+image.piece {
+  href: "/web/app/chess.png";
+  height: 400px;
+  width: 600px;
+}
+
+image.black {
+  y:0;
+}
+
+image.gold {
+  y:-100;
+}
+
+image.silver {
+  y:-200;
+}
+
+image.white {
+  y:-300;
+}
+
+image.king {
+   x:0;
+}
+
+image.queen {
+  x:-100;
+}
+
+image.rook {
+  x:-200;
+}
+
+image.bishop {
+  x:-300;
+}
+
+image.knight {
+  x:-400;
+}
+
+image.pawn {
+  x:-500;
 }
