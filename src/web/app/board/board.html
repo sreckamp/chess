@@ -1,17 +1,26 @@
+<link rel="stylesheet" href="/web/app/board/board.css">
+<link ng-if="theme == 'black'" rel="stylesheet" href="/web/app/board/board_black.css">
+<link ng-if="theme == 'blue'" rel="stylesheet" href="/web/app/board/board_blue.css">
+<link ng-if="theme == 'green'" rel="stylesheet" href="/web/app/board/board_green.css">
+<link ng-if="theme == 'orange'" rel="stylesheet" href="/web/app/board/board_orange.css">
+<link ng-if="theme == 'red'" rel="stylesheet" href="/web/app/board/board_red.css">
+<link ng-if="theme == 'tan'" rel="stylesheet" href="/web/app/board/board_tan.css">
+
 <div class="board" style="text-align: center; width: fit-content; margin: auto;">
-    <h2 style="text-align: center">{{board.name}}</h2>
-    <div ng-repeat="piece in pieces" class="square"
-         ng-class-even="[($index / board.width) % 2 >= 1 ? cornerColor : otherColor]"
-         ng-class-odd="[($index / board.width) % 2 < 1 ? cornerColor : otherColor]"
+    <h2 style="text-align: center">{{board.name}}{{meta}}</h2>
+    <div ng-repeat="piece in board.pieces" class="square"
+         ng-class-even="[($index / board.width) % 2 >= 1 ? board.corner : board.other]"
+         ng-class-odd="[($index / board.width) % 2 < 1 ? board.corner : board.other]"
          ng-class="{'floatme': !($index % board.width),
-            'transparent': board.corners > 0 && (
-                ($index / board.width < board.corners && ($index % board.width < board.corners || $index % board.width >= board.width - board.corners ))
-                || ($index / board.width >= board.width - board.corners && ($index % board.width < board.corners || $index % board.width >= board.width - board.corners ))
-                ) }"
+                        'transparent': !isVisible($index),
+                         'active': isActive($index),
+                         'available': isAvailable($index),
+                         'opponent': isOpponent($index)
+                     }"
+         ng-click="clickSquare($index)"
     >
         <svg ng-show="piece.color" class="piece">
             <image class='piece' ng-class="[piece.color, piece.piece]" href="/web/app/chess.png"/>
         </svg>
     </div>
-    <div class = "floatme"/>
 </div>

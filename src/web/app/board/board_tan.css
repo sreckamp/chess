@@ -1,0 +1,36 @@
+/* Tan */
+.dark {
+  background-color: saddlebrown;
+}
+
+.light {
+  background-color: khaki;
+}
+
+.active {
+  background-color: yellow !important;
+}
+
+.available.light {
+  background-color: #55F;
+}
+
+.available.dark {
+  background-color: #003;
+}
+
+/*.opponent.light {*/
+/*  background-color: cyan;*/
+/*}*/
+
+/*.opponent.dark {*/
+/*  background-color: darkcyan;*/
+/*}*/
+
+.available.opponent.light {
+  background-color: red;
+}
+
+.available.opponent.dark {
+  background-color: darkred;
+}

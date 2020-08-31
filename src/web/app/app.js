@@ -6,9 +6,8 @@ angular.module('chess', [
   'chess.two',
   'chess.four',
   'chess.version'
-]).
-config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
-  $locationProvider.hashPrefix('!');
-
+])
+.config(['$routeProvider', function($routeProvider) {
   $routeProvider.otherwise({redirectTo: '/two'});
-}]);
+}])
+    .filter('rotate');
