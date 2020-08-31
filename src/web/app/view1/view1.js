@@ -8,20 +8,18 @@ angular.module('myApp.view1', ['ngRoute'])
       controller: 'View1Ctrl'
     })
     .when('/view1', {
-      redirectTo: '/view1/black'
+      redirectTo: '/view1/white'
     });
 }])
 
 .controller('View1Ctrl', ['$scope', '$routeParams', function($scope, $routeParams) {
-  console.log($routeParams);
   $scope.board = {
     'name': 'Two-Player Game',
     'corners': 0,
-    'count': 8,
+    'width': 8,
     'corner': 'light',
     'other': 'dark'
   };
-  $scope.perspective = $routeParams.perspective;
   var pieces = [
     {'piece': 'rook', 'color': 'black'},
     {'piece': 'knight', 'color': 'black'},
@@ -60,11 +58,10 @@ angular.module('myApp.view1', ['ngRoute'])
     {'piece': 'knight', 'color': 'white'},
     {'piece': 'rook', 'color': 'white'},
   ];
-  if ($scope.perspective=='black') {
-    console.log('==BLACK==');
+  $scope.cornerColor = $scope.board.corner;
+  $scope.otherColor = $scope.board.other;
+  if ($routeParams.perspective=='black') {
     pieces = pieces.reverse();
-  } else {
-    console.log('==WHITE==');
   }
   $scope.pieces = pieces;
 }]);

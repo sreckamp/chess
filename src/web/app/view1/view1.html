@@ -1,18 +1,17 @@
-<p>{{board.name}}-{{perspective}}</p>
+<p>{{board.name}}</p>
 <div class="board">
     <div ng-repeat="piece in pieces" class="square"
-         ng-class-even="[($index / board.count) % 2 < 1 ? board.corner : board.other]"
-         ng-class-odd="[($index / board.count) % 2 >= 1 ? board.corner : board.other]"
-         ng-class="{'floatme': !($index % board.count),
+         ng-class-even="[($index / board.width) % 2 >= 1 ? cornerColor : otherColor]"
+         ng-class-odd="[($index / board.width) % 2 < 1 ? cornerColor : otherColor]"
+         ng-class="{'floatme': !($index % board.width),
             'transparent': board.corners > 0 && (
-                ($index / board.count < board.corners && ($index % board.count < board.corners || $index % board.count >= board.count - board.corners ))
-                || ($index / board.count >= board.count - board.corners && ($index % board.count < board.corners || $index % board.count >= board.count - board.corners ))
+                ($index / board.width < board.corners && ($index % board.width < board.corners || $index % board.width >= board.width - board.corners ))
+                || ($index / board.width >= board.width - board.corners && ($index % board.width < board.corners || $index % board.width >= board.width - board.corners ))
                 ) }"
     >
         <svg ng-show="piece.color" class="piece">
             <image class='piece' ng-class="[piece.color, piece.piece]" href="/web/app/chess.png"/>
         </svg>
-        {{$index / board.count % 2}}
     </div>
     <div class = "floatme"/>
 </div>
