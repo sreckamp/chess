@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Drawing.Drawing2D;
+using System.Drawing;
 using GameBase.Model;
 
 namespace Chess.Model
@@ -42,9 +42,9 @@ namespace Chess.Model
 
         public Board Board { get; }
 
-        public void Init(Dictionary<string, Direction> teams)
+        public void Init()
         {
-            foreach (var team in teams)
+            foreach (var team in TEAMS[m_version])
             {
                 populateSide(team.Key, team.Value, Board);
             }
@@ -52,14 +52,14 @@ namespace Chess.Model
 
         private void Place(Piece piece, int x, int y)
         {
-            var p = new Placement<Piece, Move>(piece, new Move(x, y));
+            var p = new Placement<Piece>(piece, new Point(x, y));
             Board.Add(p);
         }
 
         public void Play()
         {
             Board.Clear();
-            Init(TEAMS[m_version]);
+            Init();
             while(true);
         }
 
@@ -74,8 +74,8 @@ namespace Chess.Model
             switch (dir)
             {
                 case Direction.North:
-                    power = board.MaxY;
-                    pawn = board.MaxY - 1;
+                    power = board.Height - 1;
+                    pawn = board.Height - 2;
                     kingFile = kingOnLeft ? 3 : kingFile;
                     break;
                 case Direction.West:
@@ -85,8 +85,8 @@ namespace Chess.Model
                 case Direction.South:
                     break;
                 case Direction.East:
-                    power = board.MaxX;
-                    pawn = board.MaxX - 1;
+                    power = board.Width - 1;
+                    pawn = board.Width - 2;
                     vert = false;
                     break;
             }

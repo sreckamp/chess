@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Chess.Model
 {
-    public class Piece : GameBase.Model.Piece
+    public class Piece
     {
         private static readonly Direction[] s_all = (Direction[])Enum.GetValues(typeof(Direction));
         private static readonly Direction[] s_diagonals = {

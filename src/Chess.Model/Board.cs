@@ -1,10 +1,9 @@
-﻿using System;
-using System.Data.Common;
+﻿using System.Drawing;
 using GameBase.Model;
 
 namespace Chess.Model
 {
-    public class Board : GameBoard<Piece, Move>
+    public class Board : Board<Piece>
     {
         private const int ROWS = 8;
         private const int COLUMNS = 8;
@@ -30,20 +29,20 @@ namespace Chess.Model
                     var isXCorner = x < CornerSize || x >= Height - CornerSize;
                     var isYCorner = y < CornerSize || y >= Width - CornerSize;
                     if(isXCorner && isYCorner) continue;
-                    var m = new Move(x, y);
-                    var p = new Placement<Piece,Move>(Piece.CreateEmpty(), m);
-                    Add(p, false);
+                    var m = new Move(new Point(x, y));
+                    var p = new Placement<Piece>(Piece.CreateEmpty(), m);
+                    Add(p);
                 }
             }
         }
 
-        protected override void AddAvailableLocations(Placement<Piece, Move> p)
-        {
-            if("blank".Equals(p?.Piece?.Name))
-            {
-                AvailableLocations.Add(p.Move.Location);
-            }
-        }
+        // protected override void AddAvailableLocations(Placement<Piece> p)
+        // {
+        //     if("blank".Equals(p?.Piece?.Name))
+        //     {
+        //         AvailableLocations.Add(p.Move.Location);
+        //     }
+        // }
 
     }
 }
