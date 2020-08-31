@@ -1,15 +1,15 @@
 'use strict';
 
-describe('myApp.board module', function() {
+describe('chess.two module', function() {
 
-  beforeEach(module('myApp.view1'));
+  beforeEach(module('chess.two'));
 
-  describe('board controller', function(){
+  describe('two controller', function(){
 
     it('should ....', inject(function($controller) {
       //spec body
-      var view1Ctrl = $controller('View1Ctrl');
-      expect(view1Ctrl).toBeDefined();
+      var controller = $controller('TwoPlayerController');
+      expect(controller).toBeDefined();
     }));
 
   });
