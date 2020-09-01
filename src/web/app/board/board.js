@@ -59,14 +59,17 @@ angular.module('chess.board', [])
 
         $scope.clickSquare = function (index) {
             if(!$scope.isVisible(index)) return;
-            if(_activeSquare >= 0) {
+            if(_activeSquare == index) {
+                _activeSquare = -1;
+                $scope.meta = null;
+            } else if(_activeSquare >= 0) {
                 var tmp = $scope.board.pieces[index];
                 if(tmp.color == $routeParams.perspective) {
                     $scope.meta = " (" + $scope.board.pieces[index].color + " " + $scope.board.pieces[index].piece + ")";
                     _activeSquare = index;
-                }
-                else if(tmp.color) return;
-                else {
+                } else if(tmp.color) {
+                    return;
+                } else {
                     $scope.board.pieces[index] = $scope.board.pieces[_activeSquare];
                     $scope.board.pieces[_activeSquare] = tmp;
                     _activeSquare = -1;
