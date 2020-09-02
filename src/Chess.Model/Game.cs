@@ -73,7 +73,7 @@ namespace Chess.Model
 
             switch (dir)
             {
-                case Direction.North:
+                case Direction.South:
                     power = board.Height - 1;
                     pawn = board.Height - 2;
                     kingFile = kingOnLeft ? 3 : kingFile;
@@ -82,7 +82,7 @@ namespace Chess.Model
                     vert = false;
                     kingFile = kingOnLeft ? 3 : kingFile;
                     break;
-                case Direction.South:
+                case Direction.North:
                     break;
                 case Direction.East:
                     power = board.Width - 1;
@@ -118,6 +118,12 @@ namespace Chess.Model
                 Place(p, vert ? idx + board.CornerSize : power, vert ? power : idx + board.CornerSize);
                 Place(Piece.CreatePawn(team, dir), vert ? idx + board.CornerSize : pawn, vert ? pawn : idx + board.CornerSize);
             }
+        }
+
+        public IEnumerable<Point> GetPossibleMoves(Point point)
+        {
+            //TODO: Verify current player
+            return Board.GetPossibleMoves(point);
         }
     }
 }

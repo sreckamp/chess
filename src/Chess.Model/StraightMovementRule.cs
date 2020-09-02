@@ -4,14 +4,14 @@ namespace Chess.Model
 {
     public class StraightMovementRule : IMovementRule
     {
-        public static readonly StraightMovementRule None = new StraightMovementRule(0, 0);
-        public static readonly StraightMovementRule OneSpace = new StraightMovementRule(1, 1);
-        public static readonly StraightMovementRule TwoSpace = new StraightMovementRule(2, 2);
-        public static readonly StraightMovementRule Infinite = new StraightMovementRule(1, int.MaxValue);
+        public static readonly StraightMovementRule None = new StraightMovementRule(0);
+        public static readonly StraightMovementRule OneSpace = new StraightMovementRule(1);
+        public static readonly StraightMovementRule TwoSpace = new StraightMovementRule(2);
+        public static readonly StraightMovementRule Infinite = new StraightMovementRule(int.MaxValue);
 
-        private StraightMovementRule(int minCount, int maxCount)
+        private StraightMovementRule(int maxCount)
         {
-            MinCount = minCount;
+            MinCount = maxCount > 0 ? 1 : 0;
             MaxCount = maxCount;
         }
 
@@ -27,6 +27,13 @@ namespace Chess.Model
             if (count < MinCount || count > MaxCount) return start;
 
             return start.Offset(dir, count);
+        }
+
+        public override string ToString()
+        {
+            return MinCount == MaxCount 
+                ? $"{MaxCount} Squares"
+                : $"{MinCount}-{(MaxCount == int.MaxValue ? "" : $"{MaxCount}")} Squares";
         }
     }
 }

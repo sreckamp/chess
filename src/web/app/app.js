@@ -5,6 +5,7 @@ angular.module('chess', [
   'ngRoute',
   'chess.two',
   'chess.four',
+  'chess.dynamic',
   'chess.version'
 ])
 .config(['$routeProvider', function($routeProvider) {

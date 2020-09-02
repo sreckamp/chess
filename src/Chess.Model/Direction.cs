@@ -1,4 +1,7 @@
-﻿namespace Chess.Model
+﻿using System;
+using System.Drawing;
+
+namespace Chess.Model
 {
     public enum Direction
     {

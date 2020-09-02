@@ -11,23 +11,23 @@ namespace Chess.Model
 
             if(dir == Direction.NorthWest || dir == Direction.North || dir == Direction.NorthEast)
             {
-                yOffset = -1;
+                yOffset = -count;
             }
             else if(dir == Direction.SouthWest || dir == Direction.South || dir == Direction.SouthEast)
             {
-                yOffset = 1;
+                yOffset = count;
             }
 
             if(dir == Direction.NorthWest || dir == Direction.West || dir == Direction.SouthWest)
             {
-                xOffset = -1;
+                xOffset = -count;
             }
             else if(dir == Direction.NorthEast || dir == Direction.East || dir == Direction.SouthEast)
             {
-                xOffset = 1;
+                xOffset = count;
             }
 
-            return new Point(pt.X + xOffset, pt.Y+yOffset);
+            return new Point(pt.X + xOffset, pt.Y + yOffset);
         }
     }
 }
