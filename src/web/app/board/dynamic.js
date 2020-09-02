@@ -81,8 +81,8 @@ angular.module('chess.dynamic', ['ngRoute'])
         } else if(tmp.color) {
           return;
         } else {
-          $scope.board.pieces[index] = $scope.board.pieces[_activeSquare];
-          $scope.board.pieces[_activeSquare] = tmp;
+          // $scope.board.pieces[index] = $scope.board.pieces[_activeSquare];
+          // $scope.board.pieces[_activeSquare] = tmp;
           _activeSquare = -1;
           $scope.meta = null;
         }
