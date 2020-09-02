@@ -37,8 +37,19 @@ namespace Chess.Server.Controllers
         }
 
         [Microsoft.AspNetCore.Mvc.HttpGet]
-        [Microsoft.AspNetCore.Mvc.Route("chess/game/{game}/moves")]
-        public IEnumerable<Point> GetMoves([FromUri] int game, [FromQuery] int x, [FromQuery] int y)
+        [Microsoft.AspNetCore.Mvc.Route("chess/game/{game}/moves/{color}")]
+        public IEnumerable<Point> GetMoves([FromUri] int game, [FromUri] string color, [FromQuery] int x, [FromQuery] int y)
+        {
+            // if (!m_gameState.ContainsKey(game))
+            // {
+            //     return BadRequest("");
+            // }
+            return m_gameState[game].GetPossibleMoves(new Point(x, y));
+        }
+
+        [Microsoft.AspNetCore.Mvc.HttpPost]
+        [Microsoft.AspNetCore.Mvc.Route("chess/game/{game}/moves/{color}")]
+        public IEnumerable<Point> PutMove([FromUri] int game, [FromUri] string color, [FromBody] Move m)
         {
             // if (!m_gameState.ContainsKey(game))
             // {
