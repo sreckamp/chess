@@ -1,184 +1,187 @@
 'use strict';
 
-angular.module('chess.dynamic', ['ngRoute', 'ngResource'])
+angular.module('chess.dynamic', ['ngRoute', 'ngResource', 'chess.gameService'])
 
-.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/dynamic/:game/:perspective', {
-      templateUrl: 'board/board.html',
-      controller: 'DynamicBoardController',
-    });
-}])
+    .config(['$routeProvider', function ($routeProvider) {
+        $routeProvider.when('/games/:game/:perspective', {
+            templateUrl: 'board/board.html',
+            controller: 'DynamicBoardController',
+        });
+    }])
+
     .controller('DynamicBoardController', ['gameService', '$scope', '$routeParams', function (gameService, $scope, $routeParams) {
 
-      if($routeParams.theme) {
-        $scope.theme = $routeParams.theme;
-      } else {
-        $scope.theme = "blue";
-      }
-
-      $scope.perspective = $routeParams.perspective;
-
-      var _activeSquare = -1;
-      var _available = [];
-
-      var refreshGame = function () {
-        gameService.getGame($routeParams.game).$promise.then(function (board) {
-          var _pieces = [];
-          var i;
-          for (i = 0; i < board.width * board.width; i++) {
-            _pieces.push({});
-          }
-
-          board.pieces.forEach(function (p) {
-            var idx = p.location.x + p.location.y * board.width;
-            _pieces[idx] = {'piece': p.type.toLowerCase(), 'color': p.color.toLowerCase()};
-          });
-
-          var _rotation = board.rotationMap[$scope.perspective.toLowerCase()].toLowerCase();
-          var _sideView = [rotations.COUNTERCLOCKWISE, rotations.CLOCKWISE].includes(_rotation);
-
-          $scope.activeSquare = -1;
-
-          $scope.board = {
-            'name': board.name,
-            'corners': board.corners,
-            'width': board.width,
-            'corner': _sideView ? board.other : board.corner,
-            'other': _sideView ? board.corner : board.other,
-            'pieces': rotate(_pieces, board.width, _rotation)
-          };
-        });
-      };
-
-      var select = function(idx) {
-        _activeSquare = idx;
-
-        var _x = idx % $scope.board.width;
-        var _y = Math.floor(idx / $scope.board.width);
-        var _color = $scope.board.pieces[idx].color;
-        $scope.meta = " (" + _color + " " + $scope.board.pieces[idx].piece + ")";
-
-        gameService.getAvailable($routeParams.game, _color, _x, _y).$promise.then(function success(available) {
-          _available = [];
-          available.forEach(function (p) {
-            _available.push(p.to.x + p.to.y * $scope.board.width);
-          });
-        });
-      };
-
-      var move = function(fromIdx, toIdx) {
-        var _fromX = fromIdx % $scope.board.width;
-        var _fromY = Math.floor(fromIdx / $scope.board.width);
-        var _toX = toIdx % $scope.board.width;
-        var _toY = Math.floor(toIdx / $scope.board.width);
-        var _color = $scope.board.pieces[fromIdx].color;
-
-        return gameService.postMove($routeParams.game, _color, _fromX, _fromY, _toX, _toY).$promise;
-      };
-
-      refreshGame();
-    $scope.isActive = function (index) {
-      return index == _activeSquare;
-    };
-
-    $scope.isVisible = function (index) {
-      if($scope.board.corners == 0) return true;
-      var x = index % $scope.board.width;
-      var y = Math.floor(index / $scope.board.width);
-      return !(( y < $scope.board.corners || y >= $scope.board.width - $scope.board.corners ) &&
-          ( x < $scope.board.corners || x >= $scope.board.width - $scope.board.corners ));
-    };
-
-    $scope.isAvailable = function (index) {
-      return (_activeSquare >= 0 && _available.includes(index));
-    };
-
-    $scope.isOpponent = function (index) {
-      if(!$scope.isVisible(index)) return false;
-      return _activeSquare >= 0 &&
-          $scope.board.pieces[index].color &&
-          $scope.board.pieces[index].color != $scope.board.pieces[_activeSquare].color;
-    };
-
-    $scope.clickSquare = function (index) {
-      if(!$scope.isVisible(index)) return;
-      if(_activeSquare == index) {
-        _activeSquare = -1;
-        _available = [];
-        $scope.meta = null;
-      } else if(_activeSquare >= 0) {
-        var tmp = $scope.board.pieces[index];
-        if(tmp.color == $scope.perspective) {
-          select(index);
-        } else {
-          move(_activeSquare, index).then(function success(){
-            _activeSquare = -1;
-            _available = [];
-            $scope.meta = null;
-            refreshGame();
-          });
-          return;
+        var _players = 4;
+        if ($routeParams.players) {
+            _players = $routeParams.players;
         }
-      } else {
-        select(index);
-      }
-    };
 
-    $scope.clickPiece = function () {
-      $scope.meta = 'piece';
-    };
-  }])
+        if ($routeParams.theme) {
+            $scope.theme = $routeParams.theme;
+        } else {
+            $scope.theme = "blue";
+        }
 
-.factory('gameService', function ($resource) {
-  var gameService = {};
+        $scope.perspective = $routeParams.perspective;
 
-  var _boardResource = $resource('https://localhost:5001/chess/games/:id');
-  var _moveResource = $resource('https://localhost:5001/chess/games/:id/moves/:color');
+        var _activeSquare = -1;
+        var _available = [];
 
-  gameService.getGame = function(game){
-    return _boardResource.get({id:game});
-  };
+        var _rotation = rotations.NONE;
 
-  gameService.getAvailable = function(game, color, x, y){
-    return _moveResource.query({id:game, color:color, x:x, y:y});
-  };
+        var refreshGame = function () {
+            gameService.getGame($routeParams.game).$promise.then(function (board) {
+                var _pieces = [];
+                var i;
+                for (i = 0; i < board.width * board.width; i++) {
+                    _pieces.push({});
+                }
 
-  gameService.postMove = function(game, color, fromX, fromY, toX, toY){
-    return _moveResource.save({id:game, color:color}, {
-      'from':{ 'x': fromX, 'y': fromY },
-      'to':{ 'x': toX, 'y': toY }
-    });
-  };
+                board.pieces.forEach(function (p) {
+                    var idx = p.location.x + p.location.y * board.width;
+                    _pieces[idx] = {'piece': p.type.toLowerCase(), 'color': p.color.toLowerCase()};
+                });
 
-  return gameService;
-});
+                $scope.activeSquare = -1;
+
+                _rotation = board.rotationMap[$scope.perspective.toLowerCase()].toLowerCase();
+                var _sideView = [rotations.COUNTERCLOCKWISE, rotations.CLOCKWISE].includes(_rotation);
+
+                $scope.board = {
+                    'name': board.name,
+                    'corners': board.corners,
+                    'width': board.width,
+                    'corner': _sideView ? board.other : board.corner,
+                    'other': _sideView ? board.corner : board.other,
+                    'pieces': rotate(_pieces, board.width, _rotation)
+                };
+            });
+        };
+
+        var select = function (idx) {
+            _activeSquare = idx;
+            var _pc = $scope.board.pieces[idx];
+
+            idx = rotateIndex(idx, $scope.board.width, _rotation);
+
+            var _x = idx % $scope.board.width;
+            var _y = Math.floor(idx / $scope.board.width);
+            var _color = _pc.color;
+            $scope.meta = " (" + _color + " " + _pc.piece + ")";
+
+            gameService.getAvailable($routeParams.game, _color, _x, _y).$promise.then(function success(available) {
+                _available = [];
+                available.forEach(function (p) {
+                    var _rot = _rotation;
+                    switch (_rot)
+                    {
+                        case rotations.COUNTERCLOCKWISE:
+                            _rot = rotations.CLOCKWISE;
+                            break;
+                        case rotations.CLOCKWISE:
+                            _rot = rotations.COUNTERCLOCKWISE;
+                            break;
+                    }
+                    var idx = rotateIndex(p.to.x + p.to.y * $scope.board.width, $scope.board.width, _rot);
+                    _available.push(idx);
+                });
+            });
+        };
+
+        var move = function (fromIdx, toIdx) {
+            var _color = $scope.board.pieces[fromIdx].color;
+
+            fromIdx = rotateIndex(fromIdx, $scope.board.width, _rotation);
+            toIdx = rotateIndex(toIdx, $scope.board.width, _rotation);
+
+            var _fromX = fromIdx % $scope.board.width;
+            var _fromY = Math.floor(fromIdx / $scope.board.width);
+            var _toX = toIdx % $scope.board.width;
+            var _toY = Math.floor(toIdx / $scope.board.width);
+
+            return gameService.postMove($routeParams.game, _color, _fromX, _fromY, _toX, _toY).$promise;
+        };
+
+        refreshGame();
+
+        $scope.isActive = function (index) {
+            return index == _activeSquare;
+        };
+
+        $scope.isVisible = function (index) {
+            if ($scope.board.corners == 0) return true;
+            var x = index % $scope.board.width;
+            var y = Math.floor(index / $scope.board.width);
+            return !((y < $scope.board.corners || y >= $scope.board.width - $scope.board.corners) &&
+                (x < $scope.board.corners || x >= $scope.board.width - $scope.board.corners));
+        };
+
+        $scope.isAvailable = function (index) {
+            return (_activeSquare >= 0 && _available.includes(index));
+        };
+
+        $scope.isOpponent = function (index) {
+            if (!$scope.isVisible(index)) return false;
+            return _activeSquare >= 0 &&
+                $scope.board.pieces[index].color &&
+                $scope.board.pieces[index].color != $scope.board.pieces[_activeSquare].color;
+        };
+
+        $scope.clickSquare = function (index) {
+            if (!$scope.isVisible(index)) return;
+            if (_activeSquare == index) {
+                _activeSquare = -1;
+                _available = [];
+                $scope.meta = null;
+            } else if (_activeSquare >= 0) {
+                var pc = $scope.board.pieces[_activeSquare];
+                var target = $scope.board.pieces[index];
+                if (target.color == pc.color) {
+                    select(index);
+                } else {
+                    move(_activeSquare, index).then(function success() {
+                        _activeSquare = -1;
+                        _available = [];
+                        $scope.meta = null;
+                        refreshGame();
+                    });
+                    return;
+                }
+            } else {
+                select(index);
+            }
+        };
+
+        $scope.clickPiece = function () {
+            $scope.meta = 'piece';
+        };
+    }]);
 
 function rotate(array, width, direction) {
-  let newArray = array;
-  var i;
-  newArray = [];
-  for (i=0; i < array.length; i++) {
-    newArray.push(array[rotateIndex(i, width, direction)]);
-  }
-  return newArray;
+    let newArray = array;
+    var i;
+    newArray = [];
+    for (i = 0; i < array.length; i++) {
+        newArray.push(array[rotateIndex(i, width, direction)]);
+    }
+    return newArray;
 }
 
 function rotateIndex(idx, width, direction) {
-  switch (direction)
-  {
-    case rotations.CLOCKWISE:
-    case rotations.COUNTERCLOCKWISE:
-      var div = Math.floor(idx/width);
-      var mod = idx % width;
-      if(direction == rotations.CLOCKWISE) {
-        return width * (width - (mod + 1)) + div;
-      } else {
-        return (width * (mod + 1)) - (div + 1);
-      }
-      break;
-    case rotations.UPSIDEDOWN:
-      return (width * width) - idx - 1;
-    case rotations.NONE:
-      return idx;
-  }
+    switch (direction) {
+        case rotations.CLOCKWISE:
+        case rotations.COUNTERCLOCKWISE:
+            var div = Math.floor(idx / width);
+            var mod = idx % width;
+            if (direction == rotations.CLOCKWISE) {
+                return width * (width - (mod + 1)) + div;
+            } else {
+                return (width * (mod + 1)) - (div + 1);
+            }
+            break;
+        case rotations.UPSIDEDOWN:
+            return (width * width) - idx - 1;
+        case rotations.NONE:
+            return idx;
+    }
 }

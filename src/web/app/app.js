@@ -4,12 +4,12 @@
 angular.module('chess', [
   'ngRoute',
   'ngResource',
-  'chess.two',
-  'chess.four',
   'chess.dynamic',
+  'chess.newGame',
+  'chess.gameService',
   'chess.version'
 ])
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.otherwise({redirectTo: '/two'});
+  $routeProvider.otherwise({redirectTo: '/games'});
 }])
     .filter('rotate');

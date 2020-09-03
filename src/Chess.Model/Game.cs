@@ -33,11 +33,11 @@ namespace Chess.Model
                 }
             };
 
-        private readonly ChessVersion m_version;
+        public ChessVersion Version { get; }
 
         public Game(ChessVersion version)
         {
-            m_version = version;
+            Version = version;
             Board = new Board(version == ChessVersion.TwoPlayer ? 0 : 3);
         }
 
@@ -45,7 +45,7 @@ namespace Chess.Model
 
         public void Init()
         {
-            foreach (var team in TEAMS[m_version])
+            foreach(var team in TEAMS[Version])
             {
                 populateSide(team.Key, team.Value, Board);
             }
@@ -134,6 +134,7 @@ namespace Chess.Model
                 //TODO: Verify current player
                 var taken = Board.Move(from, to);
                 //TODO: Write this somewhere
+                //TODO: Write to move list
 
                 return true;
             }

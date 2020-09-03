@@ -16,9 +16,8 @@ namespace Chess.Server.Controllers
         private static int m_game = 10000;
         private static readonly Dictionary<int, Game> m_gameState = new Dictionary<int, Game>();
 
-        [Microsoft.AspNetCore.Mvc.HttpGet]
-        [Microsoft.AspNetCore.Mvc.Route("{gameId?}")]
-        public BoardState GetGame(int? gameId)
+        [HttpGet("{gameId?}")]
+        public BoardState GetGame(int? gameId, int players=2)
         {
             if (gameId == null)
             {
@@ -30,7 +29,7 @@ namespace Chess.Server.Controllers
 
             if (!m_gameState.ContainsKey(id))
             {
-                var g = new Game(ChessVersion.FourPlayer);
+                var g = new Game(players == 4 ? ChessVersion.FourPlayer : ChessVersion.TwoPlayer);
                 g.Init();
                 m_gameState[id] = g;
             }
@@ -81,7 +80,6 @@ namespace Chess.Server.Controllers
                 Other = game.Board.CornerSize % 2 == 1 ? "light":"dark",
                 RotationMap = new Dictionary<string, string>()
                 {
-                    //TODO: generalize this
                     {"white", "none"},
                     {"silver", "counterclockwise"},
                     {"black", "upsidedown"},
