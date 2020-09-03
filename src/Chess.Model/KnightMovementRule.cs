@@ -42,7 +42,7 @@ namespace Chess.Model
                     break;
                 case Direction.South:
                     xOffset = 1;
-                    yOffset = -2;
+                    yOffset = 2;
                     break;
                 case Direction.SouthWest:
                     xOffset = -1;

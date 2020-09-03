@@ -1,8 +1,10 @@
-﻿namespace Chess.Server.Models
+﻿namespace Chess.Server.Model
 {
     public class Move
     {
-        public Point From { get; set; }
-        public Point To { get; set; }
+        public Location From { get; set; }
+        public Location To { get; set; }
+
+        public override string ToString() => $"{From}=>{To}";
     }
 }

@@ -45,13 +45,13 @@ namespace Chess.Server
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("chessCORS");
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            app.UseCors("chessCORS");
-
-            //app.UseAuthorization();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

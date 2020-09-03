@@ -3,6 +3,7 @@
 // Declare app level module which depends on views, and core components
 angular.module('chess', [
   'ngRoute',
+  'ngResource',
   'chess.two',
   'chess.four',
   'chess.dynamic',

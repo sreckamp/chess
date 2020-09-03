@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Chess.Server.Models
+namespace Chess.Server.Model
 {
     public class BoardState
     {

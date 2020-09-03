@@ -1,30 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using System.Buffers;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Web.Http;
+using System.Text;
 using Chess.Model;
-using Chess.Server.Models;
+using Chess.Server.Model;
 using Microsoft.AspNetCore.Mvc;
-using Piece = Chess.Server.Models.Piece;
+using Piece = Chess.Server.Model.Piece;
 
 namespace Chess.Server.Controllers
 {
-    public class ChessController : ApiController
+    [Route("chess/games")]
+    public class ChessGameController : ControllerBase
     {
         private static int m_game = 10000;
         private static readonly Dictionary<int, Game> m_gameState = new Dictionary<int, Game>();
 
         [Microsoft.AspNetCore.Mvc.HttpGet]
-        [Microsoft.AspNetCore.Mvc.Route("chess/game/{game?}")]
-        public BoardState GetGame(int? game)
+        [Microsoft.AspNetCore.Mvc.Route("{gameId?}")]
+        public BoardState GetGame(int? gameId)
         {
-            if (game == null)
+            if (gameId == null)
             {
-                game = m_game;
+                gameId = m_game;
                 m_game++;
             }
 
-            var id = (int) game;
+            var id = (int) gameId;
 
             if (!m_gameState.ContainsKey(id))
             {
@@ -36,26 +38,35 @@ namespace Chess.Server.Controllers
             return BuildResponse(id, m_gameState[id]);
         }
 
-        [Microsoft.AspNetCore.Mvc.HttpGet]
-        [Microsoft.AspNetCore.Mvc.Route("chess/game/{game}/moves/{color}")]
-        public IEnumerable<Point> GetMoves([FromUri] int game, [FromUri] string color, [FromQuery] int x, [FromQuery] int y)
+        [HttpGet("{gameId}/moves/{color}")]
+        public object GetMoves(int gameId, string color, int x, int y)
         {
-            // if (!m_gameState.ContainsKey(game))
-            // {
-            //     return BadRequest("");
-            // }
-            return m_gameState[game].GetPossibleMoves(new Point(x, y));
+            if (!m_gameState.ContainsKey(gameId))
+            {
+                return NotFound($"Game {gameId} has not been initialized.");
+            }
+
+            var game = m_gameState[gameId];
+            var source = new Point(x, y);
+            return Ok(game.GetPossibleMoves(color, source).Select(p => new Move
+            {
+                From = source,
+                To = p
+            }));
         }
 
-        [Microsoft.AspNetCore.Mvc.HttpPost]
-        [Microsoft.AspNetCore.Mvc.Route("chess/game/{game}/moves/{color}")]
-        public IEnumerable<Point> PutMove([FromUri] int game, [FromUri] string color, [FromBody] Move m)
+        [HttpPost("{gameId}/moves/{color}")]
+        public object PutMove(int gameId, string color, [FromBody] Move m)
         {
-            // if (!m_gameState.ContainsKey(game))
-            // {
-            //     return BadRequest("");
-            // }
-            return m_gameState[game].GetPossibleMoves(new Point(x, y));
+            if (!m_gameState.ContainsKey(gameId))
+            {
+                return NotFound($"Game {gameId} has not been initialized.");
+            }
+
+            var game = m_gameState[gameId];
+
+            return game.Move(color, m.From, m.To) ?
+                (object)Ok() : BadRequest($"{m} is not a valid move.");
         }
 
         private BoardState BuildResponse(int id, Game game)
@@ -78,8 +89,7 @@ namespace Chess.Server.Controllers
                 },
                 Pieces = game.Board.Placements.Select(placement => new Piece
                     {
-                        X = placement.Location.X,
-                        Y = placement.Location.Y,
+                        Location = placement.Location,
                         Type = placement.Piece.Name,
                         Color = placement.Piece.Team
                     }) .ToArray()

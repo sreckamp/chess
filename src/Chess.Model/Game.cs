@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using GameBase.Model;
 
 namespace Chess.Model
@@ -116,14 +117,28 @@ namespace Chess.Model
                 }
 
                 Place(p, vert ? idx + board.CornerSize : power, vert ? power : idx + board.CornerSize);
-                Place(Piece.CreatePawn(team, dir), vert ? idx + board.CornerSize : pawn, vert ? pawn : idx + board.CornerSize);
+                Place(Piece.CreatePawn(team, dir.Opposite()), vert ? idx + board.CornerSize : pawn, vert ? pawn : idx + board.CornerSize);
             }
         }
 
-        public IEnumerable<Point> GetPossibleMoves(Point point)
+        public IEnumerable<Point> GetPossibleMoves(string color, Point point)
         {
             //TODO: Verify current player
-            return Board.GetPossibleMoves(point);
+            return Board.GetPossibleMoves(color, point);
+        }
+
+        public bool Move(string color, Point from, Point to)
+        {
+            if (GetPossibleMoves(color, from).Contains(to))
+            {
+                //TODO: Verify current player
+                var taken = Board.Move(from, to);
+                //TODO: Write this somewhere
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

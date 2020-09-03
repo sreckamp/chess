@@ -7,15 +7,6 @@ namespace Chess.Model
 {
     public class Piece
     {
-        private static readonly Direction[] SAll = (Direction[])Enum.GetValues(typeof(Direction));
-        private static readonly Direction[] SDiagonals = {
-            Direction.NorthEast, Direction.SouthEast,
-            Direction.SouthWest, Direction.NorthWest
-        };
-        private static readonly Direction[] SCardinals = {
-            Direction.North, Direction.East,
-            Direction.South, Direction.West
-        };
         private readonly Dictionary<Direction, IMovementRule> m_moveRules = new Dictionary<Direction, IMovementRule>();
         private Dictionary<Direction, IMovementRule> m_firstMoveRules;
         private bool m_hasMoved;
@@ -34,7 +25,7 @@ namespace Chess.Model
 
         public bool IsEmpty { get; private set; }
 
-        public void Move() { m_hasMoved = true; }
+        public void Moved() { m_hasMoved = true; }
 
         public Dictionary<Direction, IMovementRule> AttackRules { get; private set; }
 
@@ -54,7 +45,7 @@ namespace Chess.Model
         public static Piece CreateKing(string team)
         {
             var king = new Piece("King", team);
-            foreach (var dir in SAll)
+            foreach (var dir in Directions.All)
             {
                 king.m_moveRules[dir] = StraightMovementRule.OneSpace;
             }
@@ -66,7 +57,7 @@ namespace Chess.Model
         public static Piece CreateQueen(string team)
         {
             var queen = new Piece("Queen", team);
-            foreach (var dir in SAll)
+            foreach (var dir in Directions.All)
             {
                 queen.m_moveRules[dir] = StraightMovementRule.Infinite;
             }
@@ -77,9 +68,9 @@ namespace Chess.Model
         public static Piece CreateBishop(string team)
         {
             var bishop = new Piece("Bishop", team);
-            foreach (var dir in SAll)
+            foreach (var dir in Directions.All)
             {
-                bishop.m_moveRules[dir] = SDiagonals.Contains(dir)
+                bishop.m_moveRules[dir] = dir.IsDiagonal()
                     ? StraightMovementRule.Infinite
                     : StraightMovementRule.None;
             }
@@ -90,9 +81,9 @@ namespace Chess.Model
         public static Piece CreateRook(string team)
         {
             var rook = new Piece("Rook", team);
-            foreach (var dir in SAll)
+            foreach (var dir in Directions.All)
             {
-                rook.m_moveRules[dir] = SCardinals.Contains(dir)
+                rook.m_moveRules[dir] = dir.IsCardinal()
                     ? StraightMovementRule.Infinite
                     : StraightMovementRule.None;
             }
@@ -103,7 +94,7 @@ namespace Chess.Model
         public static Piece CreateKnight(string team)
         {
             var knight = new Piece("Knight", team);
-            foreach (var dir in SAll)
+            foreach (var dir in Directions.All)
             {
                 knight.m_moveRules[dir] = KnightMovementRule.Instance;
             }
@@ -111,11 +102,15 @@ namespace Chess.Model
             return knight;
         }
 
-        public static Piece CreatePawn(string team, Direction dir)
+        /// <summary>
+        /// Create a pawn with its rules
+        /// </summary>
+        /// <param name="color">The color of the piece</param>
+        /// <param name="dir">The direction the piece faces</param>
+        /// <returns></returns>
+        public static Piece CreatePawn(string color, Direction dir)
         {
-            dir = (Direction) (((int) dir + SAll.Length / 2) % SAll.Length);
-
-            var pawn = new Piece("Pawn", team)
+            var pawn = new Piece("Pawn", color)
             {
                 AttackRules = new Dictionary<Direction, IMovementRule>(),
                 m_firstMoveRules = new Dictionary<Direction, IMovementRule>()
@@ -123,11 +118,11 @@ namespace Chess.Model
 
             var attacks = new []
             {
-                (Direction)(((int)dir - 1) % SAll.Length),
-                (Direction)(((int)dir + 1) % SAll.Length),
+                dir.RotateClockwise(),
+                dir.RotateCounterClockwise()
             };
 
-            foreach (var d in SAll)
+            foreach (var d in Directions.All)
             {
                 pawn.m_moveRules[d] = d == dir 
                     ? StraightMovementRule.OneSpace
@@ -146,7 +141,7 @@ namespace Chess.Model
         public static Piece CreateEmpty()
         {
             var blank = new Piece("blank", "") {IsEmpty = true};
-            foreach (var d in SAll)
+            foreach (var d in Directions.All)
             {
                 blank.m_moveRules[d] = StraightMovementRule.None;
             }

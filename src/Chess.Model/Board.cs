@@ -8,8 +8,6 @@ namespace Chess.Model
 {
     public class Board : Board<Piece>
     {
-        private static readonly Direction[] s_all = (Direction[])Enum.GetValues(typeof(Direction));
-
         private const int ROWS = 8;
         private const int COLUMNS = 8;
 
@@ -35,9 +33,6 @@ namespace Chess.Model
                     if(!IsOnBoard(pt)) continue;
 
                     var m = new Move(pt);
-                    var p = new Placement<Piece>(Piece.CreateEmpty(), m);
-
-                    Add(p);
                 }
             }
         }
@@ -50,33 +45,33 @@ namespace Chess.Model
                    && (pt.Y >= 0 && pt.Y < Height);
         }
 
-        public IEnumerable<Point> GetPossibleMoves(Point point)
+        public IEnumerable<Point> GetPossibleMoves(string color, Point point)
         {
             var pc = this[point];
-            if(pc.IsEmpty) return Enumerable.Empty<Point>();
+            if(pc.IsEmpty || !pc.Team.ToLower().Equals(color?.ToLower())) return Enumerable.Empty<Point>();
             var result = new List<Point>();
-            foreach (var direction in s_all)
+            foreach (var direction in Directions.All)
             {
                 var rule = pc.MoveRules[direction];
                 for (var d = rule.MinCount; d > 0 && d <= rule.MaxCount; d++)
                 {
                     var target = rule.GetResult(point, direction, d);
-                    if (IsOnBoard(target) && this[target].IsEmpty)
-                    {
-                        result.Add(target);
-                    }
-                    else
+                    if (!(IsOnBoard(target) && this[target].IsEmpty))
                     {
                         break;
                     }
+                    result.Add(target);
                 }
                 rule = pc.AttackRules[direction];
                 for (var d = rule.MinCount; d > 0 && d <= rule.MaxCount; d++)
                 {
                     var target = rule.GetResult(point, direction, d);
                     if (!IsOnBoard(target) || this[target].Team.Equals(pc.Team)) break;
-                    if (this[target].IsEmpty) continue;
+
+                    if(result.Contains(target) || this[target].IsEmpty) continue;
+
                     result.Add(target);
+
                     break;
                 }
             }
@@ -92,5 +87,34 @@ namespace Chess.Model
         //     }
         // }
 
+        public Piece Move(Point @from, Point to)
+        {
+            var source = Find(@from);
+            var target = Find(to);
+
+            var p = target.Piece;
+
+            source.Location = target.Location;
+            source.Piece.Moved();
+
+            if (Placements.Contains(target))
+            {
+                Placements.Remove(target);
+            }
+
+            return p;
+        }
+
+        private Placement<Piece> Find(Point location)
+        {
+            try
+            {
+                return Placements.First(p => p.Location == location);
+            }
+            catch
+            {
+                return new Placement<Piece>(Piece.CreateEmpty(), location);
+            }
+        }
     }
 }
