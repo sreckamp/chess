@@ -4,7 +4,7 @@
 angular.module('chess', [
   'ngRoute',
   'ngResource',
-  'chess.dynamic',
+  'chess.game',
   'chess.newGame',
   'chess.gameService',
   'chess.version'

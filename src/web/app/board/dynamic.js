@@ -1,20 +1,15 @@
 'use strict';
 
-angular.module('chess.dynamic', ['ngRoute', 'ngResource', 'chess.gameService'])
+angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.when('/games/:game/:perspective', {
             templateUrl: 'board/board.html',
-            controller: 'DynamicBoardController',
+            controller: 'GameController',
         });
     }])
 
-    .controller('DynamicBoardController', ['gameService', '$scope', '$routeParams', function (gameService, $scope, $routeParams) {
-
-        var _players = 4;
-        if ($routeParams.players) {
-            _players = $routeParams.players;
-        }
+    .controller('GameController', ['gameService', '$scope', '$routeParams', function (gameService, $scope, $routeParams) {
 
         if ($routeParams.theme) {
             $scope.theme = $routeParams.theme;
