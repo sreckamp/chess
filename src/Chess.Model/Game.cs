@@ -129,17 +129,14 @@ namespace Chess.Model
 
         public bool Move(string color, Point from, Point to)
         {
-            if (GetPossibleMoves(color, from).Contains(to))
-            {
-                //TODO: Verify current player
-                var taken = Board.Move(from, to);
-                //TODO: Write this somewhere
-                //TODO: Write to move list
+            if (!GetPossibleMoves(color, @from).Contains(to)) return false;
 
-                return true;
-            }
-
-            return false;
+            //TODO: Verify current player
+            var taken = Board.Move(@from, to);
+            //TODO: Write this somewhere
+            //TODO: Write to move list
+            //TODO: Move to next player
+            return true;
         }
     }
 }
