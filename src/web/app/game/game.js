@@ -4,7 +4,7 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.when('/games/:game/:perspective', {
-            templateUrl: 'board/board.html',
+            templateUrl: 'game/board/board.html',
             controller: 'GameController',
         });
     }])

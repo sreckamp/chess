@@ -4,7 +4,7 @@ angular.module('chess.newGame', ['ngRoute', 'chess.gameService'])
 
     .config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/games', {
-            templateUrl: 'board/board.html',
+            templateUrl: 'game/board/board.html',
             controller: 'NewGameController'
         });
     }])
