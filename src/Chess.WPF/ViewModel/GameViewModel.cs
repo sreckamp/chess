@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Windows.Media;
-using System.Windows.Threading;
+﻿using System.ComponentModel;
 using Chess.Model;
-using GameBase.Model;
-using GameBase.WPF.ViewModel;
+using Version = Chess.Model.Models.Version;
 
 namespace Chess.WPF.ViewModel
 {
@@ -14,12 +8,12 @@ namespace Chess.WPF.ViewModel
     {
         public GameViewModel()
         {
-            BoardViewModel = new BoardViewModel(Game.Board);
+            BoardViewModel = new BoardViewModel(Game.Store.Board);
         }
 
         public BoardViewModel BoardViewModel { get; }
 
-        public Game Game { get; } = new Game(ChessVersion.FourPlayer);
+        public Game Game { get; } = new Game(Version.FourPlayer);
 
         #region INotifyPropertyChanged Members
 

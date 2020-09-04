@@ -17,7 +17,7 @@ angular.module('chess.gameService', ['ngResource'])
         };
 
         gameService.getAvailable = function(game, color, x, y){
-            return _moveResource.query({id:game, color:color, x:x, y:y});
+            return _moveResource.get({id:game, color:color, x:x, y:y});
         };
 
         gameService.postMove = function(game, color, fromX, fromY, toX, toY){

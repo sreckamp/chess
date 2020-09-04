@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Chess.Model.Extensions;
 
 namespace Chess.Model.Models.Rules
 {

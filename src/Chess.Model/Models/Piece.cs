@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Chess.Model.Models.Rules;
@@ -7,16 +8,18 @@ namespace Chess.Model.Models
 {
     public class Piece
     {
+        // private readonly Direction m_direction;
         private readonly Dictionary<Direction, IMovementRule> m_moveRules = new Dictionary<Direction, IMovementRule>();
         private Dictionary<Direction, IMovementRule> m_firstMoveRules;
         private bool m_hasMoved;
 
-        private Piece(PieceType type, Color color)
+        private Piece(PieceType type, Color color/*, Direction direction = Direction.North*/)
         {
             Type = type;
             Color = color;
             AttackRules = m_moveRules;
             m_firstMoveRules = m_moveRules;
+            // m_direction = direction;
         }
 
         public PieceType Type { get; }
@@ -25,7 +28,10 @@ namespace Chess.Model.Models
 
         public bool IsEmpty => Type == PieceType.Empty;
 
-        public void Moved() { m_hasMoved = true; }
+        public void Moved()
+        {
+            m_hasMoved = true;
+        }
 
         public Dictionary<Direction, IMovementRule> AttackRules { get; private set; }
 
@@ -112,13 +118,13 @@ namespace Chess.Model.Models
         /// <returns></returns>
         public static Piece CreatePawn(Color color, Direction dir)
         {
-            var pawn = new Piece(PieceType.Pawn, color)
+            var pawn = new Piece(PieceType.Pawn, color/*, dir*/)
             {
                 AttackRules = new Dictionary<Direction, IMovementRule>(),
                 m_firstMoveRules = new Dictionary<Direction, IMovementRule>()
             };
 
-            var attacks = new []
+            var attacks = new[]
             {
                 dir.RotateClockwise(),
                 dir.RotateCounterClockwise()
@@ -126,11 +132,11 @@ namespace Chess.Model.Models
 
             foreach (var d in Directions.All)
             {
-                pawn.m_moveRules[d] = d == dir 
+                pawn.m_moveRules[d] = d == dir
                     ? StraightMovementRule.OneSpace
                     : StraightMovementRule.None;
                 pawn.m_firstMoveRules[d] = d == dir
-                    ?  StraightMovementRule.TwoSpace
+                    ? StraightMovementRule.TwoSpace
                     : StraightMovementRule.None;
                 pawn.AttackRules[d] = attacks.Contains(d)
                     ? StraightMovementRule.OneSpace
@@ -140,15 +146,40 @@ namespace Chess.Model.Models
             return pawn;
         }
 
-        public static Piece CreateEmpty()
+        private static readonly Lazy<Piece> EmptyLazy = new Lazy<Piece>(() =>
         {
-            var blank = new Piece(PieceType.Empty, Color.None);
+            var empty = new Piece(PieceType.Empty, Color.None);
             foreach (var d in Directions.All)
             {
-                blank.m_moveRules[d] = StraightMovementRule.None;
+                empty.m_moveRules[d] = StraightMovementRule.None;
             }
 
-            return blank;
-        }
+            return empty;
+        });
+
+        public static Piece CreateEmpty() => EmptyLazy.Value;
+
+        // public Piece Clone()
+        // {
+        //     switch (Type)
+        //     {
+        //         case PieceType.Empty:
+        //             return EmptyLazy.Value;
+        //         case PieceType.Pawn:
+        //             return CreatePawn(Color, m_direction);
+        //         case PieceType.Knight:
+        //             return CreateKnight(Color);
+        //         case PieceType.Bishop:
+        //             return CreateBishop(Color);
+        //         case PieceType.Rook:
+        //             return CreateRook(Color);
+        //         case PieceType.Queen:
+        //             return CreateKnight(Color);
+        //         case PieceType.King:
+        //             return CreateKing(Color);
+        //         default:
+        //             throw new ArgumentOutOfRangeException();
+        //     }
+        // }
     }
 }

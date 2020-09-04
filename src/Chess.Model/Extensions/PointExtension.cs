@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
+using Chess.Model.Models;
 
-namespace Chess.Model
+namespace Chess.Model.Extensions
 {
     public static class PointExtension
     {

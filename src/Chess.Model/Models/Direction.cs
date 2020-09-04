@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Drawing;
 using System.Linq;
 
-namespace Chess.Model
+namespace Chess.Model.Models
 {
     public enum Direction
     {
