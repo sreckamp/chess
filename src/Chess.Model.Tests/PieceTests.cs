@@ -1,3 +1,4 @@
+using Chess.Model.Models;
 using NUnit.Framework;
 using FluentAssertions;
 

@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Chess.Model
+namespace Chess.Model.Models.Rules
 {
     public class KnightMovementRule : IMovementRule
     {

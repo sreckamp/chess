@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Chess.Model.Models.Rules;
 
-namespace Chess.Model
+namespace Chess.Model.Models
 {
     public class Piece
     {

@@ -6,7 +6,7 @@ using System.Windows.Threading;
 using Chess.Model;
 using GameBase.Model;
 using GameBase.WPF.ViewModel;
-using Piece = Chess.Model.Piece;
+using Piece = Chess.Model.Models.Piece;
 
 namespace Chess.WPF.ViewModel
 {

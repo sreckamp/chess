@@ -8,7 +8,7 @@ using Chess.Model;
 using GameBase.Model;
 using GameBase.WPF.ViewModel;
 using Brush = System.Windows.Media.Brush;
-using Piece = Chess.Model.Piece;
+using Piece = Chess.Model.Models.Piece;
 
 namespace Chess.WPF.ViewModel
 {

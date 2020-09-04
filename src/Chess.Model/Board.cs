@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Chess.Model.Models;
 using GameBase.Model;
+using Move = GameBase.Model.Move;
 
 namespace Chess.Model
 {
