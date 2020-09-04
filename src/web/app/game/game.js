@@ -24,6 +24,13 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
 
         var _rotation = rotations.NONE;
 
+        var _rotationMap = {
+            'white': rotations.NONE,
+            'silver': rotations.COUNTERCLOCKWISE,
+            'black': rotations.UPSIDEDOWN,
+            'gold': rotations.CLOCKWISE,
+        };
+
         var refreshGame = function () {
             gameService.getGame($routeParams.game).$promise.then(function (board) {
                 var _pieces = [];
@@ -39,7 +46,7 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
 
                 $scope.activeSquare = -1;
 
-                _rotation = board.rotationMap[$scope.perspective.toLowerCase()].toLowerCase();
+                _rotation = _rotationMap[$scope.perspective.toLowerCase()].toLowerCase();
                 var _sideView = [rotations.COUNTERCLOCKWISE, rotations.CLOCKWISE].includes(_rotation);
 
                 $scope.board = {

@@ -40,13 +40,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Board.cs" />
+    <Compile Include="Color.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="IMovementRule.cs" />
     <Compile Include="KnightMovementRule.cs" />
+    <Compile Include="Models\Move.cs" />
     <Compile Include="Piece.cs" />
+    <Compile Include="PieceType.cs" />
     <Compile Include="PointExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stores\BoardStore.cs" />
+    <Compile Include="Stores\GameState.cs" />
     <Compile Include="StraightMovementRule.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +59,11 @@
       <Project>{45cfc74e-2b9d-4ed3-82ef-617e3f4404b2}</Project>
       <Name>GameBase.Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Actions" />
+    <Folder Include="Models\Rules" />
+    <Folder Include="Reducers" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

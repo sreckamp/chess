@@ -23,8 +23,8 @@ namespace Chess.WPF.ViewModel
         //     return new Move(locationX, locationY);
         // }
 
-        public string Name => Placement.Piece?.Name ?? string.Empty;
-        public string Team => Placement.Piece?.Team;
+        public string Name => Placement.Piece?.Type.ToString() ?? string.Empty;
+        public string Team => Placement.Piece?.Color.ToString();
 
         public bool IsDark => (Column + Row) % 2 > 0;
 

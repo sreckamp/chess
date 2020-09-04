@@ -12,23 +12,23 @@ namespace Chess.Model
     }
     public class Game
     {
-        private static readonly Dictionary<ChessVersion, Dictionary<string, Direction>> TEAMS =
-            new Dictionary<ChessVersion, Dictionary<string, Direction>>
+        private static readonly Dictionary<ChessVersion, Dictionary<Color, Direction>> Teams =
+            new Dictionary<ChessVersion, Dictionary<Color, Direction>>
             {
                 {
-                    ChessVersion.TwoPlayer, new Dictionary<string, Direction>
+                    ChessVersion.TwoPlayer, new Dictionary<Color, Direction>
                     {
-                        { "White", Direction.South },
-                        { "Black", Direction.North },
+                        { Color.White, Direction.South },
+                        { Color.Black, Direction.North },
                     }
                 },
                 {
-                    ChessVersion.FourPlayer, new Dictionary<string, Direction>
+                    ChessVersion.FourPlayer, new Dictionary<Color, Direction>
                     {
-                        { "White", Direction.South },
-                        { "Black", Direction.North },
-                        { "Silver", Direction.West },
-                        { "Gold", Direction.East },
+                        { Color.White, Direction.South },
+                        { Color.Black, Direction.North },
+                        { Color.Silver, Direction.West },
+                        { Color.Gold, Direction.East },
                     }
                 }
             };
@@ -45,9 +45,9 @@ namespace Chess.Model
 
         public void Init()
         {
-            foreach(var team in TEAMS[Version])
+            foreach(var team in Teams[Version])
             {
-                populateSide(team.Key, team.Value, Board);
+                PopulateSide(team.Key, team.Value, Board);
             }
         }
 
@@ -57,14 +57,7 @@ namespace Chess.Model
             Board.Add(p);
         }
 
-        public void Play()
-        {
-            Board.Clear();
-            Init();
-            while(true);
-        }
-
-        private void populateSide(string team, Direction dir, Board board)
+        private void PopulateSide(Color color, Direction dir, Board board)
         {
             var kingOnLeft = board.CornerSize > 0;
             var vert = true;
@@ -99,35 +92,35 @@ namespace Chess.Model
                 {
                     case 0:
                     case 7:
-                        p = Piece.CreateRook(team);
+                        p = Piece.CreateRook(color);
                         break;
                     case 1:
                     case 6:
-                        p = Piece.CreateKnight(team);
+                        p = Piece.CreateKnight(color);
                         break;
                     case 2:
                     case 5:
-                        p = Piece.CreateBishop(team);
+                        p = Piece.CreateBishop(color);
                         break;
                     default:
                         p = idx == kingFile
-                            ? Piece.CreateKing(team)
-                            : Piece.CreateQueen(team);
+                            ? Piece.CreateKing(color)
+                            : Piece.CreateQueen(color);
                         break;
                 }
 
                 Place(p, vert ? idx + board.CornerSize : power, vert ? power : idx + board.CornerSize);
-                Place(Piece.CreatePawn(team, dir.Opposite()), vert ? idx + board.CornerSize : pawn, vert ? pawn : idx + board.CornerSize);
+                Place(Piece.CreatePawn(color, dir.Opposite()), vert ? idx + board.CornerSize : pawn, vert ? pawn : idx + board.CornerSize);
             }
         }
 
-        public IEnumerable<Point> GetPossibleMoves(string color, Point point)
+        public IEnumerable<Point> GetPossibleMoves(Color color, Point point)
         {
             //TODO: Verify current player
             return Board.GetPossibleMoves(color, point);
         }
 
-        public bool Move(string color, Point from, Point to)
+        public bool Move(Color color, Point from, Point to)
         {
             if (!GetPossibleMoves(color, @from).Contains(to)) return false;
 

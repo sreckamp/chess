@@ -11,19 +11,19 @@ namespace Chess.Model
         private Dictionary<Direction, IMovementRule> m_firstMoveRules;
         private bool m_hasMoved;
 
-        private Piece(string name, string team)
+        private Piece(PieceType type, Color color)
         {
-            Name = name;
-            Team = team;
+            Type = type;
+            Color = color;
             AttackRules = m_moveRules;
             m_firstMoveRules = m_moveRules;
-            IsEmpty = false;
         }
 
-        public string Name { get; }
-        public string Team { get; }
+        public PieceType Type { get; }
 
-        public bool IsEmpty { get; private set; }
+        public Color Color { get; }
+
+        public bool IsEmpty => Type == PieceType.Empty;
 
         public void Moved() { m_hasMoved = true; }
 
@@ -35,16 +35,18 @@ namespace Chess.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            if (!string.IsNullOrWhiteSpace(Team))
+
+            if (Color != Color.None)
             {
-                sb.Append((Team)).Append(' ');
+                sb.Append($"{Color} ");
             }
-            return sb.Append(Name).ToString();
+
+            return sb.Append("${Type}").ToString();
         }
 
-        public static Piece CreateKing(string team)
+        public static Piece CreateKing(Color color)
         {
-            var king = new Piece("King", team);
+            var king = new Piece(PieceType.King, color);
             foreach (var dir in Directions.All)
             {
                 king.m_moveRules[dir] = StraightMovementRule.OneSpace;
@@ -54,9 +56,9 @@ namespace Chess.Model
             return king;
         }
 
-        public static Piece CreateQueen(string team)
+        public static Piece CreateQueen(Color color)
         {
-            var queen = new Piece("Queen", team);
+            var queen = new Piece(PieceType.Queen, color);
             foreach (var dir in Directions.All)
             {
                 queen.m_moveRules[dir] = StraightMovementRule.Infinite;
@@ -65,9 +67,9 @@ namespace Chess.Model
             return queen;
         }
 
-        public static Piece CreateBishop(string team)
+        public static Piece CreateBishop(Color color)
         {
-            var bishop = new Piece("Bishop", team);
+            var bishop = new Piece(PieceType.Bishop, color);
             foreach (var dir in Directions.All)
             {
                 bishop.m_moveRules[dir] = dir.IsDiagonal()
@@ -78,9 +80,9 @@ namespace Chess.Model
             return bishop;
         }
 
-        public static Piece CreateRook(string team)
+        public static Piece CreateRook(Color color)
         {
-            var rook = new Piece("Rook", team);
+            var rook = new Piece(PieceType.Rook, color);
             foreach (var dir in Directions.All)
             {
                 rook.m_moveRules[dir] = dir.IsCardinal()
@@ -91,9 +93,9 @@ namespace Chess.Model
             return rook;
         }
 
-        public static Piece CreateKnight(string team)
+        public static Piece CreateKnight(Color color)
         {
-            var knight = new Piece("Knight", team);
+            var knight = new Piece(PieceType.Knight, color);
             foreach (var dir in Directions.All)
             {
                 knight.m_moveRules[dir] = KnightMovementRule.Instance;
@@ -108,9 +110,9 @@ namespace Chess.Model
         /// <param name="color">The color of the piece</param>
         /// <param name="dir">The direction the piece faces</param>
         /// <returns></returns>
-        public static Piece CreatePawn(string color, Direction dir)
+        public static Piece CreatePawn(Color color, Direction dir)
         {
-            var pawn = new Piece("Pawn", color)
+            var pawn = new Piece(PieceType.Pawn, color)
             {
                 AttackRules = new Dictionary<Direction, IMovementRule>(),
                 m_firstMoveRules = new Dictionary<Direction, IMovementRule>()
@@ -140,7 +142,7 @@ namespace Chess.Model
 
         public static Piece CreateEmpty()
         {
-            var blank = new Piece("blank", "") {IsEmpty = true};
+            var blank = new Piece(PieceType.Empty, Color.None);
             foreach (var d in Directions.All)
             {
                 blank.m_moveRules[d] = StraightMovementRule.None;

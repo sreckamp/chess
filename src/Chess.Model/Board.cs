@@ -45,10 +45,10 @@ namespace Chess.Model
                    && (pt.Y >= 0 && pt.Y < Height);
         }
 
-        public IEnumerable<Point> GetPossibleMoves(string color, Point point)
+        public IEnumerable<Point> GetPossibleMoves(Color color, Point point)
         {
             var pc = this[point];
-            if(pc.IsEmpty || !pc.Team.ToLower().Equals(color?.ToLower())) return Enumerable.Empty<Point>();
+            if(pc.IsEmpty || pc.Color != color) return Enumerable.Empty<Point>();
             var result = new List<Point>();
             foreach (var direction in Directions.All)
             {
@@ -66,7 +66,7 @@ namespace Chess.Model
                 for (var d = rule.MinCount; d > 0 && d <= rule.MaxCount; d++)
                 {
                     var target = rule.GetResult(point, direction, d);
-                    if (!IsOnBoard(target) || this[target].Team.Equals(pc.Team)) break;
+                    if (!IsOnBoard(target) || this[target].Color.Equals(pc.Color)) break;
 
                     if(result.Contains(target) || this[target].IsEmpty) continue;
 

@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using Chess.Model;
 using Chess.Server.Model;
+using Chess.Server.Services;
 using Microsoft.AspNetCore.Mvc;
+using Color = Chess.Model.Color;
 using Piece = Chess.Server.Model.Piece;
 
 namespace Chess.Server.Controllers
@@ -13,39 +15,40 @@ namespace Chess.Server.Controllers
     [Route("chess/games")]
     public class ChessGameController : ControllerBase
     {
-        private static int m_game = 10000;
-        private static readonly Dictionary<int, Game> m_gameState = new Dictionary<int, Game>();
+        private readonly IGameProviderService m_gameService;
+        private static int m_gameId = 10000;
+
+        public ChessGameController(IGameProviderService gameProvider)
+        {
+            m_gameService = gameProvider;
+        }
 
         [HttpGet("{gameId?}")]
-        public BoardState GetGame(int? gameId, int players=2)
+        public GameState GetGame(int? gameId, int players=2)
         {
             if (gameId == null)
             {
-                gameId = m_game;
-                m_game++;
+                gameId = m_gameId;
+                m_gameId++;
+                var g = new Game(players == 4 ? ChessVersion.FourPlayer : ChessVersion.TwoPlayer);
+                g.Init();
+                m_gameService.StoreGame((int)gameId, g);
             }
 
             var id = (int) gameId;
 
-            if (!m_gameState.ContainsKey(id))
-            {
-                var g = new Game(players == 4 ? ChessVersion.FourPlayer : ChessVersion.TwoPlayer);
-                g.Init();
-                m_gameState[id] = g;
-            }
-
-            return BuildResponse(id, m_gameState[id]);
+            return BuildResponse(id, m_gameService.GetGame(id));
         }
 
         [HttpGet("{gameId}/moves/{color}")]
-        public object GetMoves(int gameId, string color, int x, int y)
+        public object GetMoves(int gameId, Color color, int x, int y)
         {
-            if (!m_gameState.ContainsKey(gameId))
-            {
-                return NotFound($"Game {gameId} has not been initialized.");
-            }
+            // if (!m_gameState.ContainsKey(gameId))
+            // {
+            //     return NotFound($"Game {gameId} has not been initialized.");
+            // }
 
-            var game = m_gameState[gameId];
+            var game = m_gameService.GetGame(gameId);
             var source = new Point(x, y);
             return Ok(game.GetPossibleMoves(color, source).Select(p => new Move
             {
@@ -55,22 +58,22 @@ namespace Chess.Server.Controllers
         }
 
         [HttpPost("{gameId}/moves/{color}")]
-        public object PutMove(int gameId, string color, [FromBody] Move m)
+        public object PutMove(int gameId, Color color, [FromBody] Move m)
         {
-            if (!m_gameState.ContainsKey(gameId))
-            {
-                return NotFound($"Game {gameId} has not been initialized.");
-            }
+            // if (!m_gameState.ContainsKey(gameId))
+            // {
+            //     return NotFound($"Game {gameId} has not been initialized.");
+            // }
 
-            var game = m_gameState[gameId];
+            var game = m_gameService.GetGame(gameId);
 
             return game.Move(color, m.From, m.To) ?
                 (object)Ok() : BadRequest($"{m} is not a valid move.");
         }
 
-        private BoardState BuildResponse(int id, Game game)
+        private GameState BuildResponse(int id, Game game)
         {
-            return new BoardState
+            return new GameState
             {
                 GameId = id,
                 Name = $"Game {id}",
@@ -78,18 +81,18 @@ namespace Chess.Server.Controllers
                 Width = game.Board.Width,
                 Corner = game.Board.CornerSize % 2 == 1 ? "dark":"light",
                 Other = game.Board.CornerSize % 2 == 1 ? "light":"dark",
-                RotationMap = new Dictionary<string, string>()
-                {
-                    {"white", "none"},
-                    {"silver", "counterclockwise"},
-                    {"black", "upsidedown"},
-                    {"gold", "clockwise"}
-                },
+                // RotationMap = new Dictionary<string, string>()
+                // {
+                //     {"white", "none"},
+                //     {"silver", "counterclockwise"},
+                //     {"black", "upsidedown"},
+                //     {"gold", "clockwise"}
+                // },
                 Pieces = game.Board.Placements.Select(placement => new Piece
                     {
                         Location = placement.Location,
-                        Type = placement.Piece.Name,
-                        Color = placement.Piece.Team
+                        Type = placement.Piece.Type.ToString(),
+                        Color = placement.Piece.Color.ToString()
                     }) .ToArray()
             };
         }

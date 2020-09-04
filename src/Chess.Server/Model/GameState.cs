@@ -2,7 +2,7 @@
 
 namespace Chess.Server.Model
 {
-    public class BoardState
+    public class GameState
     {
         public int GameId { get; set; }
         public string Name { get; set; }
@@ -10,7 +10,6 @@ namespace Chess.Server.Model
         public int Width { get; set; }
         public string Corner { get; set; }
         public string Other { get; set; }
-        public Dictionary<string, string> RotationMap { get; set; }
         public Piece[] Pieces { get; set; }
     }
 }

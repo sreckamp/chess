@@ -13,7 +13,7 @@ namespace Chess.Model.Tests
         [Test]
         public void CreatePawn_WhenDirectionNorth_ShouldHaveAttacksToNorthWestAndNorthEast()
         {
-            var pawn = Piece.CreatePawn("test", Direction.North);
+            var pawn = Piece.CreatePawn(Color.None, Direction.North);
             
             pawn.AttackRules[Direction.NorthEast].MaxCount.Should().Be(1);
             pawn.AttackRules[Direction.NorthWest].MaxCount.Should().Be(1);
