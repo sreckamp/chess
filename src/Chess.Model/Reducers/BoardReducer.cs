@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Chess.Model.Actions;
+using Chess.Model.Extensions;
 using Chess.Model.Models;
 using GameBase.Model;
 using Move = Chess.Model.Models.Move;
@@ -30,14 +31,15 @@ namespace Chess.Model.Reducers
                 {
                     if (store.Available.Contains(ma.Target))
                     {
-                        var (placements, taken) = Move(store.Placements, store.Selection, ma.Target);
+                        var board = store.Board.DeepCopy();
+                        var taken = Move(board, store.Selection, ma.Target);
                         next = new BoardStore
                         {
                             Size = store.Size,
                             CornerSize = store.CornerSize,
                             Selection = None,
                             Available = Enumerable.Empty<Point>(),
-                            Placements = placements,
+                            Board = board,
                             Captured = store.Captured.ToDictionary(pair => pair.Key, pair =>
                                 {
                                     var captured = pair.Value.ToList();
@@ -49,7 +51,7 @@ namespace Chess.Model.Reducers
                             ),
                             History = store.History.Append(new MoveHistoryItem
                             {
-                                Start = store.Placements.Select(p=> new Placement<Piece>(p.Piece, p.Location)),
+                                Start = store.Board.DeepCopy(),
                                 Move = new Move
                                 {
                                     From = store.Selection,
@@ -71,8 +73,8 @@ namespace Chess.Model.Reducers
                         Size = store.Size,
                         CornerSize = store.CornerSize,
                         Selection = sa.Selection,
-                        Available = GetAvailable(store.Placements, sa.Selection, store.Size, store.CornerSize),
-                        Placements = store.Placements.Select(p=> new Placement<Piece>(p.Piece, p.Location)),
+                        Available = GetAvailable(store.Board, sa.Selection, store.CornerSize),
+                        Board = store.Board.DeepCopy(),
                         Captured = store.Captured.ToDictionary(pair => pair.Key,
                             pair => (IEnumerable<Piece>)pair.Value.ToList()
                             ),
@@ -91,11 +93,9 @@ namespace Chess.Model.Reducers
                                              && (pt.Y >= 0 && pt.Y < size);
         }
 
-        private static IEnumerable<Point> GetAvailable(IEnumerable<Placement<Piece>> placements, Point location, int size, int corner)
+        private static IEnumerable<Point> GetAvailable(Piece[][] board, Point location, int corner)
         {
-            var places = placements.ToList();
-
-            var pc= Find(places, location).Piece;
+            var pc= board[location.Y][location.X];
             
             if(pc.IsEmpty) return Enumerable.Empty<Point>();
 
@@ -107,12 +107,12 @@ namespace Chess.Model.Reducers
                 for (var d = rule.MinCount; d > 0 && d <= rule.MaxCount; d++)
                 {
                     var to = rule.GetResult(location, direction, d);
-                    var target = Find(places, to).Piece;
 
-                    if (!(IsOnBoard(to, size, corner) && target.IsEmpty))
-                    {
-                        break;
-                    }
+                    if(!IsOnBoard(to, board.Length, corner)) break;
+
+                    var target= board[to.Y][to.X];
+
+                    if (!target.IsEmpty) break;
 
                     result.Add(to);
                 }
@@ -121,9 +121,12 @@ namespace Chess.Model.Reducers
                 for (var d = rule.MinCount; d > 0 && d <= rule.MaxCount; d++)
                 {
                     var to = rule.GetResult(location, direction, d);
-                    var target = Find(places, to).Piece;
 
-                    if (!IsOnBoard(to, size, corner) || target.Color.Equals(pc.Color)) break;
+                    if(!IsOnBoard(to, board.Length, corner)) break;
+
+                    var target= board[to.Y][to.X];
+
+                    if (target.Color.Equals(pc.Color)) break;
 
                     if(result.Contains(to) || target.IsEmpty) continue;
 
@@ -136,30 +139,16 @@ namespace Chess.Model.Reducers
             return result;
         }
         
-        private static (IEnumerable<Placement<Piece>>, Piece) Move(IEnumerable<Placement<Piece>> placements, Point @from, Point to)
+        private static Piece Move(Piece[][] board, Point @from, Point to)
         {
-            var places = placements.Select(p=> new Placement<Piece>(p.Piece, p.Location)).ToList();
-            var source = Find(places, @from);
-            var target = Find(places, to);
+            //TODO: Checking about validity
+            var taken = board[to.Y][to.X];
 
-            var taken = target.Piece;
+            board[to.Y][to.X] = board[@from.Y][@from.X];
+            board[to.Y][to.X].Moved();
+            board[@from.Y][@from.X] = Piece.CreateEmpty();
 
-            source.Location = target.Location;
-            source.Piece.Moved();
-
-            return (places.Where(place => place != target), taken);
-        }
-
-        private static Placement<Piece> Find(IEnumerable<Placement<Piece>> placements, Point location)
-        {
-            try
-            {
-                return placements.First(p => p.Location == location);
-            }
-            catch
-            {
-                return new Placement<Piece>(Piece.CreateEmpty(), location);
-            }
+            return taken;
         }
     }
 }

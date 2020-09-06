@@ -38,17 +38,7 @@ namespace Chess.Model.Models
         public Dictionary<Direction, IMovementRule> MoveRules => m_hasMoved ? m_moveRules : m_firstMoveRules;
 
         /// <inheritdoc />
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-
-            if (Color != Color.None)
-            {
-                sb.Append($"{Color} ");
-            }
-
-            return sb.Append("${Type}").ToString();
-        }
+        public override string ToString() => IsEmpty ? string.Empty : $"{Color} {Type}";
 
         public static Piece CreateKing(Color color)
         {

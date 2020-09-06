@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Chess.Model;
 using Chess.Model.Models;
@@ -79,6 +80,21 @@ namespace Chess.Server.Controllers
 
         private static GameState BuildResponse(int id, GameStore store)
         {
+            var pieces = new List<Piece>();
+            for (var y = 0; y < store.Board.Board.Length; y++)
+            {
+                for (var x = 0; x < store.Board.Board[y].Length; x++)
+                {
+                    var piece = store.Board.Board[y][x];
+                    if(piece.IsEmpty) continue;
+                    pieces.Add(new Piece
+                    {
+                        Location = new Location { X = x, Y = y},
+                        Color = piece.Color.ToString(),
+                        Type = piece.Type.ToString(),
+                    });
+                }
+            }
             return new GameState
             {
                 GameId = id,
@@ -90,12 +106,7 @@ namespace Chess.Server.Controllers
 
                 Available = store.Board.Available.Select(p => (Location)p),
 
-                Pieces = store.Board.Placements.Select(placement => new Piece
-                    {
-                        Location = placement.Location,
-                        Type = placement.Piece.Type.ToString(),
-                        Color = placement.Piece.Color.ToString()
-                    }),
+                Pieces = pieces,
 
                 MoveHistory = store.Board.History.Select(history => new Move
                 {
@@ -104,10 +115,7 @@ namespace Chess.Server.Controllers
                 }),
 
                 Corners = store.Board.CornerSize,
-                Size = store.Board.Size,
-
-                Corner = store.Board.CornerSize % 2 == 1 ? "dark":"light",
-                Other = store.Board.CornerSize % 2 == 1 ? "light":"dark"
+                Size = store.Board.Size
             };
         }
     }
