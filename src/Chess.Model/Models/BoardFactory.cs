@@ -6,6 +6,13 @@ using GameBase.Model;
 
 namespace Chess.Model.Models
 {
+    // TODO: convert to array
+    
+    /// <summary>
+    /// Creates a board.
+    /// Y is along file axis (0 = south, max = north)
+    /// X is along rank axis (0 = west, max = east)
+    /// </summary>
     public class BoardFactory
     {
         private static class Lazy
@@ -35,22 +42,22 @@ namespace Chess.Model.Models
             var northSouth = true;
             var pieceFile = 0;
             var pawnFile = 1;
-            var kingFile = 4;
+            var kingFile = 3;
 
             var placements = new List<Placement<Piece>>();
 
             switch (dir)
             {
                 case Direction.South:
-                    pieceFile = template.BoardSize - 1;
-                    pawnFile = template.BoardSize - 2;
-                    kingFile = template.KingOnLeft ? 3 : kingFile;
                     break;
                 case Direction.West:
                     northSouth = false;
-                    kingFile = template.KingOnLeft ? 3 : kingFile;
+                    kingFile = template.KingOnLeft ? 4 : kingFile;
                     break;
                 case Direction.North:
+                    pieceFile = template.BoardSize - 1;
+                    pawnFile = template.BoardSize - 2;
+                    kingFile = template.KingOnLeft ? 4 : kingFile;
                     break;
                 case Direction.East:
                     pieceFile = template.BoardSize - 1;

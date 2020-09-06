@@ -1,5 +1,82 @@
 /* game css stylesheet */
 
+.grid {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.grid.clockwise {
+  flex-direction: row;
+}
+
+.grid.upsidedown {
+  flex-direction: column;
+}
+
+.grid.counterclockwise {
+  flex-direction: row-reverse;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.row.clockwise {
+  flex-direction: column;
+}
+
+.row.upsidedown {
+  flex-direction: row-reverse;
+}
+
+.row.counterclockwise {
+  flex-direction: column-reverse;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+}
+
+.header.counterclockwise,.header.upsidedown {
+  justify-content: flex-end;
+}
+
+.header.counterclockwise,.header.upsidedown {
+  flex-direction: row-reverse;
+}
+
+.header > div {
+  display: flex;
+  width: 100px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+}
+
+.header > div.corner {
+  width: 50px;
+  height: 50px;
+}
+
+.labels {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.labels.clockwise,.labels.upsidedown {
+  flex-direction: column;
+}
+
+div.labels > div {
+  display: flex;
+  width: 50px;
+  height: 100px;
+  justify-content: center;
+  align-items: center;
+}
+
 .square{
   cursor: pointer;
   float: left;
@@ -11,8 +88,8 @@
   background-color: transparent !important;
 }
 
-.square.floatme{
-  clear:both;
+.available {
+  cursor: pointer;
 }
 
 svg.piece {

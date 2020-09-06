@@ -12,11 +12,11 @@ namespace Chess.Model.Extensions
 
             if(dir == Direction.NorthWest || dir == Direction.North || dir == Direction.NorthEast)
             {
-                yOffset = -count;
+                yOffset = count;
             }
             else if(dir == Direction.SouthWest || dir == Direction.South || dir == Direction.SouthEast)
             {
-                yOffset = count;
+                yOffset = -count;
             }
 
             if(dir == Direction.NorthWest || dir == Direction.West || dir == Direction.SouthWest)
