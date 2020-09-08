@@ -2,7 +2,7 @@
 
 /*jshint esversion: 6 */
 const rotations = {
-    NONE: 'none',
+    NONE: 'upright',
     CLOCKWISE: 'clockwise',
     UPSIDEDOWN: 'upsidedown',
     COUNTERCLOCKWISE: 'counterclockwise'

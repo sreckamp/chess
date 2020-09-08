@@ -3,15 +3,11 @@ using System.Drawing;
 using Chess.Model.Models;
 using Color = Chess.Model.Models.Color;
 
-namespace Chess.Model
+namespace Chess.Model.Stores
 {
     public class BoardStore
     {
-        public int CornerSize { get; set; }
-        public int Size { get; set; }
-        public Point Selection { get; set; }
-        public IEnumerable<Point> Available { get; set; }
-        public Piece[][] Board { get; set; }
+        public Board Board { get; set; }
         public Dictionary<Color, IEnumerable<Piece>> Captured { get; set; }
         /// <summary>
         /// A map of the state and the moves applied.

@@ -4,6 +4,7 @@ namespace Chess.Model.Actions
 {
     public class MoveAction : IAction
     {
-        public Point Target { get; set; }
+        public Point From { get; set; }
+        public Point To { get; set; }
     }
 }

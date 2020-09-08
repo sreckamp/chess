@@ -36,16 +36,6 @@ namespace Chess.Model.Reducers
                         //TODO: Write this somewhere
                         //TODO: Write to move list
                     }
-                    case SelectAction _:
-                    {
-                        //TODO: Verify current player
-                        return new GameStore
-                        {
-                            Version = store.Version,
-                            CurrentPlayer = m_playerReducer.Apply(action, store.CurrentPlayer),
-                            Board = m_boardReducer.Apply(action, store.Board)
-                        };
-                    }
                 }
             }
             // ReSharper disable once EmptyGeneralCatchClause

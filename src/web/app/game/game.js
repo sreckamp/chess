@@ -3,7 +3,7 @@
 angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
 
     .config(['$routeProvider', function ($routeProvider) {
-        $routeProvider.when('/games/:game/:perspective', {
+        $routeProvider.when('/games/:game', {
             templateUrl: 'game/board/board.html',
             controller: 'GameController',
         });
@@ -17,13 +17,15 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
             $scope.theme = "blue";
         }
 
-        $scope.perspective = $routeParams.perspective;
-        $scope.currentPlayer = '';
+        if($routeParams.meta) {
+            $scope.meta = true;
+        }
 
-        var _activeSquare = null;
-        var _available = [];
+        var _bottom = 'white';
 
-        $scope.rotation = rotations.NONE;
+        if($routeParams.bottom) {
+            _bottom = $routeParams.bottom;
+        }
 
         var _rotationMap = {
             'white': rotations.NONE,
@@ -31,6 +33,13 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
             'black': rotations.UPSIDEDOWN,
             'gold': rotations.CLOCKWISE,
         };
+
+        $scope.rotation = _rotationMap[_bottom.toLowerCase()];
+
+        $scope.currentPlayer = '';
+
+        var _activeSquare = null;
+        var _available = [];
 
         $scope.board = {
                 'name': '',
@@ -49,7 +58,6 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
         };
 
         var parseStore = function(store) {
-            $scope.rotation = _rotationMap[$scope.perspective.toLowerCase()].toLowerCase();
             var _sideView = [rotations.COUNTERCLOCKWISE, rotations.CLOCKWISE].includes($scope.rotation);
             $scope.currentPlayer = store.currentPlayer;
 
@@ -67,10 +75,8 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
             $scope.labels = _sideView ? $scope.board.files : $scope.board.ranks;
 
             store.pieces.forEach(function (p) {
-                _pieces[p.location.y].cols[p.location.x] = {'piece': p.type.toLowerCase(), 'color': p.color.toLowerCase()};
+                _pieces[p.location.y].cols[p.location.x] = {'piece': p.type.toLowerCase(), 'color': p.color.toLowerCase(), 'metadata':p.location.metadata};
             });
-
-            _activeSquare = store.activeLocation.x < 0 ? null : store.activeLocation;
 
             $scope.board.name = store.name;
             $scope.board.corners = store.corners;
@@ -78,12 +84,6 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
             $scope.board.pieces = _pieces;
             $scope.board.corner = store.corners % 2 == 0 ? 'dark' : 'light';
             $scope.board.other = store.corners % 2 == 1 ? 'dark' : 'light';
-
-            _available = [];
-
-            store.available.forEach(function (p) {
-                _available.push(p);
-            });
         };
 
         var refreshGame = function () {
@@ -93,17 +93,21 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
         };
 
         var select = function (x,y) {
-            _activeSquare = {'x':x,'y':y};
-
             var _pc = getPiece(x, y);
 
-            if(!_pc) return;
+            if(!_pc || _pc.color != $scope.currentPlayer.toLowerCase()) return;
+
+            _activeSquare = {'x':x,'y':y};
 
             var _color = _pc.color;
             $scope.meta = " (" + _color + " " + _pc.piece + ")";
 
-            gameService.getAvailable($routeParams.game, _color, x, y).$promise.then(function success(store) {
-                parseStore(store);
+            gameService.getAvailable($routeParams.game, _color, x, y).$promise.then(function success(available) {
+                _available = [];
+
+                available.forEach(function (p) {
+                    _available.push(p);
+                });
             });
         };
 
@@ -144,7 +148,7 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
             var _pc = getPiece(x, y);
             var _active = getPiece(_activeSquare.x, _activeSquare.y);
 
-            if(!_pc || !_active) return false;
+            if(!_pc || _pc.piece =='empty' || !_active) return false;
 
             return _pc.color != $scope.board.pieces[_activeSquare.y].cols[_activeSquare.x].color;
         };
@@ -163,7 +167,7 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
 
                 if(!pc) return;
 
-                if (target && target.color == pc.color) {
+                if (target && (target.color == pc.color && target.color != 'none')) {
                     select(x,y);
                 } else {
                     move(_activeSquare.x, _activeSquare.y, x, y).then(function success() {
@@ -174,7 +178,7 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
                     });
                     return;
                 }
-            } else if(target) {
+            } else if(target && target.color != 'none') {
                 select(x,y);
             }
         };

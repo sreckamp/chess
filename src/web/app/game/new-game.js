@@ -17,7 +17,7 @@ angular.module('chess.newGame', ['ngRoute', 'chess.gameService'])
 
         gameService.newGame(_players).$promise.then(function (board){
             var _path = $location.path();
-            $location.url(_path + "/" + board.gameId + "/white");
+            $location.url(_path + "/" + board.gameId);
         });
     }
     ]);

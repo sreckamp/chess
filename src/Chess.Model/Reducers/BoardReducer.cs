@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Chess.Model.Actions;
-using Chess.Model.Extensions;
 using Chess.Model.Models;
-using GameBase.Model;
+using Chess.Model.Stores;
 using Move = Chess.Model.Models.Move;
 
 namespace Chess.Model.Reducers
 {
     public class BoardReducer : IReducer<BoardStore>
     {
-        private static readonly Point None = new Point(-1, -1);
-
         public BoardStore Apply(IAction action, BoardStore store)
         {
             var next = store;
@@ -22,23 +19,17 @@ namespace Chess.Model.Reducers
                 case InitializeAction ia:
                 {
                     next = BoardFactory.Instance.Create(ia.Version);
-                    next.Available = Enumerable.Empty<Point>();
                     next.History = Enumerable.Empty<MoveHistoryItem>();
-                    next.Selection = None;
                     break;
                 }
                 case MoveAction ma:
                 {
-                    if (store.Available.Contains(ma.Target))
+                    if (store.Board.GetAvailable(ma.From).Contains(ma.To))
                     {
                         var board = store.Board.DeepCopy();
-                        var taken = Move(board, store.Selection, ma.Target);
+                        var taken = Move(board, ma.From, ma.To);
                         next = new BoardStore
                         {
-                            Size = store.Size,
-                            CornerSize = store.CornerSize,
-                            Selection = None,
-                            Available = Enumerable.Empty<Point>(),
                             Board = board,
                             Captured = store.Captured.ToDictionary(pair => pair.Key, pair =>
                                 {
@@ -54,99 +45,32 @@ namespace Chess.Model.Reducers
                                 Start = store.Board.DeepCopy(),
                                 Move = new Move
                                 {
-                                    From = store.Selection,
-                                    To = ma.Target
+                                    Piece = store.Board[ma.From.X, ma.From.Y],
+                                    From = ma.From,
+                                    To = ma.To
                                 }
                             })
                         };
                     }
                     else
                     {
-                        throw new InvalidOperationException($"{ma.Target} is not a valid move.");
+                        throw new InvalidOperationException($"{ma.From} to {ma.To} is not a valid move.");
                     }
                     break;
-                }
-                case SelectAction sa:
-                {
-                    return new BoardStore
-                    {
-                        Size = store.Size,
-                        CornerSize = store.CornerSize,
-                        Selection = sa.Selection,
-                        Available = GetAvailable(store.Board, sa.Selection, store.CornerSize),
-                        Board = store.Board.DeepCopy(),
-                        Captured = store.Captured.ToDictionary(pair => pair.Key,
-                            pair => (IEnumerable<Piece>)pair.Value.ToList()
-                            ),
-                        History = store.History.ToList()
-                    };
                 }
             }
             return next;
         }
-
-        private static bool IsOnBoard(Point pt, int size, int corner)
-        {
-            var isXCorner = pt.X < corner || pt.X >= size - corner;
-            var isYCorner = pt.Y < corner || pt.Y >= size - corner;
-            return !(isXCorner && isYCorner) && (pt.X >= 0 && pt.X < size)
-                                             && (pt.Y >= 0 && pt.Y < size);
-        }
-
-        private static IEnumerable<Point> GetAvailable(Piece[][] board, Point location, int corner)
-        {
-            var pc= board[location.Y][location.X];
-            
-            if(pc.IsEmpty) return Enumerable.Empty<Point>();
-
-            var result = new List<Point>();
-
-            foreach (var direction in Directions.All)
-            {
-                var rule = pc.MoveRules[direction];
-                for (var d = rule.MinCount; d > 0 && d <= rule.MaxCount; d++)
-                {
-                    var to = rule.GetResult(location, direction, d);
-
-                    if(!IsOnBoard(to, board.Length, corner)) break;
-
-                    var target= board[to.Y][to.X];
-
-                    if (!target.IsEmpty) break;
-
-                    result.Add(to);
-                }
-
-                rule = pc.AttackRules[direction];
-                for (var d = rule.MinCount; d > 0 && d <= rule.MaxCount; d++)
-                {
-                    var to = rule.GetResult(location, direction, d);
-
-                    if(!IsOnBoard(to, board.Length, corner)) break;
-
-                    var target= board[to.Y][to.X];
-
-                    if (target.Color.Equals(pc.Color)) break;
-
-                    if(result.Contains(to) || target.IsEmpty) continue;
-
-                    result.Add(to);
-
-                    break;
-                }
-            }
-
-            return result;
-        }
         
-        private static Piece Move(Piece[][] board, Point @from, Point to)
+        private static Piece Move(Board board, Point @from, Point to)
         {
             //TODO: Checking about validity
-            var taken = board[to.Y][to.X];
+            var taken = board[to.X, to.Y];
 
-            board[to.Y][to.X] = board[@from.Y][@from.X];
-            board[to.Y][to.X].Moved();
-            board[@from.Y][@from.X] = Piece.CreateEmpty();
+            board[to.X, to.Y] = board[@from.X,@from.Y];
+            board[to.X, to.Y].Moved();
+            board[@from.X,@from.Y] = Piece.CreateEmpty();
+            board.Update();
 
             return taken;
         }

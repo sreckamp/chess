@@ -1,0 +1,221 @@
+.meta {
+    position: absolute;
+    z-index: 5;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 33% 34% 33%;
+    grid-template-rows: 33% 34% 33%;
+}
+
+.attack {
+    width: 100%;
+    height: 100%;
+    border:1px solid black;
+}
+
+.attack.northwest {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.attack.northwest.clockwise {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+.attack.northwest.upsidedown {
+    grid-column: 3;
+    grid-row: 3;
+}
+
+.attack.northwest.counterclockwise {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.attack.north {
+    grid-column: 2;
+    grid-row: 1;
+}
+.attack.north.clockwise {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.attack.north.upsidedown {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.attack.north.counterclockwise {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.attack.northeast {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+.attack.northeast.clockwise {
+    grid-column: 3;
+    grid-row: 3;
+}
+
+.attack.northeast.upsidedown {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.attack.northeast.counterclockwise {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.attack.west {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.attack.west.clockwise {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.attack.west.upsidedown {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.attack.west.counterclockwise {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.attack.none {
+    grid-column: 2;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 50% 50%;
+}
+
+.attack.east {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.attack.east.clockwise {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.attack.east.upsidedown {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.attack.east.counterclockwise {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.attack.southwest {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.attack.southwest.clockwise {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.attack.southwest.upsidedown {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+.attack.southwest.counterclockwise {
+    grid-column: 3;
+    grid-row: 3;
+}
+
+.attack.south {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.attack.south.clockwise {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.attack.south.upsidedown {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.attack.south.counterclockwise {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.attack.southeast {
+    grid-column: 3;
+    grid-row: 3;
+}
+
+.attack.southeast.clockwise {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.attack.southeast.upsidedown {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.attack.southeast.counterclockwise {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+.attack.pinned {
+    border:4px solid red;
+}
+
+.attack > div {
+    width: 100%;
+    height: 100%;
+}
+
+.attack.none > div {
+    border:1px solid white;
+}
+
+.attack > div.white {
+    grid-column: 1;
+    grid-row: 1;
+    background-color: white;
+}
+
+.attack > div.silver {
+    grid-column: 2;
+    grid-row: 1;
+    background-color: slategray;
+}
+
+.attack > div.black {
+    grid-column: 1;
+    grid-row: 2;
+    background-color: black;
+}
+
+.attack > div.gold {
+    grid-column: 2;
+    grid-row: 2;
+    background-color: gold;
+}

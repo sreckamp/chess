@@ -24,14 +24,9 @@ namespace Chess.Model
             Store = m_gameReducer.Apply(new InitializeAction {Version = Version}, Store);
         }
 
-        public void Select(Point point)
+        public void Move(Point from, Point to)
         {
-            Store = m_gameReducer.Apply(new SelectAction {Selection = point}, Store);
-        }
-
-        public void Move(Point to)
-        {
-            Store = m_gameReducer.Apply(new MoveAction {Target = to}, Store);
+            Store = m_gameReducer.Apply(new MoveAction {From = from, To = to}, Store);
         }
     }
 }

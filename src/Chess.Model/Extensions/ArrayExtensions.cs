@@ -18,6 +18,20 @@ namespace Chess.Model.Extensions
             return array;
         }
 
+        public static T[][] TypedInitialize<T>(this T[][] array, int width, Func<int, int, T> getValue)
+        {
+            for (var y = 0; y < array.Length; y++)
+            {
+                array[y] = new T[width];
+                for (var x = 0; x < array[y].Length; x++)
+                {
+                    array[y][x] = getValue(x,y);
+                }
+            }
+
+            return array;
+        }
+
         public static T[][] DeepCopy<T>(this T[][] array)
         {
             return DeepCopy(array, arg => arg);

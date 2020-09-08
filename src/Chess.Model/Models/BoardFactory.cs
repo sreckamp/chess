@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Chess.Model.Extensions;
+using Chess.Model.Stores;
 
 namespace Chess.Model.Models
 {
@@ -27,56 +28,31 @@ namespace Chess.Model.Models
         public BoardStore Create(Version version)
         {
             var template = m_templates[version];
-            var board = new Piece[template.BoardSize][].TypedInitialize(template.BoardSize, Piece.CreateEmpty());
+            var board = new Board(template.BoardSize, template.CornerSize);
             foreach (var color in template.Colors)
             {
                 PopulateColor(board, color, template.CornerSize, template.KingOnLeft);
             }
 
+            board.Update();
+
             return new BoardStore
             {
-                Size = m_templates[version].BoardSize,
-                CornerSize = m_templates[version].CornerSize,
                 Board = board,
                 Captured = m_templates[version].Colors.ToDictionary(color => color,
                     color => Enumerable.Empty<Piece>()),
             };
         }
 
-        private void PopulateColor(Piece[][] board, Color color, int cornerSize, bool kingOnLeft)
+        private static Direction[] SKingFlips = new[] {Direction.South, Direction.East};
+        private static Direction[] SOpposite = new[] {Direction.North, Direction.East};
+        private void PopulateColor(Board board, Color color, int cornerSize, bool kingOnLeft)
         {
             var startEdge = m_sides[color];
-            var northSouth = true;
-            var pieceFile = 0;
-            var pawnFile = 1;
-            var kingFile = 4;
 
-            switch (startEdge)
-            {
-                case Direction.South:
-                    kingFile = kingOnLeft ? 3 : kingFile;
-                    break;
-                case Direction.West:
-                    northSouth = false;
-                    break;
-                case Direction.North:
-                    pieceFile = board.Length - 1;
-                    pawnFile = board.Length - 2;
-                    break;
-                case Direction.East:
-                    northSouth = false;
-
-                    pieceFile = board[0].Length - 1;
-                    pawnFile = board[0].Length - 2;
-                    kingFile = kingOnLeft ? 3 : kingFile;
-                    break;
-                case Direction.NorthEast:
-                case Direction.SouthEast:
-                case Direction.SouthWest:
-                case Direction.NorthWest:
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            var pieceFile = startEdge.IsMember(SOpposite) ? board.Size - 1 : 0;
+            var pawnFile = startEdge.IsMember(SOpposite) ? board.Size - 2 : 1;
+            var kingFile = startEdge.IsMember(SKingFlips) && kingOnLeft ? 3 : 4;
 
             for (var idx = 0; idx < 8; idx++)
             {
@@ -106,15 +82,15 @@ namespace Chess.Model.Models
 
                 var rank = idx + cornerSize;
 
-                var x = northSouth ? rank : pieceFile;
-                var y = northSouth ? pieceFile : rank;
+                var x = startEdge.IsNorthSouth() ? rank : pieceFile;
+                var y = startEdge.IsNorthSouth() ? pieceFile : rank;
 
-                board[y][x] = piece;
+                board[x,y] = piece;
 
-                x = northSouth ? rank : pawnFile;
-                y = northSouth ? pawnFile : rank;
+                x = startEdge.IsNorthSouth() ? rank : pawnFile;
+                y = startEdge.IsNorthSouth() ? pawnFile : rank;
 
-                board[y][x] = pawn;
+                board[x,y] = pawn;
             }
         }
 

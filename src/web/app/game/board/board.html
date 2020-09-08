@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="/web/app/game/board/board.css">
+<link rel="stylesheet" href="/web/app/game/board/board-meta.css">
 <link ng-if="theme == 'black'" rel="stylesheet" href="/web/app/game/board/board-black.css">
 <link ng-if="theme == 'blue'" rel="stylesheet" href="/web/app/game/board/board-blue.css">
 <link ng-if="theme == 'green'" rel="stylesheet" href="/web/app/game/board/board-green.css">
@@ -26,33 +27,22 @@
                             'transparent': !isVisible($index, $parent.$index),
                             'active': isActive($index, $parent.$index),
                             'available': isAvailable($index, $parent.$index),
-                            'opponent': isOpponent($index, $parent.$index)
+                            'opponent': isOpponent($index, $parent.$index),
+                            'selectable': piece.color == (currentPlayer | lowercase)
                         }"
                         ng-click="clickSquare($index, $parent.$index)">
-                    <svg ng-show="piece" class="piece">
+                    <svg ng-show="piece && piece.piece != 'empty'" class="piece">
                         <image class="piece" ng-class="[piece.color, piece.piece]" href="/web/app/chess.png"/>
                     </svg>
+                    <div ng-show="meta" class = "meta">
+                        <div ng-repeat="ab in piece.metadata.attackedBy track by $index" class="attack"
+                             ng-class="[ab.direction, rotation, piece.metadata.pinDir == ab.direction && piece.metadata.pinDir != 'none' ? 'pinned':'']">
+                            <div ng-repeat="color in ab.colors track by $index" ng-class="color"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div></div>
     </div>
 </div>
-
-<!--<div class="board" style="text-align: center; width: fit-content; margin: auto;">-->
-<!--    <div ng-repeat="piece in board.pieces" class="square"-->
-<!--         ng-class-even="[($index / board.size) % 2 >= 1 ? board.corner : board.other]"-->
-<!--         ng-class-odd="[($index / board.size) % 2 < 1 ? board.corner : board.other]"-->
-<!--         ng-class="{'floatme': !($index % board.size),-->
-<!--                        'transparent': !isVisible($index),-->
-<!--                         'active': isActive($index),-->
-<!--                         'available': isAvailable($index),-->
-<!--                         'opponent': isOpponent($index)-->
-<!--                     }"-->
-<!--         ng-click="clickSquare($index)"-->
-<!--    >-->
-<!--        <svg ng-show="piece" class="piece">-->
-<!--            <image class='piece' ng-class="[piece.color, piece.piece]" href="/web/app/chess.png"/>-->
-<!--        </svg>-->
-<!--    </div>-->
-<!--</div>-->

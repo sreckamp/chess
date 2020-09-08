@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
+﻿using System.Linq;
 using Chess.Model;
-using Chess.Model.Models;
 using Chess.Model.Stores;
 using Chess.Server.Model;
 using Chess.Server.Services;
@@ -10,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Color = Chess.Model.Models.Color;
 using Move = Chess.Server.Model.Move;
 using Piece = Chess.Server.Model.Piece;
+using Version = Chess.Model.Models.Version;
 
 namespace Chess.Server.Controllers
 {
@@ -50,12 +48,10 @@ namespace Chess.Server.Controllers
             // }
 
             var game = m_gameService.GetGame(gameId);
-            var before = game.Store;
 
-            game.Select(new Point(x, y));
+            var available = game.Store.Board.Board.GetAvailable(x,y).Select(p => (Location) p);
 
-            var resp = BuildResponse(gameId, game.Store); 
-            return game.Store != before ? (object)Ok(resp) : BadRequest(resp);
+            return game.Store.Board.Board.IsOnBoard(x, y) ? (object)Ok(available) : BadRequest(Enumerable.Empty<Location>());
         }
 
         [HttpPost("{gameId}/moves/{color}")]
@@ -69,7 +65,7 @@ namespace Chess.Server.Controllers
             var game = m_gameService.GetGame(gameId);
             var before = game.Store;
 
-            game.Move(m.To);
+            game.Move(m.From, m.To);
 
             var resp = BuildResponse(gameId, game.Store); 
             return game.Store != before ? (object)Ok(resp) : BadRequest(resp);
@@ -80,33 +76,39 @@ namespace Chess.Server.Controllers
 
         private static GameState BuildResponse(int id, GameStore store)
         {
-            var pieces = new List<Piece>();
-            for (var y = 0; y < store.Board.Board.Length; y++)
-            {
-                for (var x = 0; x < store.Board.Board[y].Length; x++)
-                {
-                    var piece = store.Board.Board[y][x];
-                    if(piece.IsEmpty) continue;
-                    pieces.Add(new Piece
-                    {
-                        Location = new Location { X = x, Y = y},
-                        Color = piece.Color.ToString(),
-                        Type = piece.Type.ToString(),
-                    });
-                }
-            }
-            return new GameState
+            var state = new GameState
             {
                 GameId = id,
                 Name = $"Game {id}",
 
                 CurrentPlayer = store.CurrentPlayer.ToString(),
 
-                ActiveLocation = store.Board.Selection,
+                // ActiveLocation = store.Board.Selection,
+                //
+                // Available = store.Board.Available.Select(p => (Location)p),
 
-                Available = store.Board.Available.Select(p => (Location)p),
-
-                Pieces = pieces,
+                Pieces = store.Board.Board.Where(square => !square.IsEmpty || (square.AttackedBy == null || square.AttackedBy.Count > 0)).Select(
+                    square => new Piece
+                        {
+                            Location = new Location
+                            {
+                                X =square.X,
+                                Y=square.Y,
+                                Metadata = new Metadata
+                                {
+                                    AttackedBy = square.AttackedBy.Select(pair => 
+                                            new AttackData
+                                            {
+                                                Direction = pair.Key.ToString().ToLower(),
+                                                Colors = pair.Value.Select(color => color.ToString().ToLower())
+                                            }
+                                        ),
+                                    PinDir = square.PinDir.ToString().ToLower()
+                                }
+                            },
+                            Color = square.Piece.Color.ToString(),
+                            Type = square.Piece.Type.ToString(),
+                        }),
 
                 MoveHistory = store.Board.History.Select(history => new Move
                 {
@@ -114,9 +116,10 @@ namespace Chess.Server.Controllers
                     To = history.Move.To
                 }),
 
-                Corners = store.Board.CornerSize,
-                Size = store.Board.Size
+                Corners = store.Board.Board.Corners,
+                Size = store.Board.Board.Size
             };
+            return state;
         }
     }
 }
