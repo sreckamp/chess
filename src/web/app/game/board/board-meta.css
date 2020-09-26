@@ -1,6 +1,6 @@
 .meta {
     position: absolute;
-    z-index: 5;
+    /*z-index: 5;*/
     top:0;
     left:0;
     width: 100%;
@@ -10,212 +10,223 @@
     grid-template-rows: 33% 34% 33%;
 }
 
-.attack {
+svg.phantom > image {
+    opacity: .25;
+}
+
+.meta > div {
+    background-color: rgba(0, 0, 0, 0.6);
     width: 100%;
     height: 100%;
-    border:1px solid black;
+    position: relative;
 }
 
-.attack.northwest {
+.meta > div.enpassant {
+    background-color: rgba(0, 128, 0, 0.4);
+}
+
+.meta > div.pin {
+    background-color: rgba(255, 138, 0, 0.4);
+}
+
+.meta > div.check {
+    background-color: rgba(255, 64, 0, 0.4);
+}
+
+.meta > div > svg.piece {
+    transform: scale(0.33, 0.33) translate(-100%, -100%);
+}
+
+.meta > div.northwest {
     grid-column: 1;
     grid-row: 1;
 }
 
-.attack.northwest.clockwise {
+.meta > div.northwest.clockwise {
     grid-column: 3;
     grid-row: 1;
 }
 
-.attack.northwest.upsidedown {
+.meta > div.northwest.upsidedown {
     grid-column: 3;
     grid-row: 3;
 }
 
-.attack.northwest.counterclockwise {
+.meta > div.northwest.counterclockwise {
     grid-column: 1;
     grid-row: 3;
 }
 
-.attack.north {
+.meta > div.north {
     grid-column: 2;
     grid-row: 1;
 }
-.attack.north.clockwise {
+.meta > div.north.clockwise {
     grid-column: 3;
     grid-row: 2;
 }
 
-.attack.north.upsidedown {
+.meta > div.north.upsidedown {
     grid-column: 2;
     grid-row: 3;
 }
 
-.attack.north.counterclockwise {
+.meta > div.north.counterclockwise {
     grid-column: 1;
     grid-row: 2;
 }
 
-.attack.northeast {
+.meta > div.northeast {
     grid-column: 3;
     grid-row: 1;
 }
 
-.attack.northeast.clockwise {
+.meta > div.northeast.clockwise {
     grid-column: 3;
     grid-row: 3;
 }
 
-.attack.northeast.upsidedown {
+.meta > div.northeast.upsidedown {
     grid-column: 1;
     grid-row: 3;
 }
 
-.attack.northeast.counterclockwise {
+.meta > div.northeast.counterclockwise {
     grid-column: 1;
     grid-row: 1;
 }
 
-.attack.west {
+.meta > div.west {
     grid-column: 1;
     grid-row: 2;
 }
 
-.attack.west.clockwise {
+.meta > div.west.clockwise {
     grid-column: 2;
     grid-row: 1;
 }
 
-.attack.west.upsidedown {
+.meta > div.west.upsidedown {
     grid-column: 3;
     grid-row: 2;
 }
 
-.attack.west.counterclockwise {
+.meta > div.west.counterclockwise {
     grid-column: 2;
     grid-row: 3;
 }
 
-.attack.none {
+.meta > div.none {
     grid-column: 2;
     grid-row: 2;
+}
+
+.meta > div.none:not(.enpassant) {
     display: grid;
     grid-template-columns: 50% 50%;
     grid-template-rows: 50% 50%;
 }
 
-.attack.east {
+.meta > div.east {
     grid-column: 3;
     grid-row: 2;
 }
 
-.attack.east.clockwise {
+.meta > div.east.clockwise {
     grid-column: 2;
     grid-row: 3;
 }
 
-.attack.east.upsidedown {
+.meta > div.east.upsidedown {
     grid-column: 1;
     grid-row: 2;
 }
 
-.attack.east.counterclockwise {
+.meta > div.east.counterclockwise {
     grid-column: 2;
     grid-row: 1;
 }
 
-.attack.southwest {
+.meta > div.southwest {
     grid-column: 1;
     grid-row: 3;
 }
 
-.attack.southwest.clockwise {
+.meta > div.southwest.clockwise {
     grid-column: 1;
     grid-row: 1;
 }
 
-.attack.southwest.upsidedown {
+.meta > div.southwest.upsidedown {
     grid-column: 3;
     grid-row: 1;
 }
 
-.attack.southwest.counterclockwise {
+.meta > div.southwest.counterclockwise {
     grid-column: 3;
     grid-row: 3;
 }
 
-.attack.south {
+.meta > div.south {
     grid-column: 2;
     grid-row: 3;
 }
 
-.attack.south.clockwise {
+.meta > div.south.clockwise {
     grid-column: 1;
     grid-row: 2;
 }
 
-.attack.south.upsidedown {
+.meta > div.south.upsidedown {
     grid-column: 2;
     grid-row: 1;
 }
 
-.attack.south.counterclockwise {
+.meta > div.south.counterclockwise {
     grid-column: 3;
     grid-row: 2;
 }
 
-.attack.southeast {
+.meta > div.southeast {
     grid-column: 3;
     grid-row: 3;
 }
 
-.attack.southeast.clockwise {
+.meta > div.southeast.clockwise {
     grid-column: 1;
     grid-row: 3;
 }
 
-.attack.southeast.upsidedown {
+.meta > div.southeast.upsidedown {
     grid-column: 1;
     grid-row: 1;
 }
 
-.attack.southeast.counterclockwise {
+.meta > div.southeast.counterclockwise {
     grid-column: 3;
     grid-row: 1;
 }
 
-.attack.pinned {
-    border:4px solid red;
+.meta > div.none:not(.enpassant) > svg {
+    transform: scale(0.25, 0.25) translate(-166%, -166%);
 }
 
-.attack > div {
-    width: 100%;
-    height: 100%;
-}
-
-.attack.none > div {
-    border:1px solid white;
-}
-
-.attack > div.white {
+.meta > div.none > svg.white {
     grid-column: 1;
     grid-row: 1;
-    background-color: white;
 }
 
-.attack > div.silver {
+.meta > div.none > svg.silver {
     grid-column: 2;
     grid-row: 1;
-    background-color: slategray;
 }
 
-.attack > div.black {
+.meta > div.none > svg.black {
     grid-column: 1;
     grid-row: 2;
-    background-color: black;
 }
 
-.attack > div.gold {
+.meta > div.none > svg.gold {
     grid-column: 2;
     grid-row: 2;
-    background-color: gold;
 }

@@ -8,25 +8,36 @@ namespace Chess.Model
 {
     public class Game
     {
-        private readonly GameReducer m_gameReducer = new GameReducer();
-        public Version Version { get; }
+        private GameReducer m_gameReducer;
+        private readonly Version m_version;
+        private readonly GameBoard m_board;
 
-        public Game(Version version)
+        public Game(Version version, GameBoard board = null)
         {
-            Version = version;
+            m_version = version;
             Store = new GameStore();
+            m_board = board ?? BoardStoreFactory.Instance.Create(m_version);
         }
 
         public GameStore Store { get; private set; }
 
         public void Init()
         {
-            Store = m_gameReducer.Apply(new InitializeAction {Version = Version}, Store);
+            ApplyAndUpdate(new InitializeAction{Version = m_version, Board = m_board});
         }
 
         public void Move(Point from, Point to)
         {
-            Store = m_gameReducer.Apply(new MoveAction {From = from, To = to}, Store);
+            ApplyAndUpdate(new MoveAction {From = from, To = to});
         }
+
+        private void ApplyAndUpdate(IAction action)
+        {
+            var next = Reducer.Apply(action, Store);
+            Store = Reducer.Apply(new UpdateAvailableMovesAction(),
+                Reducer.Apply(new UpdateMarkersAction{ActivePlayer = next.CurrentPlayer}, next));
+        }
+
+        private GameReducer Reducer => m_gameReducer ?? (m_gameReducer = GameReducerFactory.Instance.Create(m_version));
     }
 }

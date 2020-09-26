@@ -18,7 +18,7 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
         }
 
         if($routeParams.meta) {
-            $scope.meta = true;
+            $scope.showMeta = true;
         }
 
         var _bottom = 'white';
@@ -75,7 +75,32 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
             $scope.labels = _sideView ? $scope.board.files : $scope.board.ranks;
 
             store.pieces.forEach(function (p) {
-                _pieces[p.location.y].cols[p.location.x] = {'piece': p.type.toLowerCase(), 'color': p.color.toLowerCase(), 'metadata':p.location.metadata};
+                var _enpassant = p.location.metadata.markers.find(value => value.type == 'enpassant');
+                _pieces[p.location.y].cols[p.location.x] = {
+                    'piece': _enpassant ? _enpassant.type : p.type,
+                    'color': _enpassant ? _enpassant.sourceColor : p.color,
+                    'metadata': {
+                        'markers': p.location.metadata.markers.reduce(function (arr, m) {
+                            if(m.type != 'enpassant') {
+                                _idx = arr.findIndex(item => item.direction === m.direction);
+                                if (_idx < 0) {
+                                    arr.push({
+                                        'direction': m.direction,
+                                        'types': [],
+                                        'pieces': []
+                                    });
+                                    _idx = arr.findIndex(item => item.direction === m.direction);
+                                }
+                                arr[_idx].types.push(m.type);
+                                arr[_idx].pieces.push({
+                                    'color': m.sourceColor,
+                                    'piece': m.sourceType,
+                                });
+                            }
+                            return arr;
+                        }, [])
+                    }
+                };
             });
 
             $scope.board.name = store.name;
@@ -100,9 +125,8 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
             _activeSquare = {'x':x,'y':y};
 
             var _color = _pc.color;
-            $scope.meta = " (" + _color + " " + _pc.piece + ")";
 
-            gameService.getAvailable($routeParams.game, _color, x, y).$promise.then(function success(available) {
+            gameService.getAvailable($routeParams.game, x, y).$promise.then(function success(available) {
                 _available = [];
 
                 available.forEach(function (p) {
@@ -116,9 +140,7 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
 
             if(!_pc) return;
 
-            var _color = _pc.color;
-
-            return gameService.postMove($routeParams.game, _color, fromX, fromY, toX, toY).$promise.then(function success(store) {
+            return gameService.postMove($routeParams.game, fromX, fromY, toX, toY).$promise.then(function success(store) {
                 parseStore(store);
             });
         };
@@ -161,7 +183,6 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
             if (_activeSquare && _activeSquare.x == x && _activeSquare.y == y) {
                 _activeSquare = null;
                 _available = [];
-                $scope.meta = null;
             } else if (_activeSquare != null) {
                 var pc = getPiece(_activeSquare.x, _activeSquare.y);
 
@@ -173,7 +194,6 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
                     move(_activeSquare.x, _activeSquare.y, x, y).then(function success() {
                         _activeSquare = null;
                         _available = [];
-                        $scope.meta = null;
                         refreshGame();
                     });
                     return;

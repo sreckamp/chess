@@ -1,105 +1,86 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Chess.Model.Extensions;
-using Chess.Model.Stores;
 
 namespace Chess.Model.Models
 {
-    // TODO: convert to array
-    // TODO: Create "square" class that has attacked by field (color & rule) & move to.  And some sort of pinning detection.  Only need to evaluate straight paths > 1.
-    // TODO: Pin rule.  If attacked by another color with straight > 1 attack rule.  If continuing direction is king, can only move in that direction or opposite.
-    // TODO: Castle Rule.  Look east or west or north or south.  If none of the squares are under any attack && next square is rook && king && rook have not moved, castling is allowed. (indicate 2 squares to side of king)
-    // TODO: Check king is under attack (check)
     /// <summary>
     /// Creates a board.
     /// Y is along file axis (0 = south, max = north)
     /// X is along rank axis (0 = west, max = east)
     /// </summary>
-    public class BoardFactory
+    public class BoardStoreFactory
     {
         private static class Lazy
         {
-            public static readonly BoardFactory BoardFactory = new BoardFactory();
+            public static readonly BoardStoreFactory BoardFactory = new BoardStoreFactory();
         }
 
-        public static BoardFactory Instance => Lazy.BoardFactory;
+        public static BoardStoreFactory Instance => Lazy.BoardFactory;
 
-        public BoardStore Create(Version version)
+        public GameBoard Create(Version version)
         {
             var template = m_templates[version];
-            var board = new Board(template.BoardSize, template.CornerSize);
+            var board = new GameBoard(template.BoardSize, template.CornerSize);
             foreach (var color in template.Colors)
-            {
                 PopulateColor(board, color, template.CornerSize, template.KingOnLeft);
-            }
 
-            board.Update();
-
-            return new BoardStore
-            {
-                Board = board,
-                Captured = m_templates[version].Colors.ToDictionary(color => color,
-                    color => Enumerable.Empty<Piece>()),
-            };
+            return board;
         }
 
-        private static Direction[] SKingFlips = new[] {Direction.South, Direction.East};
-        private static Direction[] SOpposite = new[] {Direction.North, Direction.East};
-        private void PopulateColor(Board board, Color color, int cornerSize, bool kingOnLeft)
+        private static readonly Direction[] SKingFlips = new[] {Direction.South, Direction.East};
+        private static readonly Direction[] SOpposite = new[] {Direction.North, Direction.East};
+        private void PopulateColor(GameBoard board, Color color, int cornerSize, bool kingOnLeft)
         {
-            var startEdge = m_sides[color];
+            var side = m_sides.First(s => s.Color == color);
 
-            var pieceFile = startEdge.IsMember(SOpposite) ? board.Size - 1 : 0;
-            var pawnFile = startEdge.IsMember(SOpposite) ? board.Size - 2 : 1;
-            var kingFile = startEdge.IsMember(SKingFlips) && kingOnLeft ? 3 : 4;
+            var pieceFile = side.Edge.IsMember(SOpposite) ? board.Size - 1 : 0;
+            var pawnFile = side.Edge.IsMember(SOpposite) ? board.Size - 2 : 1;
+            var kingFile = side.Edge.IsMember(SKingFlips) && kingOnLeft ? 3 : 4;
 
             for (var idx = 0; idx < 8; idx++)
             {
-                var pawn = Piece.CreatePawn(color, startEdge.Opposite());
+                var pawn = new Piece(PieceType.Pawn, color, side.Edge);
                 Piece piece;
-
+            
                 switch (idx)
                 {
                     case 0:
                     case 7:
-                        piece = Piece.CreateRook(color);
+                        piece = new Piece(PieceType.Rook, color, side.Edge);
                         break;
                     case 1:
                     case 6:
-                        piece = Piece.CreateKnight(color);
+                        piece = new Piece(PieceType.Knight, color, side.Edge);
                         break;
                     case 2:
                     case 5:
-                        piece = Piece.CreateBishop(color);
+                        piece = new Piece(PieceType.Bishop, color, side.Edge);
                         break;
                     default:
-                        piece = idx == kingFile
-                            ? Piece.CreateKing(color)
-                            : Piece.CreateQueen(color);
+                        piece = new Piece(idx == kingFile ? PieceType.King : PieceType.Queen, color, side.Edge);
                         break;
                 }
-
+            
                 var rank = idx + cornerSize;
-
-                var x = startEdge.IsNorthSouth() ? rank : pieceFile;
-                var y = startEdge.IsNorthSouth() ? pieceFile : rank;
-
+            
+                var x = side.Edge.IsNorthSouth() ? rank : pieceFile;
+                var y = side.Edge.IsNorthSouth() ? pieceFile : rank;
+            
                 board[x,y] = piece;
-
-                x = startEdge.IsNorthSouth() ? rank : pawnFile;
-                y = startEdge.IsNorthSouth() ? pawnFile : rank;
-
+            
+                x = side.Edge.IsNorthSouth() ? rank : pawnFile;
+                y = side.Edge.IsNorthSouth() ? pawnFile : rank;
+            
                 board[x,y] = pawn;
             }
         }
 
-        private readonly Dictionary<Color, Direction> m_sides = new Dictionary<Color, Direction>
+        private readonly IEnumerable<Side> m_sides = new List<Side>
         {
-            {Color.White, Direction.South},
-            {Color.Black, Direction.North},
-            {Color.Silver, Direction.West},
-            {Color.Gold, Direction.East},
+            new Side{ Color = Color.White, Edge = Direction.South},
+            new Side{ Color = Color.Black, Edge = Direction.North},
+            new Side{ Color = Color.Silver, Edge = Direction.West},
+            new Side{ Color = Color.Gold, Edge = Direction.East},
         };
 
         private readonly Dictionary<Version, Template> m_templates = new Dictionary<Version, Template>

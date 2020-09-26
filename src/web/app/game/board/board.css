@@ -97,48 +97,47 @@ svg.piece {
   height: 100px;
 }
 
-image.piece {
-  href: "/web/app/chess.png";
+svg.piece > image {
   height: 400px;
   width: 600px;
 }
 
-image.black {
+svg.black > image {
   y:0;
 }
 
-image.gold {
+svg.gold > image {
   y:-100;
 }
 
-image.silver {
+svg.silver > image {
   y:-200;
 }
 
-image.white {
+svg.white > image {
   y:-300;
 }
 
-image.king {
+svg.king > image {
    x:0;
 }
 
-image.queen {
+svg.queen > image {
   x:-100;
 }
 
-image.rook {
+svg.rook > image {
   x:-200;
 }
 
-image.bishop {
+svg.bishop > image {
   x:-300;
 }
 
-image.knight {
+svg.knight > image {
   x:-400;
 }
 
-image.pawn {
+svg.pawn > image {
   x:-500;
 }

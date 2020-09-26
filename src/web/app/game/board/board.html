@@ -8,41 +8,48 @@
 <link ng-if="theme == 'tan'" rel="stylesheet" href="/web/app/game/board/board-tan.css">
 
 <div>
-    <h2 style="text-align: center">{{board.name}}{{meta}} {{currentPlayer}}'s Turn</h2>
-    <div class="header" ng-class="[rotation]">
-        <div class="corner"></div>
-        <div ng-repeat="head in headers">{{head}}</div>
-        <div class="corner"></div>
-    </div>
-    <div style="display: flex; flex-direction: row;">
-        <div class="labels" ng-class="[rotation]">
-            <div ng-repeat="label in labels">{{label}}</div>
+    <h2 style="text-align: center">{{board.name}} {{currentPlayer}}'s Turn</h2>
+    <div>
+        <div class="header" ng-class="[rotation]">
+            <div class="corner"></div>
+            <div ng-repeat="head in headers">{{head}}</div>
+            <div class="corner"></div>
         </div>
-        <div class="grid" ng-class="[rotation]">
-            <div ng-repeat="row in board.pieces track by $index" class="row" ng-class="[rotation]">
-                <div ng-repeat="piece in row.cols track by $index" class="square"
-                     ng-class="{
-                            'dark': ($index + $parent.$index) % 2 == board.corners % 2,
-                            'light': ($index + $parent.$index) % 2 != board.corners % 2,
-                            'transparent': !isVisible($index, $parent.$index),
-                            'active': isActive($index, $parent.$index),
-                            'available': isAvailable($index, $parent.$index),
-                            'opponent': isOpponent($index, $parent.$index),
-                            'selectable': piece.color == (currentPlayer | lowercase)
-                        }"
-                        ng-click="clickSquare($index, $parent.$index)">
-                    <svg ng-show="piece && piece.piece != 'empty'" class="piece">
-                        <image class="piece" ng-class="[piece.color, piece.piece]" href="/web/app/chess.png"/>
-                    </svg>
-                    <div ng-show="meta" class = "meta">
-                        <div ng-repeat="ab in piece.metadata.attackedBy track by $index" class="attack"
-                             ng-class="[ab.direction, rotation, piece.metadata.pinDir == ab.direction && piece.metadata.pinDir != 'none' ? 'pinned':'']">
-                            <div ng-repeat="color in ab.colors track by $index" ng-class="color"></div>
+        <div style="display: flex; flex-direction: row;">
+            <div class="labels" ng-class="[rotation]">
+                <div ng-repeat="label in labels">{{label}}</div>
+            </div>
+            <div class="grid" ng-class="[rotation]">
+                <div ng-repeat="row in board.pieces track by $index" class="row" ng-class="[rotation]">
+                    <div ng-repeat="piece in row.cols track by $index" class="square"
+                         ng-class="{
+                                'dark': ($index + $parent.$index) % 2 == (board.corners + board.size) % 2,
+                                'light': ($index + $parent.$index) % 2 != (board.corners + board.size) % 2,
+                                'transparent': !isVisible($index, $parent.$index),
+                                'active': isActive($index, $parent.$index),
+                                'available': isAvailable($index, $parent.$index),
+                                'opponent': isOpponent($index, $parent.$index),
+                                'selectable': piece.color == (currentPlayer | lowercase)
+                            }"
+                            ng-click="clickSquare($index, $parent.$index)">
+                        <svg ng-show="piece && piece.piece != 'empty' && piece.piece != 'enpassant'" class="piece" ng-class="[piece.color, piece.piece]">
+                            <image href="/web/app/chess.png"/>
+                        </svg>
+                        <div ng-show="showMeta" class = "meta">
+                            <div ng-repeat="m in piece.metadata.markers track by $index" ng-class="[m.types, m.direction, rotation]">
+                                <svg ng-repeat ="mp in m.pieces" ng-show="mp.piece != 'empty'" class="piece" ng-class="[mp.color, mp.piece]">
+                                    <image href="/web/app/chess.png"/>
+                                </svg>
+                            </div>
                         </div>
+                        <!-- TODO: For EnPassant create a "phantom" pawn at this place (transparency 40%) -->
+                        <svg ng-show="showMeta && piece && piece.piece == 'enpassant'" class="piece pawn phantom" ng-class="[piece.color]">
+                            <image href="/web/app/chess.png"/>
+                        </svg>
                     </div>
                 </div>
             </div>
+            <div></div>
         </div>
-        <div></div>
     </div>
 </div>

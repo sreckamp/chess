@@ -1,45 +1,54 @@
-﻿using Chess.Model.Actions;
+﻿using System.Collections.Generic;
+using Chess.Model.Actions;
+using Chess.Model.Models;
 using Chess.Model.Stores;
 
 namespace Chess.Model.Reducers
 {
     public class GameReducer : IReducer<GameStore>
     {
-        private readonly BoardReducer m_boardReducer = new BoardReducer();
-        private PlayerReducer m_playerReducer = new PlayerReducer();
+        private readonly IReducer<Version> m_versionReducer;
+        private readonly IReducer<GameBoard> m_boardReducer;
+        // private readonly IReducer<State> m_stateReducer;
+        private readonly IReducer<Color> m_playerReducer;
+        private readonly IReducer<HistoryStore> m_historyReducer;
+
+        public GameReducer(IReducer<Version> versionReducer, IReducer<GameBoard> boardReducer,
+            // IReducer<SideStore> sideReducer,
+            IReducer<Color> playerReducer,
+            IReducer<HistoryStore> historyReducer)
+        {
+            m_versionReducer = versionReducer;
+            m_boardReducer = boardReducer;
+            // m_stateReducer = sideReducer;
+            m_playerReducer = playerReducer;
+            m_historyReducer = historyReducer;
+        }
 
         public GameStore Apply(IAction action, GameStore store)
         {
             try
             {
-                switch (action)
+                return new GameStore
                 {
-                    case InitializeAction ia:
+                    Version = m_versionReducer.Apply(action, store.Version),
+                    CurrentPlayer = m_playerReducer.Apply(action, store.CurrentPlayer),
+                    Board = m_boardReducer.Apply(action, store.Board),
+                    // State = m_stateReducer.Apply(action, new SideStore
+                    // {
+                    //     Sides = store.Sides
+                    // }).Sides,
+                    HistoryItems = m_historyReducer.Apply(action, new HistoryStore
                     {
-                        m_playerReducer = new PlayerReducer(ia.Version);
-                        return new GameStore
-                        {
-                            Version = ia.Version,
-                            CurrentPlayer = m_playerReducer.Apply(action, store.CurrentPlayer),
-                            Board = m_boardReducer.Apply(action, store.Board)
-                        };
-                    }
-                    case MoveAction _:
-                    {
-                        //TODO: Verify current player
-                        return new GameStore
-                        {
-                            Version = store.Version,
-                            CurrentPlayer = m_playerReducer.Apply(action, store.CurrentPlayer),
-                            Board = m_boardReducer.Apply(action, store.Board)
-                        };
-                        //TODO: Write this somewhere
-                        //TODO: Write to move list
-                    }
-                }
+                        Board = store.Board,
+                        History = store.HistoryItems
+                    }).History
+                };
             }
             // ReSharper disable once EmptyGeneralCatchClause
-            catch { }
+            catch
+            {
+            }
 
             return store;
         }

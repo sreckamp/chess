@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
-using Chess.Model.Stores;
-using GameBase.Model;
+using Chess.Model.Move;
 
 namespace Chess.Model.Models
 {
     public class MoveHistoryItem
     {
-        public Board Start { get; set; }
-        public Dictionary<Color, IEnumerable<Piece>> Captured { get; set; }
-        public Move Move { get; set; }
+        public GameBoard Start { get; set; }
+
+        public IMove Move { get; set; }
+        
+        public Piece Taken { get; set; }
+        public IEnumerable<Color> Checks { get; set; }
     }
 }

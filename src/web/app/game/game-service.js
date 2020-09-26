@@ -6,7 +6,7 @@ angular.module('chess.gameService', ['ngResource'])
 
         var _newGameResource = $resource('https://localhost:5001/chess/games');
         var _gameResource = $resource('https://localhost:5001/chess/games/:id');
-        var _moveResource = $resource('https://localhost:5001/chess/games/:id/moves/:color');
+        var _moveResource = $resource('https://localhost:5001/chess/games/:id/moves');
 
         gameService.newGame = function (players) {
             return _newGameResource.get({players:players});
@@ -16,12 +16,12 @@ angular.module('chess.gameService', ['ngResource'])
             return _gameResource.get({id:game});
         };
 
-        gameService.getAvailable = function(game, color, x, y){
-            return _moveResource.query({id:game, color:color, x:x, y:y});
+        gameService.getAvailable = function(game, x, y){
+            return _moveResource.query({id:game, x:x, y:y});
         };
 
-        gameService.postMove = function(game, color, fromX, fromY, toX, toY){
-            return _moveResource.save({id:game, color:color}, {
+        gameService.postMove = function(game, fromX, fromY, toX, toY){
+            return _moveResource.save({id:game}, {
                 'from':{ 'x': fromX, 'y': fromY },
                 'to':{ 'x': toX, 'y': toY }
             });

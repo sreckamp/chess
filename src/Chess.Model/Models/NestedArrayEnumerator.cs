@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Chess.Model.Models
@@ -6,12 +7,19 @@ namespace Chess.Model.Models
     public class NestedArrayEnumerator<T> : IEnumerator<T>
     {
         private readonly T[][] m_array;
+        private readonly Func<T, bool> m_validator;
         private int m_x = -1;
         private int m_y = 0;
 
         public NestedArrayEnumerator(T[][] array)
+        : this(array, _ => true)
+        {
+        }
+
+        public NestedArrayEnumerator(T[][] array, Func<T, bool> validator)
         {
             m_array = array;
+            m_validator = validator;
         }
 
         public void Dispose()
@@ -20,13 +28,18 @@ namespace Chess.Model.Models
 
         public bool MoveNext()
         {
-            m_x++;
-            if (m_x < m_array[m_y].Length) return true;
+            do
+            {
+                m_x++;
+                if (m_x != m_array[m_y].Length) continue;
 
-            m_y++;
-            m_x = 0;
+                m_y++;
+                m_x = 0;
+                if (m_y == m_array.Length) return false;
+                
+            } while (!m_validator(m_array[m_y][m_x]));
 
-            return m_y < m_array.Length;
+            return true;
         }
 
         public void Reset()

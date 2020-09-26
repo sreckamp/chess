@@ -21,11 +21,11 @@ namespace Chess.Model.Models
     {
         public static readonly Direction[] All = ((Direction[])Enum.GetValues(typeof(Direction)))
             .Where(d => d != Direction.None).ToArray();
-        private static readonly Direction[] SDiagonals = {
+        public static readonly Direction[] Diagonals = {
             Direction.NorthEast, Direction.SouthEast,
             Direction.SouthWest, Direction.NorthWest
         };
-        private static readonly Direction[] SCardinals = {
+        public static readonly Direction[] Cardinals = {
             Direction.North, Direction.East,
             Direction.South, Direction.West
         };
@@ -33,9 +33,9 @@ namespace Chess.Model.Models
             Direction.North, Direction.South
         };
 
-        public static bool IsCardinal(this Direction dir) => dir.IsMember(SCardinals);
+        public static bool IsCardinal(this Direction dir) => dir.IsMember(Cardinals);
 
-        public static bool IsDiagonal(this Direction dir) => dir.IsMember(SDiagonals);
+        public static bool IsDiagonal(this Direction dir) => dir.IsMember(Diagonals);
 
         public static bool IsNorthSouth(this Direction dir) => dir.IsMember(SNorthSouth);
 
@@ -67,5 +67,11 @@ namespace Chess.Model.Models
                 
             return (Direction) tmp;
         }
+        
+        public static bool IsPerpendicular(this Direction direction, Direction edge) => direction == edge.RotateClockwise(2) ||
+                                        direction == edge.RotateCounterClockwise(2);
+
+        public static bool IsParallel(this Direction direction, Side side) =>
+                                        direction == side.Edge || direction == side.Edge.Opposite();
     }
 }

@@ -1,78 +1,100 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using Chess.Model.Actions;
 using Chess.Model.Models;
-using Chess.Model.Stores;
-using Move = Chess.Model.Models.Move;
+using Chess.Model.Models.Board;
+using Chess.Model.Rules;
+using Color = Chess.Model.Models.Color;
 
 namespace Chess.Model.Reducers
 {
-    public class BoardReducer : IReducer<BoardStore>
+    public class BoardReducer : IReducer<GameBoard>
     {
-        public BoardStore Apply(IAction action, BoardStore store)
+        private readonly IRules m_markingRules;
+        private readonly IRules m_movementRules;
+
+        public BoardReducer(IRules markingRules, IRules movementRules)
         {
-            var next = store;
+            m_markingRules = markingRules;
+            m_movementRules = movementRules;
+        }
+
+        public GameBoard Apply(IAction action, GameBoard store)
+        {
             switch (action)
             {
                 case InitializeAction ia:
-                {
-                    next = BoardFactory.Instance.Create(ia.Version);
-                    next.History = Enumerable.Empty<MoveHistoryItem>();
-                    break;
-                }
+                    return ia.Board;
                 case MoveAction ma:
-                {
-                    if (store.Board.GetAvailable(ma.From).Contains(ma.To))
-                    {
-                        var board = store.Board.DeepCopy();
-                        var taken = Move(board, ma.From, ma.To);
-                        next = new BoardStore
-                        {
-                            Board = board,
-                            Captured = store.Captured.ToDictionary(pair => pair.Key, pair =>
-                                {
-                                    var captured = pair.Value.ToList();
-
-                                    if(pair.Key == taken.Color) captured.Add(taken);
-
-                                    return (IEnumerable<Piece>) captured;
-                                }
-                            ),
-                            History = store.History.Append(new MoveHistoryItem
-                            {
-                                Start = store.Board.DeepCopy(),
-                                Move = new Move
-                                {
-                                    Piece = store.Board[ma.From.X, ma.From.Y],
-                                    From = ma.From,
-                                    To = ma.To
-                                }
-                            })
-                        };
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException($"{ma.From} to {ma.To} is not a valid move.");
-                    }
-                    break;
-                }
+                    return Move(store, ma.From, ma.To);
+                case UpdateMarkersAction uma:
+                    return UpdateMarkings(store, m_markingRules, uma.ActivePlayer);
+                case UpdateAvailableMovesAction _:
+                    return UpdateAvailableMoves(store, m_movementRules);
+                default:
+                    return store;
             }
-            return next;
+        }
+
+        public static GameBoard Move(GameBoard board, Point from, Point to)
+        {
+            if (board.GetAvailable(from).Any(move => move.To ==to))
+            {
+                var sw = new Stopwatch();
+                var next = board.DeepCopy();
+                sw.Start();
+ 
+                var move = next.GetAvailable(from).First(mv => mv.To == to);
+
+                move.Apply(next);
+
+                sw.Stop();
+                Console.WriteLine($"Moved in {sw.ElapsedMilliseconds}mS");
+
+                return next;
+            }
+            else
+            {
+                throw new InvalidOperationException($"{from} to {to} is not a valid move.");
+            }
         }
         
-        private static Piece Move(Board board, Point @from, Point to)
+        public static GameBoard UpdateMarkings(GameBoard board, IRules markingRules, Color activePlayer)
         {
-            //TODO: Checking about validity
-            var taken = board[to.X, to.Y];
+            var sw = new Stopwatch();
+            
+            sw.Start();
 
-            board[to.X, to.Y] = board[@from.X,@from.Y];
-            board[to.X, to.Y].Moved();
-            board[@from.X,@from.Y] = Piece.CreateEmpty();
-            board.Update();
+            // Clone the board & only keep the EnPassant that are not the current player
+            var next = board.DeepCopy(marker => marker.Type == MarkerType.EnPassant &&
+                                                marker.Source.Piece.Type == PieceType.Pawn &&
+                                                marker.Source.Piece.Color != activePlayer);
+            foreach (var square in next)
+            {
+                markingRules.Apply(square, next);
+            }
 
-            return taken;
+            sw.Stop();
+            Console.WriteLine($"Updated Markings in {sw.ElapsedMilliseconds}mS");
+
+            return next;
+        }
+
+        public static GameBoard UpdateAvailableMoves(GameBoard board, IRules movementRules)
+        {
+            var sw = new Stopwatch();
+            var next = board.DeepCopy();
+            sw.Start();
+            foreach (var square in next)
+            {
+                movementRules.Apply(square, next);
+            }
+            sw.Stop();
+            Console.WriteLine($"Updated Available Moves in {sw.ElapsedMilliseconds}mS");
+
+            return next;
         }
     }
 }

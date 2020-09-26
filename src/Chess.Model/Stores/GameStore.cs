@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Chess.Model.Models;
 using Color = Chess.Model.Models.Color;
 
@@ -8,6 +9,8 @@ namespace Chess.Model.Stores
     {
         public Version Version { get; set; }
         public Color CurrentPlayer { get; set; }
-        public BoardStore Board { get; set; }
+        public GameBoard Board { get; set; }
+        public IEnumerable<Side> Sides { get; set; }
+        public IEnumerable<MoveHistoryItem> HistoryItems { get; set; }
     }
 }

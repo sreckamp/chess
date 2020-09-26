@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using Chess.Model.Extensions;
+using Chess.Model.Models.Board;
+using Chess.Model.Move;
+using Chess.Model.Rules;
 
 namespace Chess.Model.Models
 {
-    public class Board : IEnumerable<Board.Square>
+    public class GameBoard : ISquareProvider
     {
         private readonly Square[][] m_squares;
-        public Board(int size, int corners)
+        public GameBoard(int size, int corners)
         {
             Corners = corners;
             m_squares = new Square[size][];
 
             m_squares.TypedInitialize(size, (x, y) => new Square
             {
-                X = x,
-                Y = y,
+                Location = new Point(x, y),
                 Piece = Piece.CreateEmpty()
             });
         }
@@ -35,164 +36,86 @@ namespace Chess.Model.Models
             && (x >= 0 && x < Size)
             && (y >= 0 && y < Size);
 
-        public Piece this[int x, int y]
+        public Piece this[Point point]
         {
             set
             {
-                if(!IsOnBoard(x, y)) throw new IndexOutOfRangeException();
+                if(!IsOnBoard(point)) throw new IndexOutOfRangeException();
 
-                m_squares[y][x].Piece = value;
+                GetSquare(point).Piece = value;
             }
             get
             {
-                if(!IsOnBoard(x, y)) throw new IndexOutOfRangeException();
+                if(!IsOnBoard(point)) throw new IndexOutOfRangeException();
 
-                return m_squares[y][x].Piece;
+                return GetSquare(point).Piece;
             }
         }
 
-        public Board DeepCopy()
+        public Piece this[int x, int y]
         {
-            var board = new Board(Size, Corners);
-            foreach (var square in this.Where(square => !square.IsEmpty))
+            set => this[new Point(x, y)] = value;
+            get => this[new Point(x, y)];
+        }
+
+        public Square GetSquare(Point p) => GetSquare(p.X,p.Y);
+
+        public Square GetSquare(int x, int y) => m_squares[y][x];
+
+        public GameBoard DeepCopy(Func<ISquareMarker, bool> keepMarker = null)
+        {
+            var board = new GameBoard(Size, Corners);
+            foreach (var square in this.Where(square => !square.IsEmpty || square.GetMarkers<ISquareMarker>().Any()))
             {
-                board[square.X, square.Y] = square.Piece;
+                var newSquare = board.GetSquare(square.Location.X, square.Location.Y);
+
+                newSquare.Piece = new Piece
+                (
+                    square.Piece.Type,
+                    square.Piece.Color,
+                    square.Piece.Edge
+                );
+
+                if (square.Piece.HasMoved)
+                {
+                    newSquare.Piece.Moved();
+                }
+
+                foreach (var marker in square.GetMarkers<ISquareMarker>().Where(keepMarker ?? (marker => true) ))
+                {
+                    newSquare.Mark(marker.Clone(board));
+                }
+
+                newSquare.Available = square.Available.Select(move => move.Clone());
             }
 
             return board;
         }
 
-        public void Update()
-        {
-            var sw = new Stopwatch();
-            sw.Start();
-            foreach (var square in this)
-            {
-                square.Update(this);
-            }
-            sw.Stop();
-            Console.WriteLine($"Updated in {sw.ElapsedMilliseconds}mS");
-        }
-
-        public IEnumerable<Point> GetAvailable(Point location)
+        public IEnumerable<IMove> GetAvailable(Point location)
         {
             return GetAvailable(location.X, location.Y);
         }
 
-        public IEnumerable<Point> GetAvailable(int x, int y)
+        public IEnumerable<IMove> GetAvailable(int x, int y)
         {
-            return IsOnBoard(x, y) ? m_squares[y][x].Available : Enumerable.Empty<Point>();
-        }
-
-        public class Square
-        {
-            public int X { get; set; }
-            public int Y { get; set; }
-            public Piece Piece { get; set; }
-
-            public bool IsEmpty => Piece.IsEmpty;
-            
-            public IEnumerable<Point> Available { get; set; }
-
-            public Dictionary<Direction, HashSet<Color>> AttackedBy { get; } = new Dictionary<Direction, HashSet<Color>>();
-
-            public Direction PinDir { get; set; } = Direction.None;
-
-            public void Update(Board board)
-            {
-                Available = !board.IsOnBoard(X,Y) || IsEmpty ? Enumerable.Empty<Point>() : GetAvailable(board);
-            }
-
-            private IEnumerable<Point> GetAvailable(Board board)
-            {
-                var location = new Point(X, Y);
-                var result = new List<Point>();
-
-                var testDirs = new List<Direction>();
-                if (PinDir != Direction.None)
-                {
-                    testDirs.Add(PinDir);
-                    testDirs.Add(PinDir.Opposite());
-                }
-                else
-                {
-                    testDirs.AddRange(Directions.All);
-                }
-                foreach (var direction in testDirs)
-                {
-                    var rule = Piece.MoveRules[direction];
-
-                    for (var d = rule.MinCount; d > 0 && d <= rule.MaxCount; d++)
-                    {
-                        var to = rule.GetResult(location, direction, d);
-
-                        if(!board.IsOnBoard(to)) break;
-
-                        var target= board[to.X, to.Y];
-
-                        if (!target.IsEmpty) break;
-
-                        result.Add(to);
-                    }
-
-                    rule = Piece.AttackRules[direction];
-                    for (var d = rule.MinCount; d > 0 && d <= rule.MaxCount; d++)
-                    {
-                        var to = rule.GetResult(location, direction, d);
-
-                        if(!board.IsOnBoard(to)) break;
-
-                        var target= board.m_squares[to.Y][to.X];
-
-                        var attackDir = rule.MaxCount == 1 ? Direction.None : direction;
-
-                        if (!target.AttackedBy.ContainsKey(attackDir))
-                        {
-                            target.AttackedBy[attackDir] = new HashSet<Color>();
-                        }
-
-                        target.AttackedBy[attackDir].Add(Piece.Color);
-
-                        if (target.Piece.Color.Equals(Piece.Color)) break;
-
-                        if (attackDir != Direction.None)
-                        {
-                            for (var pinPoint = to.Offset(attackDir, 1);
-                                board.IsOnBoard(pinPoint);
-                                pinPoint = pinPoint.Offset(attackDir, 1))
-                            {
-                                var pinTest = board[pinPoint.X, pinPoint.Y];
-
-                                if (pinTest.IsEmpty) continue;
-
-                                if (pinTest.Type != PieceType.King || pinTest.Color != target.Piece.Color) break;
-
-                                target.PinDir = attackDir;
-                                target.Update(board);
-                                break;
-                            }
-                        }
-
-                        if(result.Contains(to) || target.IsEmpty) continue;
-
-                        result.Add(to);
-
-                        break;
-                    }
-                }
-
-                return result;
-            }
+            return IsOnBoard(x, y) ? GetSquare(x, y).Available : Enumerable.Empty<IMove>();
         }
 
         public IEnumerator<Square> GetEnumerator()
         {
-            return new NestedArrayEnumerator<Square>(m_squares);
+            return new NestedArrayEnumerator<Square>(m_squares, square => IsOnBoard(square.Location));
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
+
+        public IEnumerable<Square> EnumerateStraightLine(Point start, Direction direction, bool includeStart = false)
+            => new BoardStraightLineEnumerable(this, start, direction, includeStart);
+        
+        public IEnumerable<Square> EnumerateKnight(Point start)
+            => new BoardKnightEnumerable(this, start);
     }
 }

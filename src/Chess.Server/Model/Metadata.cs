@@ -5,7 +5,6 @@ namespace Chess.Server.Model
 {
     public class Metadata
     {
-        public IEnumerable<AttackData> AttackedBy { get; set; }
-        public string PinDir { get; set; }
+        public IEnumerable<Marker> Markers { get; set; }
     }
 }

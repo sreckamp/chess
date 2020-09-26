@@ -5,7 +5,17 @@ namespace Chess.Model.Extensions
 {
     public static class PointExtension
     {
-        public static Point Offset(this Point pt, Direction dir, int count)
+        public static Point CartesianOffset(this Point pt, Point offset)
+        {
+            return new Point(pt.X + offset.X, pt.Y + offset.Y);
+        }
+
+        public static Point Divide(this Point pt, int divisor)
+        {
+            return new Point(pt.X / divisor, pt.Y / divisor);
+        }
+
+        public static Point PolarOffset(this Point pt, Direction dir, int count)
         {
             var xOffset = 0;
             var yOffset = 0;

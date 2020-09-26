@@ -5,5 +5,6 @@ namespace Chess.Model.Actions
     public class InitializeAction : IAction
     {
         public Version Version { get; set; }
+        public GameBoard Board { get; set; }
     }
 }
