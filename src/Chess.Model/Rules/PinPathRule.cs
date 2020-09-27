@@ -4,7 +4,7 @@ using Chess.Model.Models.Board;
 
 namespace Chess.Model.Rules
 {
-    public class PinPathRule : IPathRule
+    public sealed class PinPathRule : IPathRule
     {
         private readonly IPathRule m_chain;
         public PinPathRule(IPathRule chain)

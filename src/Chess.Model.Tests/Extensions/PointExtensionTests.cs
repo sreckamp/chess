@@ -8,11 +8,6 @@ namespace Chess.Model.Tests.Extensions
 {
     public class PointExtensionTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public void CartesianOffset_WhenPositiveX_ShouldHaveCorrectResult()
         {

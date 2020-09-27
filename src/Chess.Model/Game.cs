@@ -34,8 +34,8 @@ namespace Chess.Model
         private void ApplyAndUpdate(IAction action)
         {
             var next = Reducer.Apply(action, Store);
-            Store = Reducer.Apply(new UpdateAvailableMovesAction(),
-                Reducer.Apply(new UpdateMarkersAction{ActivePlayer = next.CurrentPlayer}, next));
+            Store = Reducer.Apply(new UpdateAvailableMovesAction {ActivePlayer = next.CurrentPlayer},
+                Reducer.Apply(new UpdateMarkersAction {ActivePlayer = next.CurrentPlayer}, next));
         }
 
         private GameReducer Reducer => m_gameReducer ?? (m_gameReducer = GameReducerFactory.Instance.Create(m_version));

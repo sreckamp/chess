@@ -75,10 +75,9 @@
     <Compile Include="Reducers\GameReducerFactory.cs" />
     <Compile Include="Reducers\HistoryReducer.cs" />
     <Compile Include="Reducers\IReducer.cs" />
-    <Compile Include="Reducers\NextActionReducer.cs" />
     <Compile Include="Reducers\PlayerReducer.cs" />
     <Compile Include="Reducers\VersionReducer.cs" />
-    <Compile Include="Rules\BoardKnightEnumerable.cs" />
+    <Compile Include="Rules\KnightOffsetEnumerable.cs" />
     <Compile Include="Rules\CheckPathRule.cs" />
     <Compile Include="Rules\CollectAvailableRules.cs" />
     <Compile Include="Rules\CoverPathRule.cs" />
@@ -102,7 +101,7 @@
     <Compile Include="Rules\PathSources.cs" />
     <Compile Include="Rules\PinPathRule.cs" />
     <Compile Include="Rules\PinMarkPathRule.cs" />
-    <Compile Include="Rules\StraightLineSquareEnumerable.cs" />
+    <Compile Include="Rules\StraightLineEnumerable.cs" />
     <Compile Include="Rules\TakePathRule.cs" />
     <Compile Include="Stores\BoardStore.cs" />
     <Compile Include="Stores\GameStore.cs" />

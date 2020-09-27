@@ -6,7 +6,7 @@ using Chess.Model.Move;
 
 namespace Chess.Model.Rules
 {
-    public class CollectAvailableRules : IRules
+    public sealed class CollectAvailableRules : IRules
     {
         private readonly IEnumerable<IPathSource> m_pathSources;
         private readonly IPathRule m_pathRule;

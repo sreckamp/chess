@@ -21,16 +21,18 @@ svg.phantom > image {
     position: relative;
 }
 
-.meta > div.enpassant {
-    background-color: rgba(0, 128, 0, 0.4);
-}
-
 .meta > div.pin {
-    background-color: rgba(255, 138, 0, 0.4);
+    background-color: yellow;
 }
 
-.meta > div.check {
-    background-color: rgba(255, 64, 0, 0.4);
+.meta > div.check::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border: 4px dashed darkred;
 }
 
 .meta > div > svg.piece {

@@ -11,13 +11,8 @@ using Color = Chess.Model.Models.Color;
 
 namespace Chess.Model.Tests.Rules
 {
-    public class PawnMoveRulesTests
+    public sealed class PawnMovePathSourceTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public void GetPaths_WhenNotPawn_ShouldBeEmpty()
         {
@@ -50,6 +45,8 @@ namespace Chess.Model.Tests.Rules
             // Assert
             result.Should().HaveCount(1);
             result.First().Direction.Should().Be(Direction.North);
+            result.First().AllowMove.Should().BeTrue();
+            result.First().AllowTake.Should().BeFalse();
             result.First().Moves.Should().HaveCount(2);
             result.First().Moves.First().Should().BeOfType<SimpleMove>();
             result.First().Moves.First().As<SimpleMove>().From.Should().Be(new Point(2,1));
@@ -78,6 +75,8 @@ namespace Chess.Model.Tests.Rules
             // Assert
             result.Should().HaveCount(1);
             result.First().Direction.Should().Be(Direction.North);
+            result.First().AllowMove.Should().BeTrue();
+            result.First().AllowTake.Should().BeFalse();
             result.First().Moves.Should().HaveCount(1);
             result.First().Moves.First().Should().BeOfType<SimpleMove>();
             result.First().Moves.First().As<SimpleMove>().From.Should().Be(new Point(2,1));
@@ -101,11 +100,13 @@ namespace Chess.Model.Tests.Rules
             // Assert
             result.Should().HaveCount(1);
             result.First().Direction.Should().Be(Direction.North);
+            result.First().AllowMove.Should().BeTrue();
+            result.First().AllowTake.Should().BeFalse();
             result.First().Moves.Should().HaveCount(1);
-            result.First().Moves.First().Should().BeOfType<SimpleMove>();
-            result.First().Moves.First().As<SimpleMove>().From.Should().Be(new Point(1,1));
-            result.First().Moves.First().As<SimpleMove>().To.Should().Be(new Point(1,2));
-            result.First().Moves.First().As<SimpleMove>().Piece.Should().Be(piece);
+            result.First().Moves.First().Should().BeOfType<PawnPromotionMove>();
+            result.First().Moves.First().As<PawnPromotionMove>().From.Should().Be(new Point(1,1));
+            result.First().Moves.First().As<PawnPromotionMove>().To.Should().Be(new Point(1,2));
+            result.First().Moves.First().As<PawnPromotionMove>().Piece.Should().Be(piece);
         }
         
         [Test]
@@ -141,6 +142,8 @@ namespace Chess.Model.Tests.Rules
             // Assert
             result.Should().HaveCount(1);
             result.First().Direction.Should().Be(Direction.North);
+            result.First().AllowMove.Should().BeTrue();
+            result.First().AllowTake.Should().BeFalse();
             result.First().Moves.Should().HaveCount(2);
             result.First().Moves.First().Should().BeOfType<SimpleMove>();
             result.First().Moves.First().As<SimpleMove>().From.Should().Be(new Point(1,0));
@@ -168,6 +171,8 @@ namespace Chess.Model.Tests.Rules
             // Assert
             result.Should().HaveCount(1);
             result.First().Direction.Should().Be(Direction.North);
+            result.First().AllowMove.Should().BeTrue();
+            result.First().AllowTake.Should().BeFalse();
             result.First().Moves.Should().HaveCount(2);
             result.First().Moves.First().Should().BeOfType<SimpleMove>();
             result.First().Moves.First().As<SimpleMove>().From.Should().Be(new Point(3,1));
@@ -195,6 +200,8 @@ namespace Chess.Model.Tests.Rules
             // Assert
             result.Should().HaveCount(1);
             result.First().Direction.Should().Be(Direction.North);
+            result.First().AllowMove.Should().BeTrue();
+            result.First().AllowTake.Should().BeFalse();
             result.First().Moves.Should().HaveCount(2);
             result.First().Moves.First().Should().BeOfType<SimpleMove>();
             result.First().Moves.First().As<SimpleMove>().From.Should().Be(new Point(0,1));

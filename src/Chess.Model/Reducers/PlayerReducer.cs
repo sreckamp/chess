@@ -4,7 +4,7 @@ using Chess.Model.Models;
 
 namespace Chess.Model.Reducers
 {
-    public class PlayerReducer : IReducer<Color>
+    public sealed class PlayerReducer : IReducer<Color>
     {
         private readonly Dictionary<Color, Color> m_nextMap;
         public PlayerReducer(Version version = Version.TwoPlayer)

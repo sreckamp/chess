@@ -8,7 +8,7 @@ namespace Chess.Model.Rules
     /// Rule used to detect and mark pins
     /// TODO: Unit tests
     /// </summary>
-    public class PinMarkPathRule : IPathRule
+    public sealed class PinMarkPathRule : IPathRule
     {
         private readonly IPathRule m_chain;
         public PinMarkPathRule(IPathRule chain)

@@ -6,7 +6,7 @@ using Chess.Model.Stores;
 
 namespace Chess.Model.Reducers
 {
-    public class HistoryReducer : IReducer<HistoryStore>
+    public sealed class HistoryReducer : IReducer<HistoryStore>
     {
         public HistoryStore Apply(IAction action, HistoryStore store)
         {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Chess.Model.Models
 {
-    public class NestedArrayEnumerator<T> : IEnumerator<T>
+    public sealed class NestedArrayEnumerator<T> : IEnumerator<T>
     {
         private readonly T[][] m_array;
         private readonly Func<T, bool> m_validator;

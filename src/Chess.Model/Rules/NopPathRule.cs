@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Threading;
 using Chess.Model.Models.Board;
 
 namespace Chess.Model.Rules
 {
-    public class NopPathRule : IPathRule
+    public sealed class NopPathRule : IPathRule
     {
         private static Lazy<IPathRule> m_lazyInstance = new Lazy<IPathRule>(() => new NopPathRule());
 

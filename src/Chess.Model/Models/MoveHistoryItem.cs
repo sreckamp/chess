@@ -3,7 +3,7 @@ using Chess.Model.Move;
 
 namespace Chess.Model.Models
 {
-    public class MoveHistoryItem
+    public sealed class MoveHistoryItem
     {
         public GameBoard Start { get; set; }
 

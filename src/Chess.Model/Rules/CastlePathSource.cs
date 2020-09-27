@@ -7,7 +7,7 @@ using static Chess.Model.Extensions.PointExtension;
 
 namespace Chess.Model.Rules
 {
-    public class CastlePathSource : IPathSource
+    public sealed class CastlePathSource : IPathSource
     {
         public bool Applies(PieceType type) => type == PieceType.King;
 
@@ -35,7 +35,7 @@ namespace Chess.Model.Rules
                     paths.Add(new Path
                     {
                         AllowMove = true,
-                        Direction = Direction.None,
+                        Direction = rankDir,
                         Moves = new[]
                         {
                             new CastleMove

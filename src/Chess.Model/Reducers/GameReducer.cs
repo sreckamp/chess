@@ -5,7 +5,7 @@ using Chess.Model.Stores;
 
 namespace Chess.Model.Reducers
 {
-    public class GameReducer : IReducer<GameStore>
+    public sealed class GameReducer : IReducer<GameStore>
     {
         private readonly IReducer<Version> m_versionReducer;
         private readonly IReducer<GameBoard> m_boardReducer;

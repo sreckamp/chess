@@ -2,11 +2,8 @@
 
 namespace Chess.Model.Models
 {
-    public class Piece
+    public sealed class Piece
     {
-        // private readonly Direction m_direction;
-        // private readonly Dictionary<Direction, List<IMovementRule>> m_moveRules = new Dictionary<Direction, List<IMovementRule>>();
-
         public Piece(PieceType type, Color color, Direction edge)
         {
             Type = type;

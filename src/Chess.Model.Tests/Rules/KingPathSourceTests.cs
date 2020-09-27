@@ -9,13 +9,8 @@ using Color = Chess.Model.Models.Color;
 
 namespace Chess.Model.Tests.Rules
 {
-    public class KingPathAttackSourceTests
+    public class KingPathSourceTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public void GetPaths_WhenNotKing_ShouldBeEmpty()
         {

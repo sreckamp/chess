@@ -9,11 +9,6 @@ namespace Chess.Model.Tests.Models
 {
     public class BoardStoreFactoryTest
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public void Create_WithTwoPlayers_ShouldHave8x8With0CornersWithWhiteAtSouthAndBlackAtNorth()
         {

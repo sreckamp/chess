@@ -5,7 +5,7 @@ using Chess.Model.Models.Board;
 
 namespace Chess.Model.Rules
 {
-    public class MarkSquareRules : IRules
+    public sealed class MarkSquareRules : IRules
     {
         private readonly IEnumerable<IPathSource> m_pathSources;
         private readonly IPathRule m_pathRule;

@@ -9,11 +9,6 @@ namespace Chess.Model.Tests.Models
 {
     public class SquareTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public void Mark_GetMarkers_WhenSameType_ShouldReturnMarker()
         {

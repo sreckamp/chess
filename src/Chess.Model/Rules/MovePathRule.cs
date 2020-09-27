@@ -3,7 +3,7 @@ using Chess.Model.Models.Board;
 
 namespace Chess.Model.Rules
 {
-    public class MovePathRule : IPathRule
+    public sealed class MovePathRule : IPathRule
     {
         private readonly IPathRule m_chain;
         public MovePathRule(IPathRule chain)
@@ -11,6 +11,7 @@ namespace Chess.Model.Rules
             m_chain = chain;
         }
 
+        /// <inheritdoc />
         public void Apply(Square start, Path path, ISquareProvider squares)
         {
             if (path.Moves.Any() && path.AllowMove)

@@ -8,7 +8,7 @@ using static Chess.Model.Extensions.PointExtension;
 
 namespace Chess.Model.Rules
 {
-    public class KingPathSource : IPathSource
+    public sealed class KingPathSource : IPathSource
     {
         public bool Applies(PieceType type) => type == PieceType.King;
 

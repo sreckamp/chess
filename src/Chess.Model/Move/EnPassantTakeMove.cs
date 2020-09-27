@@ -1,30 +1,61 @@
 ﻿using System.Drawing;
 using Chess.Model.Models;
-using Chess.Model.Models.Board;
 
 namespace Chess.Model.Move
 {
-    public class EnPassantTakeMove : IMove
+    public sealed class EnPassantTakeMove : IMove
     {
-        public Point From { get; set; }
-        public Point To { get; set; }
+        private readonly SimpleMove m_pawnMove;
+
+        public EnPassantTakeMove() : this(new SimpleMove())
+        {
+        }
+
+        private EnPassantTakeMove(SimpleMove pawnMove)
+        {
+            m_pawnMove = pawnMove;
+        }
+        
+        /// <inheritdoc />
+        public Piece Piece
+        {
+            get => m_pawnMove.Piece;
+            set => m_pawnMove.Piece = value;
+        }
+
+        /// <inheritdoc />
+        public Point From
+        {
+            get => m_pawnMove.From;
+            set => m_pawnMove.From = value;
+        }
+        
+        /// <inheritdoc />
+        public Point To
+        {
+            get => m_pawnMove.To;
+            set => m_pawnMove.To = value;
+        }
+
+        /// <summary>
+        /// The location where the Pawn to be taken is.
+        /// </summary>
         public Point PawnLocation { get; set; }
+
+        /// <inheritdoc />
         public Piece Apply(GameBoard board)
         {
             var taken = board[PawnLocation];
-
-            board[To] = board[From];
-            board[To].Moved();
-            board[From] = Piece.CreateEmpty();
             board[PawnLocation] = Piece.CreateEmpty();
+
+            m_pawnMove.Apply(board);
 
             return taken;
         }
 
-        public IMove Clone() => new EnPassantTakeMove
+        /// <inheritdoc />
+        public IMove Clone() => new EnPassantTakeMove(m_pawnMove.SimpleMoveClone())
         {
-            From = From,
-            To = To,
             PawnLocation = PawnLocation
         };
     }

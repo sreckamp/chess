@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Chess.Model.Models;
-using Chess.Model.Models.Board;
+﻿using System.Collections.Generic;
 
 namespace Chess.Model.Rules
 {
-    public class PathSources
+    public static class PathSources
     {
         public static readonly IEnumerable<IPathSource> Sources = new IPathSource[]
         {

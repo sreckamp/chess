@@ -4,7 +4,7 @@ using Version = Chess.Model.Models.Version;
 
 namespace Chess.Model.Reducers
 {
-    public class GameReducerFactory
+    public sealed class GameReducerFactory
     {
         private static readonly Lazy<GameReducerFactory> LazyInstance = new Lazy<GameReducerFactory>(() => new GameReducerFactory());
         public static GameReducerFactory Instance => LazyInstance.Value;

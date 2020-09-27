@@ -1,7 +1,9 @@
-﻿namespace Chess.Model.Actions
+﻿using Chess.Model.Models;
+
+namespace Chess.Model.Actions
 {
-    public class UpdateAvailableMovesAction: IAction
+    public sealed class UpdateAvailableMovesAction: IAction
     {
-        
+        public Color ActivePlayer { get; set; }
     }
 }

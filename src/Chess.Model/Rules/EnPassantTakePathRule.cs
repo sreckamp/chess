@@ -5,7 +5,7 @@ using Chess.Model.Move;
 
 namespace Chess.Model.Rules
 {
-    public class EnPassantTakePathRule : IPathRule
+    public sealed class EnPassantTakePathRule : IPathRule
     {
         private readonly IPathRule m_chain;
         public EnPassantTakePathRule(IPathRule chain)
@@ -26,6 +26,7 @@ namespace Chess.Model.Rules
                 {
                     start.Available = start.Available.Append(new EnPassantTakeMove
                     {
+                        Piece = start.Piece,
                         From = move.From,
                         To = move.To,
                         PawnLocation = marker.Source.Location

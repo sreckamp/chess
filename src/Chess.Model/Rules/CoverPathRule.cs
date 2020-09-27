@@ -3,7 +3,7 @@ using Chess.Model.Models.Board;
 
 namespace Chess.Model.Rules
 {
-    public class CoverPathRule : IPathRule
+    public sealed class CoverPathRule : IPathRule
     {
         private readonly IPathRule m_chain;
         public CoverPathRule(IPathRule chain)

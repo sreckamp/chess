@@ -8,7 +8,7 @@ namespace Chess.Model.Models
     /// Y is along file axis (0 = south, max = north)
     /// X is along rank axis (0 = west, max = east)
     /// </summary>
-    public class BoardStoreFactory
+    public sealed class BoardStoreFactory
     {
         private static class Lazy
         {

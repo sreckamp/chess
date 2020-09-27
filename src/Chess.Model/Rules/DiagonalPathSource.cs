@@ -6,7 +6,7 @@ using Chess.Model.Move;
 
 namespace Chess.Model.Rules
 {
-    public class DiagonalPathSource : IPathSource
+    public sealed class DiagonalPathSource : IPathSource
     {
         public bool Applies(PieceType type) => type == PieceType.Bishop || type == PieceType.Queen;
 

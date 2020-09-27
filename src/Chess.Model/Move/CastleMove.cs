@@ -4,21 +4,55 @@ using Chess.Model.Models;
 
 namespace Chess.Model.Move
 {
-    public class CastleMove : SimpleMove
+    public sealed class CastleMove : IMove
     {
+        private readonly SimpleMove m_kingMove;
+
+        public CastleMove() : this(new SimpleMove())
+        {
+        }
+
+        private CastleMove(SimpleMove kingMove)
+        {
+            m_kingMove = kingMove;
+        }
+        
+        /// <inheritdoc />
+        public Piece Piece
+        {
+            get => m_kingMove.Piece;
+            set => m_kingMove.Piece = value;
+        }
+
+        /// <inheritdoc />
+        public Point From
+        {
+            get => m_kingMove.From;
+            set => m_kingMove.From = value;
+        }
+        
+        /// <inheritdoc />
+        public Point To
+        {
+            get => m_kingMove.To;
+            set => m_kingMove.To = value;
+        }
+
+        /// <summary>
+        /// The move used to move the Rook while castling
+        /// </summary>
         public SimpleMove RookMove { get; set; }
 
-        public override Piece Apply(GameBoard board)
+        /// <inheritdoc />
+        public Piece Apply(GameBoard board)
         {
-            base.Apply(board);
+            m_kingMove.Apply(board);
+
             return RookMove.Apply(board);
         }
 
-        public override IMove Clone() => new CastleMove
+        public IMove Clone() => new CastleMove(m_kingMove.SimpleMoveClone())
         {
-            Piece = new Piece(Piece.Type, Piece.Color, Piece.Edge),
-            From = From,
-            To = To,
             RookMove = RookMove.SimpleMoveClone()
         };
 

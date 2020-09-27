@@ -4,38 +4,38 @@ using Chess.Model.Models;
 
 namespace Chess.Model.Move
 {
-    public class SimpleMove : IMove
+    public sealed class SimpleMove : IMove
     {
-        /// <summary>
-        /// The piece involved in the move.
-        /// </summary>
+        /// <inheritdoc />
         public Piece Piece { get; set; }
 
-        /// <summary>
-        /// The starting point of the move.
-        /// </summary>
+        /// <inheritdoc />
         public Point From { get; set; }
         
-        /// <summary>
-        /// The destination of the move.
-        /// </summary>
+        /// <inheritdoc />
         public Point To { get; set; }
 
-        /// <summary>
-        /// Apply this move to the game board
-        /// </summary>
-        /// <param name="board">The board to update with this move</param>
-        /// <returns>Any captured piece (An empty piece if none is captured)</returns>
-        public virtual Piece Apply(GameBoard board)
+        /// <inheritdoc />
+        public Piece Apply(GameBoard board)
         {
-            var taken = board[To.X, To.Y];
+            var taken = board[To];
 
-            board[To.X, To.Y] = board[From.X, From.Y];
-            board[To.X, To.Y].Moved();
-            board[From.X, From.Y] = Piece.CreateEmpty();
+            board[To] = board[From];
+            board[To].Moved();
+            board[From] = Piece.CreateEmpty();
 
             return taken;
         }
+
+        /// <inheritdoc />
+        public IMove Clone() => SimpleMoveClone();
+
+        internal SimpleMove SimpleMoveClone() => new SimpleMove
+        {
+            Piece = new Piece(Piece.Type, Piece.Color, Piece.Edge),
+            From = From,
+            To = To
+        };
 
         /// <summary>
         /// Standard Disambiguous Notation
@@ -45,15 +45,6 @@ namespace Chess.Model.Move
         public override string ToString() => Piece.Type == PieceType.Pawn 
             ? $"{ToString(To)}" 
             : $"{ToString(Piece.Type)}{ToString(From)}{ToString(To)}";
-
-        public virtual IMove Clone() => SimpleMoveClone();
-
-        internal SimpleMove SimpleMoveClone() => new SimpleMove
-        {
-            Piece = new Piece(Piece.Type, Piece.Color, Piece.Edge),
-            From = From,
-            To = To
-        };
 
         private string ToString(PieceType type)
         {

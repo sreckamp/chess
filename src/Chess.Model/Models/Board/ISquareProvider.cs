@@ -9,7 +9,7 @@ namespace Chess.Model.Models.Board
 
         Square GetSquare(int x, int y);
 
-        IEnumerable<Square> EnumerateStraightLine(Point start, Direction direction, bool includeStart = false);
+        IEnumerable<Square> EnumerateStraightLine(Point start, Direction direction);
 
         IEnumerable<Square> EnumerateKnight(Point start);
     }

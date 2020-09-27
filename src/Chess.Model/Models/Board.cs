@@ -10,7 +10,7 @@ using Chess.Model.Rules;
 
 namespace Chess.Model.Models
 {
-    public class GameBoard : ISquareProvider
+    public sealed class GameBoard : ISquareProvider
     {
         private readonly Square[][] m_squares;
         public GameBoard(int size, int corners)
@@ -21,6 +21,10 @@ namespace Chess.Model.Models
             m_squares.TypedInitialize(size, (x, y) => new Square
             {
                 Location = new Point(x, y),
+                Edges = (!IsOnBoard(x - 1, y) ? new[] {Direction.West}
+                        : !IsOnBoard(x + 1, y) ? new[] {Direction.East} : Enumerable.Empty<Direction>())
+                    .Union(!IsOnBoard(x, y - 1) ? new[] {Direction.South}
+                        : !IsOnBoard(x, y + 1) ? new[] {Direction.North} : Enumerable.Empty<Direction>()),
                 Piece = Piece.CreateEmpty()
             });
         }
@@ -87,6 +91,7 @@ namespace Chess.Model.Models
                 }
 
                 newSquare.Available = square.Available.Select(move => move.Clone());
+                newSquare.Edges = square.Edges.ToList();
             }
 
             return board;
@@ -112,10 +117,10 @@ namespace Chess.Model.Models
             return GetEnumerator();
         }
 
-        public IEnumerable<Square> EnumerateStraightLine(Point start, Direction direction, bool includeStart = false)
-            => new BoardStraightLineEnumerable(this, start, direction, includeStart);
+        public IEnumerable<Square> EnumerateStraightLine(Point start, Direction direction)
+            => new StraightLineEnumerable<Square>(start, direction, GetSquare, IsOnBoard);
         
         public IEnumerable<Square> EnumerateKnight(Point start)
-            => new BoardKnightEnumerable(this, start);
+            => new KnightOffsetEnumerable<Square>(start, GetSquare, IsOnBoard);
     }
 }

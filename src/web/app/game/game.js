@@ -21,13 +21,13 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
             $scope.showMeta = true;
         }
 
-        var _bottom = 'white';
+        let _bottom = 'white';
 
         if($routeParams.bottom) {
             _bottom = $routeParams.bottom;
         }
 
-        var _rotationMap = {
+        const _rotationMap = {
             'white': rotations.NONE,
             'silver': rotations.COUNTERCLOCKWISE,
             'black': rotations.UPSIDEDOWN,
@@ -38,8 +38,8 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
 
         $scope.currentPlayer = '';
 
-        var _activeSquare = null;
-        var _available = [];
+        let _activeSquare = null;
+        let _available = [];
 
         $scope.board = {
                 'name': '',
@@ -50,19 +50,19 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
                 'pieces' : []
         };
 
-        var getPiece = function(x, y) {
+        const getPiece = function(x, y) {
             if($scope.board.pieces[y] && $scope.board.pieces[y].cols[x]){
                 return $scope.board.pieces[y].cols[x];
             }
             return null;
         };
 
-        var parseStore = function(store) {
-            var _sideView = [rotations.COUNTERCLOCKWISE, rotations.CLOCKWISE].includes($scope.rotation);
+        const parseStore = function(store) {
+            const _sideView = [rotations.COUNTERCLOCKWISE, rotations.CLOCKWISE].includes($scope.rotation);
             $scope.currentPlayer = store.currentPlayer;
 
-            var _idx;
-            var _pieces = [];
+            let _idx;
+            const _pieces = [];
             for(_idx = 0; _idx < store.size; _idx++) {
                 if($scope.board.pieces.length != store.size) {
                     $scope.board.files.push(String.fromCharCode("A".charCodeAt(0)+_idx));
@@ -75,7 +75,7 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
             $scope.labels = _sideView ? $scope.board.files : $scope.board.ranks;
 
             store.pieces.forEach(function (p) {
-                var _enpassant = p.location.metadata.markers.find(value => value.type == 'enpassant');
+                const _enpassant = p.location.metadata.markers.find(value => value.type == 'enpassant');
                 _pieces[p.location.y].cols[p.location.x] = {
                     'piece': _enpassant ? _enpassant.type : p.type,
                     'color': _enpassant ? _enpassant.sourceColor : p.color,
@@ -111,20 +111,18 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
             $scope.board.other = store.corners % 2 == 1 ? 'dark' : 'light';
         };
 
-        var refreshGame = function () {
+        const refreshGame = function () {
             gameService.getGame($routeParams.game).$promise.then(function (store) {
                 parseStore(store);
             });
         };
 
-        var select = function (x,y) {
-            var _pc = getPiece(x, y);
+        const select = function (x,y) {
+            const _pc = getPiece(x, y);
 
             if(!_pc || _pc.color != $scope.currentPlayer.toLowerCase()) return;
 
             _activeSquare = {'x':x,'y':y};
-
-            var _color = _pc.color;
 
             gameService.getAvailable($routeParams.game, x, y).$promise.then(function success(available) {
                 _available = [];
@@ -135,8 +133,8 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
             });
         };
 
-        var move = function (fromX, fromY, toX, toY) {
-            var _pc = getPiece(fromX, fromY);
+        const move = function (fromX, fromY, toX, toY) {
+            const _pc = getPiece(fromX, fromY);
 
             if(!_pc) return;
 
@@ -164,27 +162,28 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
             });
         };
 
-        $scope.isOpponent = function (x, y) {
-            if (!$scope.isVisible(x, y) || !_activeSquare) return false;
+        $scope.isOpponent = function (color) {
+            if(color =='none' || !_activeSquare) return false;
 
-            var _pc = getPiece(x, y);
-            var _active = getPiece(_activeSquare.x, _activeSquare.y);
+            return color != $scope.board.pieces[_activeSquare.y].cols[_activeSquare.x].color;
+        };
 
-            if(!_pc || _pc.piece =='empty' || !_active) return false;
+        $scope.isInCheck = function (x, y) {
+            const _pc = getPiece(x, y);
 
-            return _pc.color != $scope.board.pieces[_activeSquare.y].cols[_activeSquare.x].color;
+            return _pc && _pc.piece == 'king' && _pc.metadata.markers.some(marker => marker.types.includes('check'));
         };
 
         $scope.clickSquare = function (x,y) {
             if (!$scope.isVisible(x,y)) return;
 
-            var target = getPiece(x, y);
+            const target = getPiece(x, y);
 
             if (_activeSquare && _activeSquare.x == x && _activeSquare.y == y) {
                 _activeSquare = null;
                 _available = [];
             } else if (_activeSquare != null) {
-                var pc = getPiece(_activeSquare.x, _activeSquare.y);
+                const pc = getPiece(_activeSquare.x, _activeSquare.y);
 
                 if(!pc) return;
 

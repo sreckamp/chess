@@ -4,7 +4,7 @@ using Chess.Model.Models.Board;
 
 namespace Chess.Model.Rules
 {
-    public class MoveIntoCheckPathRule : IPathRule
+    public sealed class MoveIntoCheckPathRule : IPathRule
     {
         private readonly IPathRule m_chain;
         public MoveIntoCheckPathRule(IPathRule chain)

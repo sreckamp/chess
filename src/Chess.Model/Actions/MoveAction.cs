@@ -2,7 +2,7 @@
 
 namespace Chess.Model.Actions
 {
-    public class MoveAction : IAction
+    public sealed class MoveAction : IAction
     {
         public Point From { get; set; }
         public Point To { get; set; }

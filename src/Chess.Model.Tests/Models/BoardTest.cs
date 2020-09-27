@@ -6,11 +6,6 @@ namespace Chess.Model.Tests.Models
 {
     public class BoardTest
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public void ctor_WithTwoPlayers_ShouldHave8x8WithWhiteAt0And1AndBlackAt6And7()
         {

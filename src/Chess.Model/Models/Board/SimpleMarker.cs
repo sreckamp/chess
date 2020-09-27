@@ -1,6 +1,6 @@
 ﻿namespace Chess.Model.Models.Board
 {
-    public class SimpleMarker : ISquareMarker
+    public sealed class SimpleMarker : ISquareMarker
     {
         public SimpleMarker(MarkerType type, Square source, Direction direction)
         {

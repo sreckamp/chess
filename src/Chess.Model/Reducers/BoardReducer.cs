@@ -10,7 +10,7 @@ using Color = Chess.Model.Models.Color;
 
 namespace Chess.Model.Reducers
 {
-    public class BoardReducer : IReducer<GameBoard>
+    public sealed class BoardReducer : IReducer<GameBoard>
     {
         private readonly IRules m_markingRules;
         private readonly IRules m_movementRules;
@@ -31,14 +31,14 @@ namespace Chess.Model.Reducers
                     return Move(store, ma.From, ma.To);
                 case UpdateMarkersAction uma:
                     return UpdateMarkings(store, m_markingRules, uma.ActivePlayer);
-                case UpdateAvailableMovesAction _:
-                    return UpdateAvailableMoves(store, m_movementRules);
+                case UpdateAvailableMovesAction uama:
+                    return UpdateAvailableMoves(store, m_movementRules, uama.ActivePlayer);
                 default:
                     return store;
             }
         }
 
-        public static GameBoard Move(GameBoard board, Point from, Point to)
+        private static GameBoard Move(GameBoard board, Point from, Point to)
         {
             if (board.GetAvailable(from).Any(move => move.To ==to))
             {
@@ -61,7 +61,7 @@ namespace Chess.Model.Reducers
             }
         }
         
-        public static GameBoard UpdateMarkings(GameBoard board, IRules markingRules, Color activePlayer)
+        private static GameBoard UpdateMarkings(GameBoard board, IRules markingRules, Color activePlayer)
         {
             var sw = new Stopwatch();
             
@@ -82,12 +82,12 @@ namespace Chess.Model.Reducers
             return next;
         }
 
-        public static GameBoard UpdateAvailableMoves(GameBoard board, IRules movementRules)
+        private static GameBoard UpdateAvailableMoves(GameBoard board, IRules movementRules, Color currentColor)
         {
             var sw = new Stopwatch();
             var next = board.DeepCopy();
             sw.Start();
-            foreach (var square in next)
+            foreach (var square in next.Where(square => square.Piece.Color == currentColor))
             {
                 movementRules.Apply(square, next);
             }

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Chess.Model.Models
 {
-    public class Side
+    public sealed class Side
     {
         public static readonly Side Empty = new Side {Color = Color.None, Edge = Direction.None};
         public Color Color { get; set; }

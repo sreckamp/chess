@@ -1,6 +1,6 @@
 ﻿namespace Chess.Model.Models.Board
 {
-    public class CheckMarker : ISquareMarker
+    public sealed class CheckMarker : ISquareMarker
     {
         public CheckMarker(Square source, Square target, Direction direction)
         {

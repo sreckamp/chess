@@ -9,11 +9,6 @@ namespace Chess.Model.Tests.Move
 {
     public class CastleMoveTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public void ToString_WhenKingSideWhite_ShouldBeOO()
         {

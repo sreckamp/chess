@@ -6,11 +6,6 @@ namespace Chess.Model.Tests.Models
 {
     public class BoardTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public void Enumerate_WithoutCorners_ShouldHaveCorrectResult()
         {

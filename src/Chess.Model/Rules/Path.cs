@@ -7,7 +7,7 @@ namespace Chess.Model.Rules
     /// <summary>
     /// Description of a sequence of moves that is available.
     /// </summary>
-    public class Path
+    public sealed class Path
     {
         /// <summary>
         /// If true this path is allowed to occupy empty squares

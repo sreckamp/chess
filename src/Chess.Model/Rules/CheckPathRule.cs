@@ -7,7 +7,7 @@ namespace Chess.Model.Rules
     /// <summary>
     /// Evaluates path for check
     /// </summary>
-    public class CheckPathRule : IPathRule
+    public sealed class CheckPathRule : IPathRule
     {
         private readonly IPathRule m_chain;
         public CheckPathRule(IPathRule chain)
