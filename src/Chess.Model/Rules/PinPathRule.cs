@@ -1,8 +1,9 @@
 ﻿﻿using System.Linq;
 using Chess.Model.Models;
 using Chess.Model.Models.Board;
+ using Chess.Model.Stores;
 
-namespace Chess.Model.Rules
+ namespace Chess.Model.Rules
 {
     public sealed class PinPathRule : IPathRule
     {
@@ -13,13 +14,13 @@ namespace Chess.Model.Rules
         }
 
         /// <inheritdoc />
-        public void Apply(Square start, Path path, ISquareProvider squares)
+        public void Apply(IMarkingsProvider markings, Path path)
         {
-            if (path.Moves.Any())
+            if (path.Squares.Any())
             {
-                var pin = start.GetMarkers(MarkerType.Pin).FirstOrDefault();
+                var pin = markings.GetMarkers<SimpleMarker>(path.Start, MarkerType.Pin).FirstOrDefault();
 
-                if (pin != null)
+                if (pin != default)
                 {
                     if (path.Direction != pin.Direction && path.Direction != pin.Direction.Opposite())
                     {
@@ -27,7 +28,7 @@ namespace Chess.Model.Rules
                     }
                 }
             }
-            m_chain.Apply(start, path, squares);
+            m_chain.Apply(markings, path);
         }
     }
 }

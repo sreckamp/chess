@@ -1,6 +1,8 @@
 ﻿using System.Drawing;
+using System.Linq;
 using Chess.Model.Actions;
 using Chess.Model.Models;
+using Chess.Model.Models.Board;
 using Chess.Model.Reducers;
 using Chess.Model.Stores;
 
@@ -28,7 +30,10 @@ namespace Chess.Model
 
         public void Move(Point from, Point to)
         {
-            ApplyAndUpdate(new MoveAction {From = from, To = to});
+            var move = Store.Markings.GetMarkers<MoveMarker>(from).FirstOrDefault(marker => marker.Move.To == to);
+            if (move == null) return;
+
+            ApplyAndUpdate(new MoveAction {Move = move.Move});
         }
 
         private void ApplyAndUpdate(IAction action)
@@ -39,5 +44,23 @@ namespace Chess.Model
         }
 
         private GameReducer Reducer => m_gameReducer ?? (m_gameReducer = GameReducerFactory.Instance.Create(m_version));
+
+        // /// <summary>
+        // /// TODO: This should return the event for the particular player
+        // /// </summary>
+        // /// <param name="color"></param>
+        // /// <returns></returns>
+        // public async Task<object> GetEventsAsync(Color color)
+        // {
+        //     return new object();
+        // }
+        //
+        // /// <summary>
+        // /// This should trigger events for all the appropriate players
+        // /// </summary>
+        // private void PublishEvent()
+        // {
+        //     
+        // }
     }
 }

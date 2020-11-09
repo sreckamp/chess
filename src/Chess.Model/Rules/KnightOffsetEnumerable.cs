@@ -3,12 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using Chess.Model.Extensions;
-using Chess.Model.Models;
-using Chess.Model.Models.Board;
 
 namespace Chess.Model.Rules
 {
-    public sealed class KnightOffsetEnumerable<T> : IEnumerable<T>
+    public sealed class KnightOffsetEnumerable<T> : IEnumerable<(Point, T)>
     {
         private readonly Point m_start;
         private readonly Func<Point, T> m_translator;
@@ -21,11 +19,11 @@ namespace Chess.Model.Rules
             m_validator = validator ?? (point => true);
         }
 
-        public IEnumerator<T> GetEnumerator() => new KnightOffsetEnumerator(m_start, m_translator, m_validator);
+        public IEnumerator<(Point, T)> GetEnumerator() => new KnightOffsetEnumerator(m_start, m_translator, m_validator);
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        private class KnightOffsetEnumerator : IEnumerator<T>
+        private class KnightOffsetEnumerator : IEnumerator<(Point, T)>
         {
             // ReSharper disable once StaticMemberInGenericType
             private static readonly Point[] Offsets =
@@ -67,7 +65,7 @@ namespace Chess.Model.Rules
 
             public void Reset() => m_index = -1;
 
-            public T Current => m_translator(m_current);
+            public (Point, T) Current => (m_current, m_translator(m_current));
 
             object IEnumerator.Current => Current;
         }

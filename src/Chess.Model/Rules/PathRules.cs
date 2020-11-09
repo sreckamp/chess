@@ -1,4 +1,6 @@
-﻿namespace Chess.Model.Rules
+﻿using Chess.Model.Stores;
+
+namespace Chess.Model.Rules
 {
     public static class PathRules
     {
@@ -6,7 +8,9 @@
         /// Rule chain to mark squares.
         /// </summary>
         public static readonly IPathRule MarkRules =
-            new CheckPathRule(new CoverPathRule(new PinMarkPathRule(NopPathRule.Instance)));
+            new CheckPathRule(
+                new CoverPathRule(
+                    new PinMarkPathRule(NopPathRule.Instance)));
 
         /// <summary>
         /// Rule chain to identify available moves.

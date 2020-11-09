@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Drawing;
 using Chess.Model.Models;
 using Chess.Model.Models.Board;
-using Chess.Model.Move;
+using Chess.Model.Stores;
 
 //TODO: must move out of check.
 //TODO: Checkmate
@@ -10,7 +10,12 @@ namespace Chess.Model.Rules
 {
     public interface IRules
     {
-        bool Applies(PieceType type);
-        void Apply(Square square, ISquareProvider squares);
+        /// <summary>
+        /// Operation starting at a particular square.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="piece"></param>
+        /// <param name="squares"></param>
+        void Apply(Point start, Piece piece, IPieceEnumerationProvider squares, MarkingStore store);
     }
 }

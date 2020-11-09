@@ -7,5 +7,6 @@
         Cover,
         Pin,
         Check,
+        Move
     }
 }

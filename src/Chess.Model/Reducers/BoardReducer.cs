@@ -1,24 +1,20 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
 using Chess.Model.Actions;
 using Chess.Model.Models;
-using Chess.Model.Models.Board;
-using Chess.Model.Rules;
-using Color = Chess.Model.Models.Color;
+using Chess.Model.Move;
 
 namespace Chess.Model.Reducers
 {
     public sealed class BoardReducer : IReducer<GameBoard>
     {
-        private readonly IRules m_markingRules;
-        private readonly IRules m_movementRules;
+        // private readonly IRules m_markingRules;
+        // private readonly IRules m_movementRules;
 
-        public BoardReducer(IRules markingRules, IRules movementRules)
+        public BoardReducer(/*IRules markingRules, IRules movementRules*/)
         {
-            m_markingRules = markingRules;
-            m_movementRules = movementRules;
+            // m_markingRules = markingRules;
+            // m_movementRules = movementRules;
         }
 
         public GameBoard Apply(IAction action, GameBoard store)
@@ -28,71 +24,27 @@ namespace Chess.Model.Reducers
                 case InitializeAction ia:
                     return ia.Board;
                 case MoveAction ma:
-                    return Move(store, ma.From, ma.To);
+                    return Move(store, ma.Move);
                 case UpdateMarkersAction uma:
-                    return UpdateMarkings(store, m_markingRules, uma.ActivePlayer);
+                    // return UpdateMarkings(store, m_markingRules, uma.ActivePlayer);
                 case UpdateAvailableMovesAction uama:
-                    return UpdateAvailableMoves(store, m_movementRules, uama.ActivePlayer);
+                    // return UpdateAvailableMoves(store, m_movementRules, uama.ActivePlayer);
                 default:
                     return store;
             }
         }
 
-        private static GameBoard Move(GameBoard board, Point from, Point to)
-        {
-            if (board.GetAvailable(from).Any(move => move.To ==to))
-            {
-                var sw = new Stopwatch();
-                var next = board.DeepCopy();
-                sw.Start();
- 
-                var move = next.GetAvailable(from).First(mv => mv.To == to);
-
-                move.Apply(next);
-
-                sw.Stop();
-                Console.WriteLine($"Moved in {sw.ElapsedMilliseconds}mS");
-
-                return next;
-            }
-            else
-            {
-                throw new InvalidOperationException($"{from} to {to} is not a valid move.");
-            }
-        }
-        
-        private static GameBoard UpdateMarkings(GameBoard board, IRules markingRules, Color activePlayer)
+        private static GameBoard Move(GameBoard board, IMove move)
         {
             var sw = new Stopwatch();
-            
             sw.Start();
 
-            // Clone the board & only keep the EnPassant that are not the current player
-            var next = board.DeepCopy(marker => marker.Type == MarkerType.EnPassant &&
-                                                marker.Source.Piece.Type == PieceType.Pawn &&
-                                                marker.Source.Piece.Color != activePlayer);
-            foreach (var square in next)
-            {
-                markingRules.Apply(square, next);
-            }
-
-            sw.Stop();
-            Console.WriteLine($"Updated Markings in {sw.ElapsedMilliseconds}mS");
-
-            return next;
-        }
-
-        private static GameBoard UpdateAvailableMoves(GameBoard board, IRules movementRules, Color currentColor)
-        {
-            var sw = new Stopwatch();
             var next = board.DeepCopy();
-            sw.Start();
-            foreach (var square in next.Where(square => square.Piece.Color == currentColor))
-            {
-                movementRules.Apply(square, next);
-            }
+
+            move.Apply(next);
+
             sw.Stop();
-            Console.WriteLine($"Updated Available Moves in {sw.ElapsedMilliseconds}mS");
+            Console.WriteLine($"Moved in {sw.ElapsedMilliseconds}mS");
 
             return next;
         }

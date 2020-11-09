@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using Chess.Model.Extensions;
 using Chess.Model.Models;
-using Chess.Model.Models.Board;
 
 namespace Chess.Model.Rules
 {
-    public sealed class StraightLineEnumerable<T> : IEnumerable<T>
+    public sealed class StraightLineEnumerable<T> : IEnumerable<(Point, T)>
     {
         private readonly Point m_start;
         private readonly Direction m_direction;
@@ -24,12 +23,12 @@ namespace Chess.Model.Rules
             m_validator = validator ?? (point => true);
         }
 
-        public IEnumerator<T> GetEnumerator() =>
+        public IEnumerator<(Point, T)> GetEnumerator() =>
             new StraightLineEnumerator(m_start, m_direction, m_translator, m_validator);
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        private class StraightLineEnumerator : IEnumerator<T>
+        private class StraightLineEnumerator : IEnumerator<(Point, T)>
         {
             private readonly Point m_start;
             private readonly Direction m_direction;
@@ -60,7 +59,7 @@ namespace Chess.Model.Rules
 
             public void Reset() => m_current = m_start;
 
-            public T Current => m_translator(m_current);
+            public (Point, T) Current => (m_current, m_translator(m_current));
 
             object IEnumerator.Current => Current;
         }

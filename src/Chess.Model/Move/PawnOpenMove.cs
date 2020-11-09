@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using Chess.Model.Extensions;
 using Chess.Model.Models;
 using Chess.Model.Models.Board;
 
@@ -9,49 +8,34 @@ namespace Chess.Model.Move
     /// <summary>
     /// Special move that a pawn can make when it has not been moved.  This moves two squares and marks enPassant
     /// </summary>
-    public sealed class PawnOpenMove : IMove
+    public readonly struct PawnOpenMove : IMove
     {
         private readonly SimpleMove m_pawnMove;
 
-        public PawnOpenMove() : this(new SimpleMove())
-        {
-        }
-
-        private PawnOpenMove(SimpleMove pawnMove)
+        public PawnOpenMove(SimpleMove pawnMove)
         {
             m_pawnMove = pawnMove;
+            EnPassant = new Point((pawnMove.From.X + pawnMove.To.X) / 2, (pawnMove.From.Y + pawnMove.To.Y) / 2);
         }
         
         /// <inheritdoc />
-        public Piece Piece
-        {
-            get => m_pawnMove.Piece;
-            set => m_pawnMove.Piece = value;
-        }
-
-        /// <inheritdoc />
-        public Point From
-        {
-            get => m_pawnMove.From;
-            set => m_pawnMove.From = value;
-        }
+        public Point From => m_pawnMove.From;
         
         /// <inheritdoc />
-        public Point To
-        {
-            get => m_pawnMove.To;
-            set => m_pawnMove.To = value;
-        }
+        public Point To => m_pawnMove.To;
+
+        /// <summary>
+        /// The square eligible for an en passant capture
+        /// </summary>
+        public Point EnPassant { get; }
 
         /// <inheritdoc />
-        public Piece Apply(GameBoard board)
+        public Piece Apply(IBoard board)
         {
-            board.GetSquare(From.CartesianOffset(To).Divide(2)).Mark(
-                new SimpleMarker(MarkerType.EnPassant, board.GetSquare(To), Direction.None));
+            // TODO: Move this to the reducer
+            // EnPassant.Mark(new SimpleMarker(MarkerType.EnPassant, To, Direction.None));
 
             return m_pawnMove.Apply(board);
         }
-
-        public IMove Clone() => new PawnOpenMove(m_pawnMove.SimpleMoveClone());
     }
 }

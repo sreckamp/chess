@@ -16,16 +16,8 @@ namespace Chess.Model.Tests.Models
             // Assert
             board.Size.Should().Be(8);
             board.Corners.Should().Be(0);
-            for(var y=0; y < board.Size; y++)
-            {
-                for(var x=0; x < board.Size; x++)
-                {
-                    board.GetSquare(x, y).Location.X.Should().Be(x);
-                    board.GetSquare(x, y).Location.Y.Should().Be(y);
-                }
-            }
 
-            board.Should().OnlyContain(square => square.IsEmpty);
+            board.Should().OnlyContain(square => square.Item2.IsEmpty);
         }
     }
 }

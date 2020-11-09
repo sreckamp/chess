@@ -3,14 +3,15 @@ using System.Drawing;
 
 namespace Chess.Model.Models.Board
 {
-    public interface ISquareProvider : IEnumerable<Square>
+    public interface IPieceEnumerationProvider : IEnumerable<(Point,Piece)>
     {
-        Square GetSquare(Point p);
+        IEnumerable<(Point, Piece)> EnumerateStraightLine(Point start, Direction direction);
 
-        Square GetSquare(int x, int y);
+        IEnumerable<(Point, Piece)> EnumerateKnight(Point start);
+    }
 
-        IEnumerable<Square> EnumerateStraightLine(Point start, Direction direction);
-
-        IEnumerable<Square> EnumerateKnight(Point start);
+    public interface IBoard
+    {
+        Piece this[Point p] { get; set; }
     }
 }

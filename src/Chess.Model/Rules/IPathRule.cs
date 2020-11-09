@@ -1,4 +1,5 @@
 ﻿using Chess.Model.Models.Board;
+using Chess.Model.Stores;
 
 namespace Chess.Model.Rules
 {
@@ -7,9 +8,8 @@ namespace Chess.Model.Rules
         /// <summary>
         /// Execute the rule against the given path.
         /// </summary>
-        /// <param name="start">The square where the path starts</param>
+        /// <param name="markings">The markings to apply the rule to.</param>
         /// <param name="path">The sequence of moves that are available</param>
-        /// <param name="squares">The provider that supplies squares for processing</param>
-        void Apply(Square start, Path path, ISquareProvider squares);
+        void Apply(IMarkingsProvider markings, Path path);
     }
 }

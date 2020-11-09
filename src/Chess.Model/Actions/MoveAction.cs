@@ -1,10 +1,9 @@
-﻿using System.Drawing;
+﻿using Chess.Model.Move;
 
 namespace Chess.Model.Actions
 {
     public sealed class MoveAction : IAction
     {
-        public Point From { get; set; }
-        public Point To { get; set; }
+        public IMove Move { get; set; }
     }
 }

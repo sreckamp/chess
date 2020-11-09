@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Chess.Model.Actions;
+﻿using Chess.Model.Actions;
 using Chess.Model.Models;
+using Chess.Model.Models.Board;
 using Chess.Model.Stores;
 
 namespace Chess.Model.Reducers
@@ -11,18 +11,22 @@ namespace Chess.Model.Reducers
         private readonly IReducer<GameBoard> m_boardReducer;
         // private readonly IReducer<State> m_stateReducer;
         private readonly IReducer<Color> m_playerReducer;
-        private readonly IReducer<HistoryStore> m_historyReducer;
+        private readonly IReducer<(IPieceEnumerationProvider, MarkingStore)> m_markingReducer;
+        // private readonly IReducer<MovesStore> m_movesReducer;
 
         public GameReducer(IReducer<Version> versionReducer, IReducer<GameBoard> boardReducer,
             // IReducer<SideStore> sideReducer,
             IReducer<Color> playerReducer,
-            IReducer<HistoryStore> historyReducer)
+            IReducer<(IPieceEnumerationProvider, MarkingStore)> markingReducer//,
+            // IReducer<MovesStore> movesReducer
+            )
         {
             m_versionReducer = versionReducer;
             m_boardReducer = boardReducer;
             // m_stateReducer = sideReducer;
             m_playerReducer = playerReducer;
-            m_historyReducer = historyReducer;
+            m_markingReducer = markingReducer;
+            // m_movesReducer = movesReducer;
         }
 
         public GameStore Apply(IAction action, GameStore store)
@@ -38,11 +42,13 @@ namespace Chess.Model.Reducers
                     // {
                     //     Sides = store.Sides
                     // }).Sides,
-                    HistoryItems = m_historyReducer.Apply(action, new HistoryStore
-                    {
-                        Board = store.Board,
-                        History = store.HistoryItems
-                    }).History
+                    Markings = m_markingReducer.Apply(action, (store.Board, store.Markings)).Item2,
+                    // Moves = m_movesReducer.Apply(action, store.Moves)
+                    // HistoryItems = m_historyReducer.Apply(action, new MovesStore
+                    // {
+                    //     Board = store.Board,
+                    //     History = store.HistoryItems
+                    // }).History
                 };
             }
             // ReSharper disable once EmptyGeneralCatchClause

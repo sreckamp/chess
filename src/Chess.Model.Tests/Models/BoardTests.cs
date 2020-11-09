@@ -15,48 +15,48 @@ namespace Chess.Model.Tests.Models
             board.Should().SatisfyRespectively(
                 square =>
                 {
-                    square.Location.X.Should().Be(0);
-                    square.Location.Y.Should().Be(0);
+                    square.Item1.X.Should().Be(0);
+                    square.Item1.Y.Should().Be(0);
                 },
                 square =>
                 {
-                    square.Location.X.Should().Be(1);
-                    square.Location.Y.Should().Be(0);
+                    square.Item1.X.Should().Be(1);
+                    square.Item1.Y.Should().Be(0);
                 },
                 square =>
                 {
-                    square.Location.X.Should().Be(2);
-                    square.Location.Y.Should().Be(0);
+                    square.Item1.X.Should().Be(2);
+                    square.Item1.Y.Should().Be(0);
                 },
                 square =>
                 {
-                    square.Location.X.Should().Be(0);
-                    square.Location.Y.Should().Be(1);
+                    square.Item1.X.Should().Be(0);
+                    square.Item1.Y.Should().Be(1);
                 },
                 square =>
                 {
-                    square.Location.X.Should().Be(1);
-                    square.Location.Y.Should().Be(1);
+                    square.Item1.X.Should().Be(1);
+                    square.Item1.Y.Should().Be(1);
                 },
                 square =>
                 {
-                    square.Location.X.Should().Be(2);
-                    square.Location.Y.Should().Be(1);
+                    square.Item1.X.Should().Be(2);
+                    square.Item1.Y.Should().Be(1);
                 },
                 square =>
                 {
-                    square.Location.X.Should().Be(0);
-                    square.Location.Y.Should().Be(2);
+                    square.Item1.X.Should().Be(0);
+                    square.Item1.Y.Should().Be(2);
                 },
                 square =>
                 {
-                    square.Location.X.Should().Be(1);
-                    square.Location.Y.Should().Be(2);
+                    square.Item1.X.Should().Be(1);
+                    square.Item1.Y.Should().Be(2);
                 },
                 square =>
                 {
-                    square.Location.X.Should().Be(2);
-                    square.Location.Y.Should().Be(2);
+                    square.Item1.X.Should().Be(2);
+                    square.Item1.Y.Should().Be(2);
                 }
             );
         }
@@ -70,63 +70,63 @@ namespace Chess.Model.Tests.Models
             board.Should().SatisfyRespectively(
                 square =>
                 {
-                    square.Location.X.Should().Be(1);
-                    square.Location.Y.Should().Be(0);
+                    square.Item1.X.Should().Be(1);
+                    square.Item1.Y.Should().Be(0);
                 },
                 square =>
                 {
-                    square.Location.X.Should().Be(2);
-                    square.Location.Y.Should().Be(0);
+                    square.Item1.X.Should().Be(2);
+                    square.Item1.Y.Should().Be(0);
                 },
                 square =>
                 {
-                    square.Location.X.Should().Be(0);
-                    square.Location.Y.Should().Be(1);
+                    square.Item1.X.Should().Be(0);
+                    square.Item1.Y.Should().Be(1);
                 },
                 square =>
                 {
-                    square.Location.X.Should().Be(1);
-                    square.Location.Y.Should().Be(1);
+                    square.Item1.X.Should().Be(1);
+                    square.Item1.Y.Should().Be(1);
                 },
                 square =>
                 {
-                    square.Location.X.Should().Be(2);
-                    square.Location.Y.Should().Be(1);
+                    square.Item1.X.Should().Be(2);
+                    square.Item1.Y.Should().Be(1);
                 },
                 square =>
                 {
-                    square.Location.X.Should().Be(3);
-                    square.Location.Y.Should().Be(1);
+                    square.Item1.X.Should().Be(3);
+                    square.Item1.Y.Should().Be(1);
                 },
                 square =>
                 {
-                    square.Location.X.Should().Be(0);
-                    square.Location.Y.Should().Be(2);
+                    square.Item1.X.Should().Be(0);
+                    square.Item1.Y.Should().Be(2);
                 },
                 square =>
                 {
-                    square.Location.X.Should().Be(1);
-                    square.Location.Y.Should().Be(2);
+                    square.Item1.X.Should().Be(1);
+                    square.Item1.Y.Should().Be(2);
                 },
                 square =>
                 {
-                    square.Location.X.Should().Be(2);
-                    square.Location.Y.Should().Be(2);
+                    square.Item1.X.Should().Be(2);
+                    square.Item1.Y.Should().Be(2);
                 },
                 square =>
                 {
-                    square.Location.X.Should().Be(3);
-                    square.Location.Y.Should().Be(2);
+                    square.Item1.X.Should().Be(3);
+                    square.Item1.Y.Should().Be(2);
                 },
                 square =>
                 {
-                    square.Location.X.Should().Be(1);
-                    square.Location.Y.Should().Be(3);
+                    square.Item1.X.Should().Be(1);
+                    square.Item1.Y.Should().Be(3);
                 },
                 square =>
                 {
-                    square.Location.X.Should().Be(2);
-                    square.Location.Y.Should().Be(3);
+                    square.Item1.X.Should().Be(2);
+                    square.Item1.Y.Should().Be(3);
                 }
             );
         }

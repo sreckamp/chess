@@ -49,10 +49,11 @@
     <Compile Include="Game.cs" />
     <Compile Include="Models\Board.cs" />
     <Compile Include="Models\Board\CheckMarker.cs" />
+    <Compile Include="Models\Board\IMarkingsProvider.cs" />
     <Compile Include="Models\Board\ISquareProvider.cs" />
     <Compile Include="Models\Board\MarkerType.cs" />
+    <Compile Include="Models\Board\MoveMarker.cs" />
     <Compile Include="Models\Board\SimpleMarker.cs" />
-    <Compile Include="Models\Board\Square.cs" />
     <Compile Include="Models\Board\ISquareMarker.cs" />
     <Compile Include="Models\Color.cs" />
     <Compile Include="Models\Direction.cs" />
@@ -75,8 +76,10 @@
     <Compile Include="Reducers\GameReducerFactory.cs" />
     <Compile Include="Reducers\HistoryReducer.cs" />
     <Compile Include="Reducers\IReducer.cs" />
+    <Compile Include="Reducers\MarkingsReducer.cs" />
     <Compile Include="Reducers\PlayerReducer.cs" />
     <Compile Include="Reducers\VersionReducer.cs" />
+    <Compile Include="Rules\IMoveRule.cs" />
     <Compile Include="Rules\KnightOffsetEnumerable.cs" />
     <Compile Include="Rules\CheckPathRule.cs" />
     <Compile Include="Rules\CollectAvailableRules.cs" />
@@ -86,7 +89,8 @@
     <Compile Include="Rules\IPathRule.cs" />
     <Compile Include="Rules\IPathSource.cs" />
     <Compile Include="Rules\IRules.cs" />
-    <Compile Include="Rules\CastlePathSource.cs" />
+    <Compile Include="Rules\PawnPromotionRule.cs" />
+    <Compile Include="Rules\RankPathSource.cs" />
     <Compile Include="Rules\KingPathSource.cs" />
     <Compile Include="Rules\KnightPathSource.cs" />
     <Compile Include="Rules\CardinalPathSource.cs" />
@@ -106,13 +110,9 @@
     <Compile Include="Stores\BoardStore.cs" />
     <Compile Include="Stores\GameStore.cs" />
     <Compile Include="Stores\HistoryStore.cs" />
+    <Compile Include="Stores\MarkingStore.cs" />
+    <Compile Include="Stores\SideStore.cs" />
     <Compile Include="Stores\StateStore.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\game-base\src\GameBase.Model\GameBase.Model.csproj">
-      <Project>{45cfc74e-2b9d-4ed3-82ef-617e3f4404b2}</Project>
-      <Name>GameBase.Model</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

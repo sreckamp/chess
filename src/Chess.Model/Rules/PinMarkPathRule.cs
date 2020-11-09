@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Drawing;
+using System.Linq;
 using Chess.Model.Models;
 using Chess.Model.Models.Board;
+using Chess.Model.Stores;
 
 namespace Chess.Model.Rules
 {
@@ -17,32 +19,32 @@ namespace Chess.Model.Rules
         }
 
         /// <inheritdoc />
-        public void Apply(Square start, Path path, ISquareProvider squares)
+        public void Apply(IMarkingsProvider markings, Path path)
         {
-            if (!path.Moves.Any()) return;
-
-            var points = path.Moves.Select(m => m.To).ToList();
-
-            var pinned = default(Square);
-
-            foreach (var target in points.Select(squares.GetSquare).Where(target => !target.IsEmpty))
+            if (path.Squares.Any())
             {
-                if (pinned == default)
+                var pinned = (new Point(-1,-1), Piece.Empty);
+
+                foreach (var target in path.Squares.Where(target => !target.Item2.IsEmpty))
                 {
-                    pinned = target;
-                    continue;
+                    if (pinned.Item2.IsEmpty)
+                    {
+                        pinned = target;
+                        continue;
+                    }
+
+                    if (target.Item2.Type != PieceType.King ||
+                        target.Item2.Color != pinned.Item2.Color ||
+                        path.Piece.Color == target.Item2.Color) break;
+
+
+                    markings.Mark(pinned.Item1, new SimpleMarker(MarkerType.Pin, path.Start, path.Piece, path.Direction));
+
+                    break;
                 }
-
-                if(target.Piece.Type != PieceType.King ||
-                   target.Piece.Color != pinned.Piece.Color ||
-                   start.Piece.Color == target.Piece.Color) break;
-
-                pinned.Mark(new SimpleMarker(MarkerType.Pin, start, path.Direction));
-
-                break;
             }
 
-            m_chain.Apply(start, path, squares);
+            m_chain.Apply(markings, path);
         }
     }
 }

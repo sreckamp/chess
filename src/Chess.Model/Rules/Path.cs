@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using Chess.Model.Models;
-using Chess.Model.Move;
 
 namespace Chess.Model.Rules
 {
@@ -19,6 +19,10 @@ namespace Chess.Model.Rules
         /// </summary>
         public bool AllowTake { get; set; }
 
+        public Point Start { get; set; }
+
+        public Piece Piece { get; set; }
+
         /// <summary>
         /// The direction the path travels
         /// </summary>
@@ -27,6 +31,6 @@ namespace Chess.Model.Rules
         /// <summary>
         /// The sequence of moves that are possible in the given direction
         /// </summary>
-        public IEnumerable<IMove> Moves { get; set; }
+        public IEnumerable<(Point, Piece)> Squares { get; set; }
     }
 }

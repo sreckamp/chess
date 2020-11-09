@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Chess.Model.Models;
 using Chess.Model.Models.Board;
+using Chess.Model.Stores;
 
 namespace Chess.Model.Rules
 {
@@ -16,15 +18,13 @@ namespace Chess.Model.Rules
             m_pathRule = pathRule;
         }
 
-        public bool Applies(PieceType type) => m_pathSources.Any(source => source.Applies(type));
-
-        public void Apply(Square square, ISquareProvider squares)
+        /// <inheritdoc/>
+        public void Apply(Point start, Piece piece, IPieceEnumerationProvider squares, MarkingStore store)
         {
             foreach (var path in m_pathSources
-                .Where(source => source.Applies(square.Piece.Type))
-                .SelectMany(source => source.GetPaths(square, squares).Where(path => path.AllowTake)))
+                .SelectMany(source => source.GetPaths(start, piece, squares).Where(path => path.AllowTake)))
             {
-                m_pathRule.Apply(square, path, squares);
+                m_pathRule.Apply(store, path);
             }
         }
     }

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
+angular.module('chess.game', ['ngRoute', 'ngResource', 'ngCookie', 'chess.gameService'])
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.when('/games/:game', {
@@ -9,7 +9,7 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
         });
     }])
 
-    .controller('GameController', ['gameService', '$scope', '$routeParams', function (gameService, $scope, $routeParams) {
+    .controller('GameController', ['gameService', '$scope', '$routeParams', '$cookie', function (gameService, $scope, $routeParams, $cookie) {
 
         if ($routeParams.theme) {
             $scope.theme = $routeParams.theme;
@@ -27,6 +27,10 @@ angular.module('chess.game', ['ngRoute', 'ngResource', 'chess.gameService'])
             _bottom = $routeParams.bottom;
         }
 
+        if($routeParams.lock)
+        {
+
+        }
         const _rotationMap = {
             'white': rotations.NONE,
             'silver': rotations.COUNTERCLOCKWISE,

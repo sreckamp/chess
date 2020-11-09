@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Chess.Model.Models.Board;
+using Chess.Model.Stores;
 
 namespace Chess.Model.Rules
 {
@@ -12,21 +13,18 @@ namespace Chess.Model.Rules
         }
 
         /// <inheritdoc />
-        public void Apply(Square start1, Path path, ISquareProvider squares)
+        public void Apply(IMarkingsProvider markings, Path path)
         {
-            if (!path.Moves.Any()) return;
-
-            var start = squares.GetSquare(path.Moves.First().From);
-            var points = path.Moves.Select(m => m.To).ToList();
-
-            foreach (var target in points.Select(squares.GetSquare))
+            if (path.Squares.Any())
             {
-                target.Mark(new SimpleMarker(MarkerType.Cover, start, path.Direction));
+                foreach (var (target, piece) in path.Squares)
+                {
+                    markings.Mark(target, new SimpleMarker(MarkerType.Cover, path.Start, path.Piece, path.Direction));
 
-                if (!target.IsEmpty) break;
+                    if (!piece.IsEmpty) break;
+                }
             }
-
-            m_chain.Apply(start, path, squares);
+            m_chain.Apply(markings, path);
         }
     }
 }

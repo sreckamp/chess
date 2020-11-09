@@ -1,13 +1,14 @@
 ﻿using System;
 using Chess.Model.Models.Board;
+using Chess.Model.Stores;
 
 namespace Chess.Model.Rules
 {
     public sealed class NopPathRule : IPathRule
     {
-        private static Lazy<IPathRule> m_lazyInstance = new Lazy<IPathRule>(() => new NopPathRule());
+        private static readonly Lazy<IPathRule> LazyInstance = new Lazy<IPathRule>(() => new NopPathRule());
 
-        public static IPathRule Instance => m_lazyInstance.Value;
+        public static IPathRule Instance => LazyInstance.Value;
 
         private NopPathRule()
         {
@@ -15,8 +16,6 @@ namespace Chess.Model.Rules
         }
 
         /// <inheritdoc />
-        public void Apply(Square start, Path path, ISquareProvider squares)
-        {
-        }
+        public void Apply(IMarkingsProvider markings, Path path) { }
     }
 }

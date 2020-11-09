@@ -7,7 +7,7 @@ namespace Chess.Model.Rules
         public static readonly IEnumerable<IPathSource> Sources = new IPathSource[]
         {
             new KingPathSource(),
-            new CastlePathSource(), 
+            new RankPathSource(), 
             new PawnMovePathSource(),
             new PawnTakePathSource(),
             new DiagonalPathSource(),

@@ -1,44 +1,26 @@
 ﻿using System.Drawing;
 using Chess.Model.Models;
+using Chess.Model.Models.Board;
 
 namespace Chess.Model.Move
 {
-    public sealed class PawnPromotionMove : IMove
+    public readonly struct PawnPromotionMove : IMove
     {
         private readonly SimpleMove m_pawnMove;
 
-        public PawnPromotionMove() : this(new SimpleMove())
-        {
-        }
-
-        private PawnPromotionMove(SimpleMove pawnMove)
+        public PawnPromotionMove(SimpleMove pawnMove)
         {
             m_pawnMove = pawnMove;
         }
 
         /// <inheritdoc />
-        public Piece Piece
-        {
-            get => m_pawnMove.Piece;
-            set => m_pawnMove.Piece = value;
-        }
+        public Point From => m_pawnMove.From;
 
         /// <inheritdoc />
-        public Point From
-        {
-            get => m_pawnMove.From;
-            set => m_pawnMove.From = value;
-        }
+        public Point To => m_pawnMove.To;
 
         /// <inheritdoc />
-        public Point To
-        {
-            get => m_pawnMove.To;
-            set => m_pawnMove.To = value;
-        }
-
-        /// <inheritdoc />
-        public Piece Apply(GameBoard board)
+        public Piece Apply(IBoard board)
         {
             var taken = m_pawnMove.Apply(board);
             var pawn = board[m_pawnMove.To];
@@ -47,8 +29,5 @@ namespace Chess.Model.Move
 
             return taken;
         }
-
-        /// <inheritdoc />
-        public IMove Clone() => new PawnPromotionMove(m_pawnMove.SimpleMoveClone());
     }
 }

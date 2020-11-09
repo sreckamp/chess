@@ -1,26 +1,29 @@
 ﻿using System.Linq;
 using Chess.Model.Models.Board;
+using Chess.Model.Move;
+using Chess.Model.Stores;
 
 namespace Chess.Model.Rules
 {
     public sealed class MovePathRule : IPathRule
     {
         private readonly IPathRule m_chain;
+
         public MovePathRule(IPathRule chain)
         {
             m_chain = chain;
         }
 
         /// <inheritdoc />
-        public void Apply(Square start, Path path, ISquareProvider squares)
+        public void Apply(IMarkingsProvider markings, Path path)
         {
-            if (path.Moves.Any() && path.AllowMove)
+            if (path.Squares.Any() && path.AllowMove)
             {
-                start.Available = start.Available.Union(
-                    path.Moves.TakeWhile(move => squares.GetSquare(move.To).IsEmpty));
+                markings.Mark(path.Start, path.Squares.TakeWhile(square => square.Item2.IsEmpty)
+                    .Select(target => new MoveMarker(new SimpleMove(path.Start, target.Item1))));
             }
 
-            m_chain.Apply(start, path, squares);
+            m_chain.Apply(markings, path);
         }
     }
 }

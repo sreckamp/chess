@@ -1,14 +1,13 @@
-﻿using System;
-
-namespace Chess.Model.Models
+﻿namespace Chess.Model.Models
 {
-    public sealed class Piece
+    public struct Piece
     {
         public Piece(PieceType type, Color color, Direction edge)
         {
             Type = type;
             Color = color;
             Edge = edge;
+            HasMoved = false;
         }
 
         public PieceType Type { get; }
@@ -29,13 +28,6 @@ namespace Chess.Model.Models
         /// <inheritdoc />
         public override string ToString() => IsEmpty ? string.Empty : $"{Color} {Type}";
 
-        private static readonly Lazy<Piece> EmptyLazy = new Lazy<Piece>(() =>
-        {
-            var empty = new Piece(PieceType.Empty, Color.None, Direction.None);
-        
-            return empty;
-        });
-
-        public static Piece CreateEmpty() => EmptyLazy.Value;
+        public static Piece Empty;
     }
 }

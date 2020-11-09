@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Chess.Model.Models;
 using Chess.Model.Models.Board;
+using Chess.Model.Stores;
 
 namespace Chess.Model.Rules
 {
@@ -16,30 +17,41 @@ namespace Chess.Model.Rules
         }
 
         /// <inheritdoc />
-        public void Apply(Square start1, Path path, ISquareProvider squares)
+        public void Apply(IMarkingsProvider markings, Path path)
         {
-            if (!path.Moves.Any()) return;
-            var start = squares.GetSquare(path.Moves.First().From);
-            var points = path.Moves.Select(m => m.To).ToList();
-            for (var i = 0; i < points.Count; i++)
+            if (path.Squares.Any())
             {
-                var target = squares.GetSquare(points[i]);
-                if (target.IsEmpty) continue;
-                if (target.Piece.Color == start.Piece.Color ||
-                    target.Piece.Type != PieceType.King) break;
+                var squares = path.Squares.ToList();
+                CheckMarker marker = default;
 
-                var marker = new CheckMarker(start, target, path.Direction);
+                var i = 0;
 
-                for (; i > -1; i--)
+                for (; i < squares.Count; i++)
                 {
-                    squares.GetSquare(points[i]).Mark(marker);
+                    var (target, targetPiece) = squares[i];
+
+                    if (targetPiece.IsEmpty) continue;
+
+                    if (targetPiece.Color == path.Piece.Color ||
+                        targetPiece.Type != PieceType.King) break;
+
+                    marker = new CheckMarker(path.Start, target, path.Direction);
                 }
 
-                start.Mark(marker);
-                break;
+                if (marker != null)
+                {
+                    for (i--; i > -1; i--)
+                    {
+                        var (target, _) = squares[i];
+
+                        markings.Mark(target, marker);
+                    }
+
+                    markings.Mark(path.Start, marker);
+                }
             }
 
-            m_chain.Apply(start, path, squares);
+            m_chain.Apply(markings, path);
         }
     }
 }

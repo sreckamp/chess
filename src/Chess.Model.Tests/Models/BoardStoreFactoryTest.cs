@@ -21,14 +21,14 @@ namespace Chess.Model.Tests.Models
             // Assert
             board.Size.Should().Be(8);
             board.Corners.Should().Be(0);
-            board.Where(sq => sq.Location.Y < 2 || sq.Location.Y > 5).Should().OnlyContain(square => !square.IsEmpty);
-            board.Where(sq => sq.Location.Y < 2 || sq.Location.Y > 5).Should().OnlyContain(square => !square.Piece.HasMoved);
-            board.Where(sq => sq.Location.Y > 1 && sq.Location.Y < 6).Should().OnlyContain(square => square.IsEmpty);
-            board.Where(sq => sq.Location.Y < 2).Should().OnlyContain(square => square.Piece.Color == Color.White);
-            board.Where(sq => sq.Location.Y > 5).Should().OnlyContain(square => square.Piece.Color == Color.Black);
-            board.Where(sq => sq.Location.Y < 2).Should().OnlyContain(square => square.Piece.Edge == Direction.South);
-            board.Where(sq => sq.Location.Y > 5).Should().OnlyContain(square => square.Piece.Edge == Direction.North);
-            board.Where(sq => sq.Location.Y == 1 || sq.Location.Y == 6).Should().OnlyContain(square => square.Piece.Type == PieceType.Pawn);
+            board.Where(sq => sq.Item1.Y < 2 || sq.Item1.Y > 5).Should().OnlyContain(square => !square.Item2.IsEmpty);
+            board.Where(sq => sq.Item1.Y < 2 || sq.Item1.Y > 5).Should().OnlyContain(square => !square.Item2.HasMoved);
+            board.Where(sq => sq.Item1.Y > 1 && sq.Item1.Y < 6).Should().OnlyContain(square => square.Item2.IsEmpty);
+            board.Where(sq => sq.Item1.Y < 2).Should().OnlyContain(square => square.Item2.Color == Color.White);
+            board.Where(sq => sq.Item1.Y > 5).Should().OnlyContain(square => square.Item2.Color == Color.Black);
+            board.Where(sq => sq.Item1.Y < 2).Should().OnlyContain(square => square.Item2.Edge == Direction.South);
+            board.Where(sq => sq.Item1.Y > 5).Should().OnlyContain(square => square.Item2.Edge == Direction.North);
+            board.Where(sq => sq.Item1.Y == 1 || sq.Item1.Y == 6).Should().OnlyContain(square => square.Item2.Type == PieceType.Pawn);
 
             board[0,0].Type.Should().Be(PieceType.Rook);
             board[1,0].Type.Should().Be(PieceType.Knight);
@@ -61,25 +61,25 @@ namespace Chess.Model.Tests.Models
             // Assert
             board.Size.Should().Be(14);
             board.Corners.Should().Be(3);
-            var onBoard = board.Where(sq => board.IsOnBoard(sq.Location));  
-            onBoard.Where(sq => sq.Location.Y < 2 || sq.Location.Y > 11 ||
-                           sq.Location.X < 2 || sq.Location.X > 11)
-                                                .Should().OnlyContain(square => !square.IsEmpty);
-            onBoard.Where(sq => sq.Location.Y < 2 || sq.Location.Y > 11 ||
-                                sq.Location.X < 2 || sq.Location.X > 11)
-                                                .Should().OnlyContain(square => !square.Piece.HasMoved);
-            onBoard.Where(sq => sq.Location.X > 1 && sq.Location.X < 12 &&
-                                sq.Location.Y > 1 && sq.Location.Y < 12).Should().OnlyContain(square => square.IsEmpty);
-            onBoard.Where(sq => sq.Location.Y < 2).Should().OnlyContain(square => square.Piece.Color == Color.White);
-            onBoard.Where(sq => sq.Location.Y < 2).Should().OnlyContain(square => square.Piece.Edge == Direction.South);
-            onBoard.Where(sq => sq.Location.X < 2).Should().OnlyContain(square => square.Piece.Color == Color.Silver);
-            onBoard.Where(sq => sq.Location.X < 2).Should().OnlyContain(square => square.Piece.Edge == Direction.West);
-            onBoard.Where(sq => sq.Location.Y > 11).Should().OnlyContain(square => square.Piece.Color == Color.Black);
-            onBoard.Where(sq => sq.Location.Y > 11).Should().OnlyContain(square => square.Piece.Edge == Direction.North);
-            onBoard.Where(sq => sq.Location.X > 11).Should().OnlyContain(square => square.Piece.Color == Color.Gold);
-            onBoard.Where(sq => sq.Location.X > 11).Should().OnlyContain(square => square.Piece.Edge == Direction.East);
-            onBoard.Where(sq => sq.Location.X == 1 || sq.Location.X == 12 ||
-                                        sq.Location.Y == 1 || sq.Location.Y == 12).Should().OnlyContain(square => square.Piece.Type == PieceType.Pawn);
+            var onBoard = board.Where(sq => board.IsOnBoard(sq.Item1));  
+            onBoard.Where(sq => sq.Item1.Y < 2 || sq.Item1.Y > 11 ||
+                           sq.Item1.X < 2 || sq.Item1.X > 11)
+                                                .Should().OnlyContain(square => !square.Item2.IsEmpty);
+            onBoard.Where(sq => sq.Item1.Y < 2 || sq.Item1.Y > 11 ||
+                                sq.Item1.X < 2 || sq.Item1.X > 11)
+                                                .Should().OnlyContain(square => !square.Item2.HasMoved);
+            onBoard.Where(sq => sq.Item1.X > 1 && sq.Item1.X < 12 &&
+                                sq.Item1.Y > 1 && sq.Item1.Y < 12).Should().OnlyContain(square => square.Item2.IsEmpty);
+            onBoard.Where(sq => sq.Item1.Y < 2).Should().OnlyContain(square => square.Item2.Color == Color.White);
+            onBoard.Where(sq => sq.Item1.Y < 2).Should().OnlyContain(square => square.Item2.Edge == Direction.South);
+            onBoard.Where(sq => sq.Item1.X < 2).Should().OnlyContain(square => square.Item2.Color == Color.Silver);
+            onBoard.Where(sq => sq.Item1.X < 2).Should().OnlyContain(square => square.Item2.Edge == Direction.West);
+            onBoard.Where(sq => sq.Item1.Y > 11).Should().OnlyContain(square => square.Item2.Color == Color.Black);
+            onBoard.Where(sq => sq.Item1.Y > 11).Should().OnlyContain(square => square.Item2.Edge == Direction.North);
+            onBoard.Where(sq => sq.Item1.X > 11).Should().OnlyContain(square => square.Item2.Color == Color.Gold);
+            onBoard.Where(sq => sq.Item1.X > 11).Should().OnlyContain(square => square.Item2.Edge == Direction.East);
+            onBoard.Where(sq => sq.Item1.X == 1 || sq.Item1.X == 12 ||
+                                        sq.Item1.Y == 1 || sq.Item1.Y == 12).Should().OnlyContain(square => square.Item2.Type == PieceType.Pawn);
 
             board[3,0].Type.Should().Be(PieceType.Rook);
             board[4,0].Type.Should().Be(PieceType.Knight);

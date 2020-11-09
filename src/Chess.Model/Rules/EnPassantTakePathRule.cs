@@ -2,6 +2,7 @@
 using Chess.Model.Models;
 using Chess.Model.Models.Board;
 using Chess.Model.Move;
+using Chess.Model.Stores;
 
 namespace Chess.Model.Rules
 {
@@ -14,27 +15,21 @@ namespace Chess.Model.Rules
         }
 
         /// <inheritdoc />
-        public void Apply(Square start, Path path, ISquareProvider squares)
+        public void Apply(IMarkingsProvider markings, Path path)
         {
-            if (path.AllowTake && start.Piece.Type == PieceType.Pawn && path.Moves.Any())
+            if (path.AllowTake && path.Piece.Type == PieceType.Pawn && path.Squares.Any())
             {
-                var move = path.Moves.First();
-                var target = squares.GetSquare(move.To);
+                var (target, _) = path.Squares.First();
 
-                if (target.GetMarkers(MarkerType.EnPassant).FirstOrDefault() is SimpleMarker marker
-                    && start.Piece.Color != marker.Source.Piece.Color)
+                if (markings.GetMarkers<SimpleMarker>(target, MarkerType.EnPassant).FirstOrDefault() is SimpleMarker marker
+                    && path.Piece.Color != marker.Piece.Color)
                 {
-                    start.Available = start.Available.Append(new EnPassantTakeMove
-                    {
-                        Piece = start.Piece,
-                        From = move.From,
-                        To = move.To,
-                        PawnLocation = marker.Source.Location
-                    });
-                    return;
+                    markings.Mark(path.Start, new MoveMarker(new EnPassantTakeMove(path.Start, target, marker.Source)));
+
+                    // return;
                 }
             }
-            m_chain.Apply(start, path, squares);
+            m_chain.Apply(markings, path);
         }
     }
 }

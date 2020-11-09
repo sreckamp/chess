@@ -13,9 +13,11 @@ namespace Chess.Model.Reducers
         {
         }
         
-        public GameReducer Create(Version version) => new GameReducer(new VersionReducer(), new BoardReducer(
-            new MarkSquareRules(PathSources.Sources, PathRules.MarkRules), 
-            new CollectAvailableRules(PathSources.Sources, PathRules.MoveRules)), 
-            new PlayerReducer(version), new HistoryReducer());
+        public GameReducer Create(Version version) => new GameReducer(new VersionReducer(), new BoardReducer(), 
+            new PlayerReducer(version),
+            new MarkingsReducer(
+                new MarkSquareRules(PathSources.Sources, PathRules.MarkRules), 
+                new CollectAvailableRules(PathSources.Sources, PathRules.MoveRules)
+            ));
     }
 }

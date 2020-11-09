@@ -1,20 +1,22 @@
-﻿namespace Chess.Model.Models.Board
+﻿using System.Drawing;
+
+namespace Chess.Model.Models.Board
 {
     public sealed class SimpleMarker : ISquareMarker
     {
-        public SimpleMarker(MarkerType type, Square source, Direction direction)
+        public SimpleMarker(MarkerType type, Point source, Piece piece, Direction direction)
         {
             Type = type;
             Source = source;
+            Piece = piece;
             Direction = direction;
         }
+
         public MarkerType Type { get; }
-        public Square Source { get; }
+        public Point Source { get; }
+        public Piece Piece { get; }
         public Direction Direction { get; }
-        
-        public ISquareMarker Clone(ISquareProvider squares) => new SimpleMarker(
-            Type,
-            squares.GetSquare(Source.Location.X, Source.Location.Y),
-            Direction);
+
+        public ISquareMarker Clone() => new SimpleMarker(Type, Source, Piece, Direction);
     }
 }
