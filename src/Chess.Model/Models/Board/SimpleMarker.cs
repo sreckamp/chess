@@ -2,7 +2,7 @@
 
 namespace Chess.Model.Models.Board
 {
-    public sealed class SimpleMarker : ISquareMarker
+    public sealed class SimpleMarker : IMarker
     {
         public SimpleMarker(MarkerType type, Point source, Piece piece, Direction direction)
         {
@@ -17,6 +17,6 @@ namespace Chess.Model.Models.Board
         public Piece Piece { get; }
         public Direction Direction { get; }
 
-        public ISquareMarker Clone() => new SimpleMarker(Type, Source, Piece, Direction);
+        public IMarker Clone() => new SimpleMarker(Type, Source, Piece, Direction);
     }
 }

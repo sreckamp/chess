@@ -3,7 +3,7 @@ using Chess.Model.Move;
 
 namespace Chess.Model.Models.Board
 {
-    public class MoveMarker:ISquareMarker
+    public class MoveMarker:IMarker
     {
         public MoveMarker(IMove move)
         {
@@ -14,7 +14,7 @@ namespace Chess.Model.Models.Board
         public MarkerType Type => MarkerType.Move;
         public Point Source { get; }
         public IMove Move { get; }
-        public ISquareMarker Clone()
+        public IMarker Clone()
         {
             throw new System.NotImplementedException();
         }

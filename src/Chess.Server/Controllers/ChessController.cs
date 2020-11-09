@@ -56,7 +56,7 @@ namespace Chess.Server.Controllers
                 //
                 // Available = store.Board.Available.Select(p => (Location)p),
 
-                Pieces = store.Board.Where(square => !square.IsEmpty || square.GetMarkers<ISquareMarker>().Any()).Select(
+                Pieces = store.Board.Where(square => !square.IsEmpty || square.GetMarkers<IMarker>().Any()).Select(
                     square => new Piece
                         {
                             Location = new Location
@@ -65,7 +65,7 @@ namespace Chess.Server.Controllers
                                 Y=square.Location.Y,
                                 Metadata = new Metadata
                                 {
-                                    Markers = square.GetMarkers<ISquareMarker>()
+                                    Markers = square.GetMarkers<IMarker>()
                                         .GroupBy(marker => marker.Direction)
                                         .ToDictionary(markers => markers.Key,
                                             markers =>  markers.GroupBy(marker => marker.Source.Piece.ToString())

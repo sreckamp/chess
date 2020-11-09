@@ -2,11 +2,10 @@
 
 namespace Chess.Model.Models.Board
 {
-    public interface ISquareMarker
+    public interface IMarker
     {
         MarkerType Type { get; }
         Point Source { get; }
-        // Direction Direction { get; }
-        ISquareMarker Clone();
+        IMarker Clone();
     }
 }

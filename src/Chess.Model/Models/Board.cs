@@ -63,7 +63,7 @@ namespace Chess.Model.Models
 
         // public Square GetSquare(int x, int y) => m_squares[y][x];
 
-        public GameBoard DeepCopy(Func<ISquareMarker, bool> keepMarker = null)
+        public GameBoard DeepCopy(Func<IMarker, bool> keepMarker = null)
         {
             var board = new GameBoard(Size, Corners);
             foreach (var (point,piece) in this.Where((tuple) => tuple.Item2.IsEmpty))

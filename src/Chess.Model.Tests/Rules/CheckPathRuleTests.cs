@@ -20,7 +20,7 @@ namespace Chess.Model.Tests.Rules
         {
             // Arrange
             var markingsMock = new Mock<IMarkingsProvider>();
-            markingsMock.Setup(provider => provider.Mark(It.IsAny<Point>(), It.IsAny<ISquareMarker>())).Verifiable();
+            markingsMock.Setup(provider => provider.Mark(It.IsAny<Point>(), It.IsAny<IMarker>())).Verifiable();
             var chainPathRuleMock = new Mock<IPathRule>();
             chainPathRuleMock.Setup(pathRule => pathRule.Apply(It.IsAny<IMarkingsProvider>(), It.IsAny<Path>())).Verifiable();
 
@@ -37,7 +37,7 @@ namespace Chess.Model.Tests.Rules
             dut.Apply(markingsMock.Object, path);
             
             // Assert
-            markingsMock.Verify(provider => provider.Mark(It.IsAny<Point>(), It.IsAny<ISquareMarker>()), Times.Never);
+            markingsMock.Verify(provider => provider.Mark(It.IsAny<Point>(), It.IsAny<IMarker>()), Times.Never);
             chainPathRuleMock.Verify(pathRule => pathRule.Apply(It.IsAny<IMarkingsProvider>(), path));
         }
         
@@ -46,7 +46,7 @@ namespace Chess.Model.Tests.Rules
         {
             // Arrange
             var markingsMock = new Mock<IMarkingsProvider>();
-            markingsMock.Setup(provider => provider.Mark(It.IsAny<Point>(), It.IsAny<ISquareMarker>())).Verifiable();
+            markingsMock.Setup(provider => provider.Mark(It.IsAny<Point>(), It.IsAny<IMarker>())).Verifiable();
             var chainPathRuleMock = new Mock<IPathRule>();
             chainPathRuleMock.Setup(pathRule => pathRule.Apply(It.IsAny<IMarkingsProvider>(), It.IsAny<Path>())).Verifiable();
 

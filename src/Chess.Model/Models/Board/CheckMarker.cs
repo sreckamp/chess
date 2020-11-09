@@ -2,7 +2,7 @@
 
 namespace Chess.Model.Models.Board
 {
-    public sealed class CheckMarker : ISquareMarker
+    public sealed class CheckMarker : IMarker
     {
         public CheckMarker(Point source, Point target, Direction direction)
         {
@@ -16,6 +16,6 @@ namespace Chess.Model.Models.Board
         public Point Target { get; }
         public Direction Direction { get; }
 
-        public ISquareMarker Clone() => new CheckMarker(Source, Target, Direction);
+        public IMarker Clone() => new CheckMarker(Source, Target, Direction);
     }
 }

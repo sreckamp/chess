@@ -5,12 +5,12 @@ namespace Chess.Model.Models.Board
 {
     public interface IMarkingsProvider
     {
-        void Mark<T>(Point point, T marker) where T : ISquareMarker;
+        void Mark<T>(Point point, T marker) where T : IMarker;
 
-        void Mark<T>(Point point, IEnumerable<T> markers) where T : ISquareMarker;
+        void Mark<T>(Point point, IEnumerable<T> markers) where T : IMarker;
 
-        IEnumerable<T> GetMarkers<T>(Point location) where T : ISquareMarker;
+        IEnumerable<T> GetMarkers<T>(Point location) where T : IMarker;
 
-        IEnumerable<T> GetMarkers<T>(Point location, MarkerType type) where T : ISquareMarker;
+        IEnumerable<T> GetMarkers<T>(Point location, MarkerType type) where T : IMarker;
     }
 }

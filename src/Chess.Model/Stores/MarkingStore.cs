@@ -7,20 +7,20 @@ namespace Chess.Model.Stores
 {
     public sealed class MarkingStore : IMarkingsProvider
     {
-        private Dictionary<Point, List<ISquareMarker>> m_markers
-            = new Dictionary<Point, List<ISquareMarker>>();
+        private Dictionary<Point, List<IMarker>> m_markers
+            = new Dictionary<Point, List<IMarker>>();
 
-        public void Mark<T>(Point point, T marker) where T : ISquareMarker
+        public void Mark<T>(Point point, T marker) where T : IMarker
         {
             if (!m_markers.ContainsKey(point))
             {
-                m_markers[point] = new List<ISquareMarker>();
+                m_markers[point] = new List<IMarker>();
             }
 
             m_markers[point].Add(marker);
         }
 
-        public void Mark<T>(Point point, IEnumerable<T> markers) where T : ISquareMarker
+        public void Mark<T>(Point point, IEnumerable<T> markers) where T : IMarker
         {
             foreach (var marker in markers)
             {
@@ -28,12 +28,12 @@ namespace Chess.Model.Stores
             }
         }
 
-        public IEnumerable<T> GetMarkers<T>(Point location) where T : ISquareMarker =>
+        public IEnumerable<T> GetMarkers<T>(Point location) where T : IMarker =>
             m_markers.ContainsKey(location)
                 ? m_markers[location].Where(marker => marker is T).Cast<T>()
                 : Enumerable.Empty<T>();
 
-        public IEnumerable<T> GetMarkers<T>(Point location, MarkerType type) where T : ISquareMarker =>
+        public IEnumerable<T> GetMarkers<T>(Point location, MarkerType type) where T : IMarker =>
             m_markers.ContainsKey(location)
                 ? m_markers[location].Where(marker => marker is T && marker.Type == type).Cast<T>()
                 : Enumerable.Empty<T>();

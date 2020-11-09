@@ -50,11 +50,12 @@
     <Compile Include="Models\Board.cs" />
     <Compile Include="Models\Board\CheckMarker.cs" />
     <Compile Include="Models\Board\IMarkingsProvider.cs" />
-    <Compile Include="Models\Board\ISquareProvider.cs" />
+    <Compile Include="Models\Board\IPieceEnumerationProvider.cs" />
+    <Compile Include="Models\Board\IBoard.cs" />
     <Compile Include="Models\Board\MarkerType.cs" />
     <Compile Include="Models\Board\MoveMarker.cs" />
     <Compile Include="Models\Board\SimpleMarker.cs" />
-    <Compile Include="Models\Board\ISquareMarker.cs" />
+    <Compile Include="Models\Board\IMarker.cs" />
     <Compile Include="Models\Color.cs" />
     <Compile Include="Models\Direction.cs" />
     <Compile Include="Models\BoardFactory.cs" />
