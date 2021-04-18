@@ -1,11 +1,11 @@
-<link rel="stylesheet" href="/web/app/game/board/board.css">
-<link rel="stylesheet" href="/web/app/game/board/board-meta.css">
-<link ng-if="theme == 'black'" rel="stylesheet" href="/web/app/game/board/board-black.css">
-<link ng-if="theme == 'blue'" rel="stylesheet" href="/web/app/game/board/board-blue.css">
-<link ng-if="theme == 'green'" rel="stylesheet" href="/web/app/game/board/board-green.css">
-<link ng-if="theme == 'orange'" rel="stylesheet" href="/web/app/game/board/board-orange.css">
-<link ng-if="theme == 'red'" rel="stylesheet" href="/web/app/game/board/board-red.css">
-<link ng-if="theme == 'tan'" rel="stylesheet" href="/web/app/game/board/board-tan.css">
+<link rel="stylesheet" href="/game/board/board.css">
+<link rel="stylesheet" href="/game/board/board-meta.css">
+<link ng-if="theme == 'black'" rel="stylesheet" href="/game/board/board-black.css">
+<link ng-if="theme == 'blue'" rel="stylesheet" href="/game/board/board-blue.css">
+<link ng-if="theme == 'green'" rel="stylesheet" href="/game/board/board-green.css">
+<link ng-if="theme == 'orange'" rel="stylesheet" href="/game/board/board-orange.css">
+<link ng-if="theme == 'red'" rel="stylesheet" href="/game/board/board-red.css">
+<link ng-if="theme == 'tan'" rel="stylesheet" href="/game/board/board-tan.css">
 
 <div>
     <h2 style="text-align: center">{{board.name}} {{currentPlayer}}'s Turn</h2>
@@ -34,18 +34,18 @@
                             }"
                             ng-click="clickSquare($index, $parent.$index)">
                         <svg ng-show="piece && piece.piece != 'empty' && piece.piece != 'enpassant'" class="piece" ng-class="[piece.color, piece.piece]">
-                            <image href="/web/app/chess.png"/>
+                            <image href="chess.png"/>
                         </svg>
                         <div ng-show="showMeta" class = "meta">
                             <div ng-repeat="m in piece.metadata.markers track by $index" ng-class="[m.types, m.direction, rotation]">
                                 <svg ng-repeat ="mp in m.pieces" ng-show="mp.piece != 'empty'" class="piece" ng-class="[mp.color, mp.piece]">
-                                    <image href="/web/app/chess.png"/>
+                                    <image href="chess.png"/>
                                 </svg>
                             </div>
                         </div>
                         <!-- TODO: For EnPassant create a "phantom" pawn at this place (transparency 40%) -->
                         <svg ng-show="showMeta && piece && piece.piece == 'enpassant'" class="piece pawn phantom" ng-class="[piece.color]">
-                            <image href="/web/app/chess.png"/>
+                            <image href="chess.png"/>
                         </svg>
                     </div>
                 </div>
