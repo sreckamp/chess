@@ -49,6 +49,7 @@
     <Compile Include="Game.cs" />
     <Compile Include="Models\Board.cs" />
     <Compile Include="Models\Board\CheckMarker.cs" />
+    <Compile Include="Models\Board\IDirectionalMarker.cs" />
     <Compile Include="Models\Board\IMarkingsProvider.cs" />
     <Compile Include="Models\Board\IPieceEnumerationProvider.cs" />
     <Compile Include="Models\Board\IBoard.cs" />

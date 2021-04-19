@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Drawing;
+using System.Linq;
+using Chess.Model.Models.Board;
 using Chess.Server.Model;
 using Chess.Server.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +27,7 @@ namespace Chess.Server.Controllers
 
             var game = m_gameService.GetGame(gameId);
 
-            var available = game.Store.Board.GetAvailable(x,y).Select(move => move.To);
+            var available = game.Store.Markings.GetMarkers<MoveMarker>(new Point(x,y)).Select(move => move.Move.To);
 
             return game.Store.Board.IsOnBoard(x, y) ? (object)Ok(available) : BadRequest(Enumerable.Empty<Location>());
         }

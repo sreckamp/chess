@@ -2,7 +2,7 @@
 
 namespace Chess.Model.Models.Board
 {
-    public sealed class SimpleMarker : IMarker
+    public sealed class SimpleMarker : IDirectionalMarker
     {
         public SimpleMarker(MarkerType type, Point source, Piece piece, Direction direction)
         {

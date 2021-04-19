@@ -2,7 +2,7 @@
 
 namespace Chess.Model.Models.Board
 {
-    public sealed class CheckMarker : IMarker
+    public sealed class CheckMarker : IDirectionalMarker
     {
         public CheckMarker(Point source, Point target, Direction direction)
         {

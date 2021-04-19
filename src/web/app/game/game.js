@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('chess.game', ['ngRoute', 'ngResource', 'ngCookie', 'chess.gameService'])
+angular.module('chess.game', ['ngRoute', 'ngResource', /*'ngCookie',*/ 'chess.gameService'])
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.when('/games/:game', {

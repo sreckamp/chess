@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Linq;
+﻿using System.Linq;
 using Chess.Model;
 using Chess.Model.Models;
 using Chess.Model.Models.Board;
@@ -56,19 +55,19 @@ namespace Chess.Server.Controllers
                 //
                 // Available = store.Board.Available.Select(p => (Location)p),
 
-                Pieces = store.Board.Where(square => !square.IsEmpty || square.GetMarkers<IMarker>().Any()).Select(
+                Pieces = store.Board.Where((square) => !square.Item2.IsEmpty || store.Markings.GetMarkers<IMarker>(square.Item1).Any()).Select(
                     square => new Piece
                         {
                             Location = new Location
                             {
-                                X =square.Location.X,
-                                Y=square.Location.Y,
+                                X = square.Item1.X,
+                                Y = square.Item1.Y,
                                 Metadata = new Metadata
                                 {
-                                    Markers = square.GetMarkers<IMarker>()
+                                    Markers = store.Markings.GetMarkers<IDirectionalMarker>(square.Item1)
                                         .GroupBy(marker => marker.Direction)
                                         .ToDictionary(markers => markers.Key,
-                                            markers =>  markers.GroupBy(marker => marker.Source.Piece.ToString())
+                                            markers =>  markers.GroupBy(marker => store.Board[marker.Source].ToString())
                                                 .ToDictionary(grouping => grouping.Key, grouping => grouping.OrderByDescending(
                                                     marker => marker.Type switch
                                                         {
@@ -80,14 +79,14 @@ namespace Chess.Server.Controllers
                                             new Marker
                                             {
                                                 Type = pair.Value.Type.ToString().ToLower(),
-                                                SourceColor = pair.Value.Source.Piece.Color.ToString().ToLower(),
-                                                SourceType = pair.Value.Source.Piece.Type.ToString().ToLower(),
+                                                SourceColor = store.Board[pair.Value.Source].Color.ToString().ToLower(),
+                                                SourceType = store.Board[pair.Value.Source].Type.ToString().ToLower(),
                                                 Direction = pair.Value.Direction.ToString().ToLower()
                                             })
                                 }
                             },
-                            Color = square.Piece.Color.ToString().ToLower(),
-                            Type = square.Piece.Type.ToString().ToLower(),
+                            Color = square.Item2.Color.ToString().ToLower(),
+                            Type = square.Item2.Type.ToString().ToLower(),
                         }),
 
                 // MoveHistory = store.Board.History.Select(history =>
