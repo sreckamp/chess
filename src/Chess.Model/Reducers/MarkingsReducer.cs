@@ -24,6 +24,8 @@ namespace Chess.Model.Reducers
             {
                 case InitializeAction _:
                     return (store.Item1, new MarkingStore());
+                case MoveAction _:
+                    return (store.Item1, new MarkingStore());
                 case UpdateMarkersAction _:
                     return (store.Item1, UpdateMarkers(store.Item1, store.Item2, m_markingRules));
                 case UpdateAvailableMovesAction _:
@@ -42,7 +44,7 @@ namespace Chess.Model.Reducers
 
             foreach (var (point, piece) in board)
             {
-               markingRules.Apply(point, piece, board, store);
+               markingRules.Apply(point, piece, board, next);
             }
         
             sw.Stop();
@@ -59,7 +61,7 @@ namespace Chess.Model.Reducers
             var next = store.DeepClone();
             foreach (var (point, piece) in board)
             {
-                movementRules.Apply(point, piece, board, store);
+                movementRules.Apply(point, piece, board, next);
             }
 
             sw.Stop();

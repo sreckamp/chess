@@ -1,12 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Chess.Model;
-using Chess.Model.Models;
 using Chess.Model.Models.Board;
 using Chess.Model.Stores;
 using Chess.Server.Model;
 using Chess.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 using Piece = Chess.Server.Model.Piece;
+using Version = Chess.Model.Models.Version;
 
 namespace Chess.Server.Controllers
 {
@@ -24,6 +25,7 @@ namespace Chess.Server.Controllers
         [HttpGet("{gameId?}")]
         public GameState GetGame(int? gameId, int players=2)
         {
+            Console.WriteLine("GetGame");
             if (gameId == null)
             {
                 gameId = _gameId;

@@ -66,7 +66,7 @@ namespace Chess.Model.Models
         public GameBoard DeepCopy(Func<IMarker, bool> keepMarker = null)
         {
             var board = new GameBoard(Size, Corners);
-            foreach (var (point,piece) in this.Where((tuple) => tuple.Item2.IsEmpty))
+            foreach (var (point, piece) in this.Where((tuple) => !tuple.Item2.IsEmpty))
             {
                 board[point] = piece;
             }

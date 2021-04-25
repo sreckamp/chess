@@ -1,12 +1,7 @@
 ﻿using System.Drawing;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using Chess.Model.Models;
 using Chess.Model.Models.Board;
-using Chess.Model.Move;
 using Chess.Model.Rules;
-using Chess.Model.Stores;
-using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using Color = Chess.Model.Models.Color;
@@ -24,7 +19,7 @@ namespace Chess.Model.Tests.Rules
             var chainPathRuleMock = new Mock<IPathRule>();
             chainPathRuleMock.Setup(pathRule => pathRule.Apply(It.IsAny<IMarkingsProvider>(), It.IsAny<Path>())).Verifiable();
 
-            var path = new Path {
+            var path = new Path("Test") {
                 Direction = Direction.None,
                 AllowMove = true,
                 AllowTake = true,
@@ -50,7 +45,7 @@ namespace Chess.Model.Tests.Rules
             var chainPathRuleMock = new Mock<IPathRule>();
             chainPathRuleMock.Setup(pathRule => pathRule.Apply(It.IsAny<IMarkingsProvider>(), It.IsAny<Path>())).Verifiable();
 
-            var path = new Path {
+            var path = new Path("Test") {
                 Direction = Direction.None,
                 AllowMove = true,
                 AllowTake = true,

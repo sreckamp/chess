@@ -28,7 +28,7 @@
                                 'transparent': !isVisible($index, $parent.$index),
                                 'active': isActive($index, $parent.$index),
                                 'available': isAvailable($index, $parent.$index),
-                                'opponent': isOpponent(piece.color),
+                                'opponent': isOpponent(piece && piece.color || 'none'),
                                 'selectable': piece.color == (currentPlayer | lowercase),
                                 'check': isInCheck($index, $parent.$index)
                             }"

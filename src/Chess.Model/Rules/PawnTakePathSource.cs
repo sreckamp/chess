@@ -17,7 +17,7 @@ namespace Chess.Model.Rules
                         piece.Edge.RotateClockwise(3)
                     }
                     .Where(direction => squares.EnumerateStraightLine(start, direction).Any())
-                    .Select(direction => new Path
+                    .Select(direction => new Path(GetType().Name)
                     {
                         AllowMove = false,
                         AllowTake = true,

@@ -16,7 +16,7 @@ namespace Chess.Model.Rules
             return piece.Type == PieceType.King && !piece.HasMoved ?
                 Directions.Cardinals.Where(dir => dir.IsPerpendicular(piece.Edge))
                     .Select(direction => 
-                        new Path
+                        new Path(GetType().Name)
                         {
                             AllowMove = true,
                             Start = start,

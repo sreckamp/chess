@@ -9,7 +9,7 @@ angular.module('chess.game', ['ngRoute', 'ngResource', /*'ngCookie',*/ 'chess.ga
         });
     }])
 
-    .controller('GameController', ['gameService', '$scope', '$routeParams', '$cookie', function (gameService, $scope, $routeParams, $cookie) {
+    .controller('GameController', ['gameService', '$scope', '$routeParams', /*'$cookie',*/ function (gameService, $scope, $routeParams, $cookie) {
 
         if ($routeParams.theme) {
             $scope.theme = $routeParams.theme;
@@ -68,7 +68,7 @@ angular.module('chess.game', ['ngRoute', 'ngResource', /*'ngCookie',*/ 'chess.ga
             let _idx;
             const _pieces = [];
             for(_idx = 0; _idx < store.size; _idx++) {
-                if($scope.board.pieces.length != store.size) {
+                if($scope.board.pieces.length !== store.size) {
                     $scope.board.files.push(String.fromCharCode("A".charCodeAt(0)+_idx));
                     $scope.board.ranks.push(_idx + 1);
                 }
@@ -79,13 +79,13 @@ angular.module('chess.game', ['ngRoute', 'ngResource', /*'ngCookie',*/ 'chess.ga
             $scope.labels = _sideView ? $scope.board.files : $scope.board.ranks;
 
             store.pieces.forEach(function (p) {
-                const _enpassant = p.location.metadata.markers.find(value => value.type == 'enpassant');
+                const _enpassant = p.location.metadata.markers.find(value => value.type === 'enpassant');
                 _pieces[p.location.y].cols[p.location.x] = {
                     'piece': _enpassant ? _enpassant.type : p.type,
-                    'color': _enpassant ? _enpassant.sourceColor : p.color,
+                    'color': _enpassant ? _enpassant.sourceColor : p.color || 'none',
                     'metadata': {
                         'markers': p.location.metadata.markers.reduce(function (arr, m) {
-                            if(m.type != 'enpassant') {
+                            if(m.type !== 'enpassant') {
                                 _idx = arr.findIndex(item => item.direction === m.direction);
                                 if (_idx < 0) {
                                     arr.push({
@@ -111,8 +111,8 @@ angular.module('chess.game', ['ngRoute', 'ngResource', /*'ngCookie',*/ 'chess.ga
             $scope.board.corners = store.corners;
             $scope.board.size = store.size;
             $scope.board.pieces = _pieces;
-            $scope.board.corner = store.corners % 2 == 0 ? 'dark' : 'light';
-            $scope.board.other = store.corners % 2 == 1 ? 'dark' : 'light';
+            $scope.board.corner = store.corners % 2 === 0 ? 'dark' : 'light';
+            $scope.board.other = store.corners % 2 === 1 ? 'dark' : 'light';
         };
 
         const refreshGame = function () {
@@ -124,7 +124,7 @@ angular.module('chess.game', ['ngRoute', 'ngResource', /*'ngCookie',*/ 'chess.ga
         const select = function (x,y) {
             const _pc = getPiece(x, y);
 
-            if(!_pc || _pc.color != $scope.currentPlayer.toLowerCase()) return;
+            if(!_pc || _pc.color !== $scope.currentPlayer.toLowerCase()) return;
 
             _activeSquare = {'x':x,'y':y};
 
@@ -150,11 +150,11 @@ angular.module('chess.game', ['ngRoute', 'ngResource', /*'ngCookie',*/ 'chess.ga
         refreshGame();
 
         $scope.isActive = function (x, y) {
-            return _activeSquare && x == _activeSquare.x && y == _activeSquare.y;
+            return _activeSquare && x === _activeSquare.x && y === _activeSquare.y;
         };
 
         $scope.isVisible = function (x, y) {
-            if ($scope.board.corners == 0) return true;
+            if ($scope.board.corners === 0) return true;
 
             return !((y < $scope.board.corners || y >= $scope.board.size - $scope.board.corners) &&
                 (x < $scope.board.corners || x >= $scope.board.size - $scope.board.corners));
@@ -162,20 +162,20 @@ angular.module('chess.game', ['ngRoute', 'ngResource', /*'ngCookie',*/ 'chess.ga
 
         $scope.isAvailable = function (x, y) {
             return _available.some(function (p) {
-                return p.x == x && p.y == y;
+                return p.x === x && p.y === y;
             });
         };
 
         $scope.isOpponent = function (color) {
-            if(color =='none' || !_activeSquare) return false;
+            if(color === 'none' || !_activeSquare) return false;
 
-            return color != $scope.board.pieces[_activeSquare.y].cols[_activeSquare.x].color;
+            return color !== $scope.board.pieces[_activeSquare.y].cols[_activeSquare.x].color;
         };
 
         $scope.isInCheck = function (x, y) {
             const _pc = getPiece(x, y);
 
-            return _pc && _pc.piece == 'king' && _pc.metadata.markers.some(marker => marker.types.includes('check'));
+            return _pc && _pc.piece === 'king' && _pc.metadata.markers.some(marker => marker.types.includes('check'));
         };
 
         $scope.clickSquare = function (x,y) {
@@ -183,7 +183,7 @@ angular.module('chess.game', ['ngRoute', 'ngResource', /*'ngCookie',*/ 'chess.ga
 
             const target = getPiece(x, y);
 
-            if (_activeSquare && _activeSquare.x == x && _activeSquare.y == y) {
+            if (_activeSquare && _activeSquare.x === x && _activeSquare.y === y) {
                 _activeSquare = null;
                 _available = [];
             } else if (_activeSquare != null) {
@@ -191,7 +191,7 @@ angular.module('chess.game', ['ngRoute', 'ngResource', /*'ngCookie',*/ 'chess.ga
 
                 if(!pc) return;
 
-                if (target && (target.color == pc.color && target.color != 'none')) {
+                if (target && (target.color === pc.color && target.color !== 'none')) {
                     select(x,y);
                 } else {
                     move(_activeSquare.x, _activeSquare.y, x, y).then(function success() {
@@ -199,9 +199,8 @@ angular.module('chess.game', ['ngRoute', 'ngResource', /*'ngCookie',*/ 'chess.ga
                         _available = [];
                         refreshGame();
                     });
-                    return;
                 }
-            } else if(target && target.color != 'none') {
+            } else if(target && target.color !== 'none') {
                 select(x,y);
             }
         };

@@ -15,7 +15,7 @@ namespace Chess.Model.Rules
         /// <inheritdoc/>
         public IEnumerable<Path> GetPaths(Point start, Piece piece, IPieceEnumerationProvider squares)
             => piece.Type == PieceType.King
-                ? Directions.All.Where(direction => squares.EnumerateStraightLine(start, direction).Any()).Select(direction => new Path
+                ? Directions.All.Where(direction => squares.EnumerateStraightLine(start, direction).Any()).Select(direction => new Path(GetType().Name)
                     {
                         AllowMove = true,
                         AllowTake = true,

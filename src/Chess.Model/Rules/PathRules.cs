@@ -1,6 +1,4 @@
-﻿using Chess.Model.Stores;
-
-namespace Chess.Model.Rules
+﻿namespace Chess.Model.Rules
 {
     public static class PathRules
     {

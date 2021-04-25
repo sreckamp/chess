@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="AWSSDK.ElastiCache" Version="3.5.0.8" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="4.0.30506" />
   </ItemGroup>
 
 

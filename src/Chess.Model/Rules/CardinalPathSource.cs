@@ -13,7 +13,7 @@ namespace Chess.Model.Rules
             => piece.Type == PieceType.Rook || piece.Type == PieceType.Queen
                 ? Directions.Cardinals
                     .Where(direction => squares.EnumerateStraightLine(start, direction).Any())
-                    .Select(direction => new Path
+                    .Select(direction => new Path(GetType().Name)
                 {
                     AllowMove = true,
                     AllowTake = true,

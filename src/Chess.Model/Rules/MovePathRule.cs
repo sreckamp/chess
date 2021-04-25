@@ -1,7 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Chess.Model.Models.Board;
 using Chess.Model.Move;
-using Chess.Model.Stores;
 
 namespace Chess.Model.Rules
 {
@@ -19,7 +19,12 @@ namespace Chess.Model.Rules
         {
             if (path.Squares.Any() && path.AllowMove)
             {
-                markings.Mark(path.Start, path.Squares.TakeWhile(square => square.Item2.IsEmpty)
+                var available = path.Squares.TakeWhile(square => square.Item2.IsEmpty).ToList();
+                if(available.Count > 0)
+                {
+                    Console.WriteLine($"Move: {path}[{available.Count()}]");
+                }
+                markings.Mark(path.Start, available
                     .Select(target => new MoveMarker(new SimpleMove(path.Start, target.Item1))));
             }
 
