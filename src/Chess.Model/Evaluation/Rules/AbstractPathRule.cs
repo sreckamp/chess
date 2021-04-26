@@ -12,9 +12,9 @@ namespace Chess.Model.Evaluation.Rules
         }
 
         /// <inheritdoc />
-        public virtual void Apply(IMarkingsProvider markings, Path item)
+        public virtual void Apply(IMarkingsProvider markings, Path path)
         {
-            m_chain.Apply(markings, item);
+            m_chain.Apply(markings, path);
         }
     }
 }
