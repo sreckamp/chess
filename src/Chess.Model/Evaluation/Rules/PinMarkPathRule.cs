@@ -2,7 +2,6 @@
 using System.Linq;
 using Chess.Model.Models;
 using Chess.Model.Models.Board;
-using Chess.Model.Stores;
 
 namespace Chess.Model.Rules
 {

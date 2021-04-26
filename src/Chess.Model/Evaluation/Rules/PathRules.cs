@@ -13,11 +13,13 @@
         /// <summary>
         /// Rule chain to identify available moves.
         /// </summary>
-        public static readonly IPathRule MoveRules = new MoveIntoCheckPathRule(
-            new PinPathRule(
-                new EnPassantTakePathRule(
-                    new MovePathRule(
-                        new TakePathRule(NopPathRule.Instance))
+        public static readonly IPathRule MoveRules = new FilterPathRule((path => path.AllowTake),
+            new MoveIntoCheckPathRule(
+                new PinPathRule(
+                    new EnPassantTakePathRule(
+                        new MovePathRule(
+                            new TakePathRule(NopPathRule.Instance))
+                    )
                 )
             )
         );

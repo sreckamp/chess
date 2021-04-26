@@ -25,7 +25,7 @@ namespace Chess.Model.Reducers
                     return ia.Board;
                 case MoveAction ma:
                     return Move(store, ma.Move);
-                case UpdateMarkersAction uma:
+                case EvaluateBoardAction uma:
                     // return UpdateMarkings(store, m_markingRules, uma.ActivePlayer);
                 case UpdateAvailableMovesAction uama:
                     // return UpdateAvailableMoves(store, m_movementRules, uama.ActivePlayer);

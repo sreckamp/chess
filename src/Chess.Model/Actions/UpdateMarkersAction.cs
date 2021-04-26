@@ -2,7 +2,7 @@
 
 namespace Chess.Model.Actions
 {
-    public sealed class UpdateMarkersAction: IAction
+    public sealed class EvaluateBoardAction: IAction
     {
         public Color ActivePlayer { get; set; }
     }
