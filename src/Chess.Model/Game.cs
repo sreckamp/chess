@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Linq;
 using Chess.Model.Actions;
+using Chess.Model.Evaluation.Models;
 using Chess.Model.Models;
 using Chess.Model.Models.Board;
 using Chess.Model.Reducers;

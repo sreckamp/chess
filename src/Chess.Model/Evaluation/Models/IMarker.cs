@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Chess.Model.Models.Board
+namespace Chess.Model.Evaluation.Models
 {
     public interface IMarker
     {

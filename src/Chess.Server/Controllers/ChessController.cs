@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Chess.Model;
+using Chess.Model.Evaluation.Models;
 using Chess.Model.Models.Board;
 using Chess.Model.Stores;
 using Chess.Server.Model;

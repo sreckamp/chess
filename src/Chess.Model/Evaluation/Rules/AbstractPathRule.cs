@@ -1,5 +1,5 @@
-﻿using Chess.Model.Models.Board;
-using Chess.Model.Rules;
+﻿using Chess.Model.Evaluation.Models;
+using Chess.Model.Models.Board;
 
 namespace Chess.Model.Evaluation.Rules
 {

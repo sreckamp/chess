@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
+using Chess.Model.Models;
 
-namespace Chess.Model.Models.Board
+namespace Chess.Model.Evaluation.Models
 {
     public sealed class CheckMarker : IDirectionalMarker
     {

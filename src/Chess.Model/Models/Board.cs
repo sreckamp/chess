@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Chess.Model.Evaluation.Enumerables;
+using Chess.Model.Evaluation.Models;
 using Chess.Model.Extensions;
 using Chess.Model.Models.Board;
-using Chess.Model.Rules;
 
 namespace Chess.Model.Models
 {

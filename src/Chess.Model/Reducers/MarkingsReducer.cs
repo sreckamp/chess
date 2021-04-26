@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Chess.Model.Actions;
+using Chess.Model.Evaluation.Models;
 using Chess.Model.Evaluation.Rules;
+using Chess.Model.Evaluation.Sources;
 using Chess.Model.Models;
 using Chess.Model.Models.Board;
 using Chess.Model.Move;
-using Chess.Model.Rules;
 using Chess.Model.Stores;
 
 namespace Chess.Model.Reducers

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using Chess.Model.Extensions;
 
-namespace Chess.Model.Rules
+namespace Chess.Model.Evaluation.Enumerables
 {
     public sealed class KnightOffsetEnumerable<T> : IEnumerable<(Point, T)>
     {

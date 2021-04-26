@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Chess.Model.Rules
+namespace Chess.Model.Evaluation.Sources
 {
     public static class PathSources
     {

@@ -1,7 +1,8 @@
 ﻿using System.Drawing;
+using Chess.Model.Evaluation.Models;
+using Chess.Model.Evaluation.Sources;
 using Chess.Model.Models;
 using Chess.Model.Models.Board;
-using Chess.Model.Rules;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;

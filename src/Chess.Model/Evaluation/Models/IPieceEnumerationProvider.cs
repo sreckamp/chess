@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using Chess.Model.Models;
 
-namespace Chess.Model.Models.Board
+namespace Chess.Model.Evaluation.Models
 {
     public interface IPieceEnumerationProvider : IEnumerable<(Point, Piece)>
     {

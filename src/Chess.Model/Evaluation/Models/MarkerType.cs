@@ -1,4 +1,4 @@
-﻿namespace Chess.Model.Models.Board
+﻿namespace Chess.Model.Evaluation.Models
 {
     public enum MarkerType
     {

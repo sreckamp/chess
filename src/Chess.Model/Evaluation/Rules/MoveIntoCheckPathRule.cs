@@ -1,7 +1,7 @@
 ﻿using System.Linq;
+using Chess.Model.Evaluation.Models;
 using Chess.Model.Models;
 using Chess.Model.Models.Board;
-using Chess.Model.Rules;
 
 namespace Chess.Model.Evaluation.Rules
 {

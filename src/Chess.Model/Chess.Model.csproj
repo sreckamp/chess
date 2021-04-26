@@ -58,6 +58,7 @@
     <Compile Include="Evaluation\Rules\CoverPathRule.cs" />
     <Compile Include="Evaluation\Rules\EnPassantTakePathRule.cs" />
     <Compile Include="Evaluation\Rules\FilterPathRule.cs" />
+    <Compile Include="Evaluation\Rules\IfPathRule.cs" />
     <Compile Include="Evaluation\Rules\IPathRule.cs" />
     <Compile Include="Evaluation\Rules\MoveIntoCheckPathRule.cs" />
     <Compile Include="Evaluation\Rules\MovePathRule.cs" />

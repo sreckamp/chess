@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using Chess.Model.Evaluation.Models;
 using Chess.Model.Models;
-using Chess.Model.Models.Board;
 
-namespace Chess.Model.Rules
+namespace Chess.Model.Evaluation.Sources
 {
     public interface IPathSource
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 using Chess.Model.Evaluation.Rules;
-using Chess.Model.Rules;
+using Chess.Model.Evaluation.Sources;
 using Version = Chess.Model.Models.Version;
 
 namespace Chess.Model.Reducers

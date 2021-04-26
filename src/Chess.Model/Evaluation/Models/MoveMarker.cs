@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using Chess.Model.Move;
 
-namespace Chess.Model.Models.Board
+namespace Chess.Model.Evaluation.Models
 {
     public class MoveMarker:IMarker
     {

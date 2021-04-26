@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Linq;
 using Chess.Model.Models;
 
-namespace Chess.Model.Rules
+namespace Chess.Model.Evaluation.Models
 {
     /// <summary>
     /// Description of a sequence of moves that is available.

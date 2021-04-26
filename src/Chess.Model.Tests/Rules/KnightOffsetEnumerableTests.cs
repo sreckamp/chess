@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
+using Chess.Model.Evaluation.Enumerables;
 using Chess.Model.Models;
-using Chess.Model.Rules;
 using FluentAssertions;
 using NUnit.Framework;
 

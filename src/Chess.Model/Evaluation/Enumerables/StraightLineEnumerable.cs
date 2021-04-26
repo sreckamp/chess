@@ -5,7 +5,7 @@ using System.Drawing;
 using Chess.Model.Extensions;
 using Chess.Model.Models;
 
-namespace Chess.Model.Rules
+namespace Chess.Model.Evaluation.Enumerables
 {
     public sealed class StraightLineEnumerable<T> : IEnumerable<(Point, T)>
     {
