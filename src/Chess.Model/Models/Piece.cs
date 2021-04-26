@@ -28,6 +28,6 @@
         /// <inheritdoc />
         public override string ToString() => IsEmpty ? string.Empty : $"{Color} {Type}";
 
-        public static Piece Empty;
+        public static readonly Piece Empty = new Piece(PieceType.Empty, Color.None, Direction.None);
     }
 }

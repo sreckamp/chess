@@ -23,10 +23,12 @@ namespace Chess.Model.Move
         {
             var taken = board[To];
 
-            board[To] = board[From];
-            board[To].Moved();
-
+            var moved = board[From];
             board[From] = Piece.Empty;
+
+            moved.Moved();
+
+            board[To] = moved;
 
             return taken;
         }

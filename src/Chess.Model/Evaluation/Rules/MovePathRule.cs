@@ -15,12 +15,7 @@ namespace Chess.Model.Evaluation.Rules
         {
             if (path.Squares.Any() && path.AllowMove)
             {
-                var available = path.Squares.TakeWhile(square => square.Item2.IsEmpty).ToList();
-                if(available.Count > 0)
-                {
-                    Console.WriteLine($"Move: {path}[{available.Count()}]");
-                }
-                markings.Mark(path.Start, available
+                markings.Mark(path.Start, path.Squares.TakeWhile(square => square.Item2.IsEmpty)
                     .Select(target =>
                     {
                         var (point, _) = target;
