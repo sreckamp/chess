@@ -1,23 +1,19 @@
 ﻿using System.Linq;
 using Chess.Model.Models;
 using Chess.Model.Models.Board;
-using Chess.Model.Stores;
+using Chess.Model.Rules;
 
-namespace Chess.Model.Rules
+namespace Chess.Model.Evaluation.Rules
 {
     /// <summary>
     /// Evaluates path for check
     /// </summary>
-    public sealed class CheckPathRule : IPathRule
+    public sealed class CheckPathRule : AbstractPathRule
     {
-        private readonly IPathRule m_chain;
-        public CheckPathRule(IPathRule chain)
-        {
-            m_chain = chain;
-        }
+        public CheckPathRule(IPathRule chain): base(chain) { }
 
         /// <inheritdoc />
-        public void Apply(IMarkingsProvider markings, Path path)
+        public override void Apply(IMarkingsProvider markings, Path path)
         {
             if (path.Squares.Any())
             {
@@ -51,7 +47,7 @@ namespace Chess.Model.Rules
                 }
             }
 
-            m_chain.Apply(markings, path);
+            base.Apply(markings, path);
         }
     }
 }

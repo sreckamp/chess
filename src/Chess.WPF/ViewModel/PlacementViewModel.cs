@@ -1,10 +1,6 @@
-﻿using System;
-using System.Drawing;
-using System.Text;
+﻿using System.Drawing;
 // using DPoint = System.Drawing.Point;
-using System.Windows.Controls;
 using System.Windows.Media;
-using Chess.Model;
 using GameBase.Model;
 using GameBase.WPF.ViewModel;
 using Brush = System.Windows.Media.Brush;
@@ -23,8 +19,8 @@ namespace Chess.WPF.ViewModel
         //     return new Move(locationX, locationY);
         // }
 
-        public string Name => Placement.Piece?.Type.ToString() ?? string.Empty;
-        public string Team => Placement.Piece?.Color.ToString();
+        public string Name => Placement.Piece.Type.ToString() ?? string.Empty;
+        public string Team => Placement.Piece.Color.ToString();
 
         public bool IsDark => (Column + Row) % 2 > 0;
 

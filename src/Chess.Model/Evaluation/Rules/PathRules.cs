@@ -1,4 +1,4 @@
-﻿namespace Chess.Model.Rules
+﻿namespace Chess.Model.Evaluation.Rules
 {
     public static class PathRules
     {
@@ -6,22 +6,19 @@
         /// Rule chain to mark squares.
         /// </summary>
         public static readonly IPathRule MarkRules =
-            new CheckPathRule(
-                new CoverPathRule(
-                    new PinMarkPathRule(NopPathRule.Instance)));
+            new FilterPathRule((path => path.AllowTake),
+                new CheckPathRule(
+                    new CoverPathRule(
+                        new PinMarkPathRule(NopPathRule.Instance))));
 
         /// <summary>
         /// Rule chain to identify available moves.
         /// </summary>
-        public static readonly IPathRule MoveRules = new FilterPathRule((path => path.AllowTake),
+        public static readonly IPathRule MoveRules =
             new MoveIntoCheckPathRule(
                 new PinPathRule(
                     new EnPassantTakePathRule(
                         new MovePathRule(
-                            new TakePathRule(NopPathRule.Instance))
-                    )
-                )
-            )
-        );
+                            new TakePathRule(NopPathRule.Instance)))));
     }
 }

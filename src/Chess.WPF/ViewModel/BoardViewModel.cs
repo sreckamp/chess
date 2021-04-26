@@ -24,7 +24,7 @@ namespace Chess.WPF.ViewModel
                 {
                     if(!board.IsOnBoard(x,y)) continue;
                     
-                    m_grid.Add(new PlacementViewModel(new Placement<Piece>(null, new Point(x,y))));
+                    m_grid.Add(new PlacementViewModel(new Placement<Piece>(Piece.Empty, new Point(x,y))));
                 }
             }
         }

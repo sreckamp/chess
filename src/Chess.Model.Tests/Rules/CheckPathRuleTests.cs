@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Chess.Model.Evaluation.Rules;
 using Chess.Model.Models;
 using Chess.Model.Models.Board;
 using Chess.Model.Rules;

@@ -1,7 +1,7 @@
 ﻿using Chess.Model.Models.Board;
-using Chess.Model.Stores;
+using Chess.Model.Rules;
 
-namespace Chess.Model.Rules
+namespace Chess.Model.Evaluation.Rules
 {
     public interface IPathRule
     {

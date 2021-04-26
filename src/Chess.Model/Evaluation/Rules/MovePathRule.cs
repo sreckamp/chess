@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Linq;
+using Chess.Model.Models;
 using Chess.Model.Models.Board;
 using Chess.Model.Move;
+using Chess.Model.Rules;
 
-namespace Chess.Model.Rules
+namespace Chess.Model.Evaluation.Rules
 {
-    public sealed class MovePathRule : IPathRule
+    public sealed class MovePathRule : AbstractPathRule
     {
-        private readonly IPathRule m_chain;
-
-        public MovePathRule(IPathRule chain)
-        {
-            m_chain = chain;
-        }
+        public MovePathRule(IPathRule chain): base(chain) { }
 
         /// <inheritdoc />
-        public void Apply(IMarkingsProvider markings, Path path)
+        public override void Apply(IMarkingsProvider markings, Path path)
         {
             if (path.Squares.Any() && path.AllowMove)
             {
@@ -25,10 +22,20 @@ namespace Chess.Model.Rules
                     Console.WriteLine($"Move: {path}[{available.Count()}]");
                 }
                 markings.Mark(path.Start, available
-                    .Select(target => new MoveMarker(new SimpleMove(path.Start, target.Item1))));
+                    .Select(target =>
+                    {
+                        var (point, _) = target;
+                        IMove move = new SimpleMove(path.Start, point);
+                        if (path.Piece.Type == PieceType.Pawn && Math.Abs(point.X + point.Y - (path.Start.X + path.Start.Y)) > 1)
+                        {
+                            move = new PawnOpenMove((SimpleMove) move);
+                        }
+
+                        return new MoveMarker(move);
+                    }));
             }
 
-            m_chain.Apply(markings, path);
+            base.Apply(markings, path);
         }
     }
 }

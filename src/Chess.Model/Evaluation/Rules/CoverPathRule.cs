@@ -1,19 +1,15 @@
 ﻿using System.Linq;
 using Chess.Model.Models.Board;
-using Chess.Model.Stores;
+using Chess.Model.Rules;
 
-namespace Chess.Model.Rules
+namespace Chess.Model.Evaluation.Rules
 {
-    public sealed class CoverPathRule : IPathRule
+    public sealed class CoverPathRule : AbstractPathRule
     {
-        private readonly IPathRule m_chain;
-        public CoverPathRule(IPathRule chain)
-        {
-            m_chain = chain;
-        }
+        public CoverPathRule(IPathRule chain): base(chain) { }
 
         /// <inheritdoc />
-        public void Apply(IMarkingsProvider markings, Path path)
+        public override void Apply(IMarkingsProvider markings, Path path)
         {
             if (path.Squares.Any())
             {
@@ -24,7 +20,7 @@ namespace Chess.Model.Rules
                     if (!piece.IsEmpty) break;
                 }
             }
-            m_chain.Apply(markings, path);
+            base.Apply(markings, path);
         }
     }
 }

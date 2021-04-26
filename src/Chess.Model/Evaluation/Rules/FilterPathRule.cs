@@ -1,24 +1,24 @@
 ﻿using System;
 using Chess.Model.Models.Board;
+using Chess.Model.Rules;
 
-namespace Chess.Model.Rules
+namespace Chess.Model.Evaluation.Rules
 {
-    public class FilterPathRule: IPathRule
+    public class FilterPathRule: AbstractPathRule
     {
-        private readonly IPathRule m_chain;
         private readonly Func<Path, bool> m_predicate;
 
-        public FilterPathRule(Func<Path, bool> predicate, IPathRule chain)
+        public FilterPathRule(Func<Path, bool> predicate, IPathRule chain): base(chain)
         {
-            m_chain = chain;
             m_predicate = predicate ?? (path => true);
         }
 
-        public void Apply(IMarkingsProvider markings, Path path)
+        /// <inheritdoc />
+        public override void Apply(IMarkingsProvider markings, Path path)
         {
             if (m_predicate.Invoke(path))
             {
-                m_chain.Apply(markings, path);
+                base.Apply(markings, path);
             }
         }
     }

@@ -53,14 +53,12 @@
     <Compile Include="Evaluation\Models\MoveMarker.cs" />
     <Compile Include="Evaluation\Models\Path.cs" />
     <Compile Include="Evaluation\Models\SimpleMarker.cs" />
+    <Compile Include="Evaluation\Rules\AbstractPathRule.cs" />
     <Compile Include="Evaluation\Rules\CheckPathRule.cs" />
-    <Compile Include="Evaluation\Rules\CollectAvailableRules.cs" />
     <Compile Include="Evaluation\Rules\CoverPathRule.cs" />
     <Compile Include="Evaluation\Rules\EnPassantTakePathRule.cs" />
     <Compile Include="Evaluation\Rules\FilterPathRule.cs" />
     <Compile Include="Evaluation\Rules\IPathRule.cs" />
-    <Compile Include="Evaluation\Rules\IRules.cs" />
-    <Compile Include="Evaluation\Rules\MarkSquareRules.cs" />
     <Compile Include="Evaluation\Rules\MoveIntoCheckPathRule.cs" />
     <Compile Include="Evaluation\Rules\MovePathRule.cs" />
     <Compile Include="Evaluation\Rules\NopPathRule.cs" />

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Chess.Model;
 using Chess.Model.Models.Board;
 using Chess.Model.Stores;
@@ -15,7 +14,7 @@ namespace Chess.Server.Controllers
     public class GamesController : ControllerBase
     {
         private readonly IGameProviderService m_gameService;
-        private static int _gameId = 10000;
+        private static int s_gameId = 10000;
 
         public GamesController(IGameProviderService gameProvider)
         {
@@ -25,11 +24,10 @@ namespace Chess.Server.Controllers
         [HttpGet("{gameId?}")]
         public GameState GetGame(int? gameId, int players=2)
         {
-            Console.WriteLine("GetGame");
             if (gameId == null)
             {
-                gameId = _gameId;
-                _gameId++;
+                gameId = s_gameId;
+                s_gameId++;
                 var g = new Game(players == 4 ? Version.FourPlayer : Version.TwoPlayer);
                 m_gameService.StoreGame((int)gameId, g);
             }

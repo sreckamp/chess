@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Chess.Model.Models.Board;
@@ -38,10 +39,12 @@ namespace Chess.Model.Stores
                 ? m_markers[location].Where(marker => marker is T && marker.Type == type).Cast<T>()
                 : Enumerable.Empty<T>();
 
-        public MarkingStore DeepClone() => new MarkingStore
+        public MarkingStore DeepClone() => Filter();
+
+        public MarkingStore Filter(Func<IMarker, bool> predicate = null) => new MarkingStore
         {
             m_markers = m_markers.ToDictionary(pair => pair.Key,
-                pair => pair.Value.Select(marker => marker.Clone()).ToList())
+                pair => pair.Value.Where(predicate ?? (_ => true)).Select(marker => marker.Clone()).ToList())
         };
     }
 }

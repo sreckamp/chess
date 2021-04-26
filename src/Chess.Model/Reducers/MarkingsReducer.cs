@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Chess.Model.Actions;
+using Chess.Model.Evaluation.Rules;
+using Chess.Model.Models;
 using Chess.Model.Models.Board;
+using Chess.Model.Move;
 using Chess.Model.Rules;
 using Chess.Model.Stores;
 
@@ -28,23 +31,40 @@ namespace Chess.Model.Reducers
             {
                 case InitializeAction _:
                     return (board, new MarkingStore());
-                case MoveAction _:
-                    // clear the markings here (setup some rules for clearing the markers so enpassant markers are only 
-                    // cleared at the start of the players turn
-                    return (board, new MarkingStore());
-                case EvaluateBoardAction _:
-                    return (board, EvaluateBoard(board, markings));
+                case MoveAction ma:
+                    return (board, MarkForMoves(board, ma.Move, markings));
+                case EvaluateBoardAction eba:
+                    return (board, EvaluateBoard(board, eba.ActivePlayer, markings));
                 default:
                     return store;
             }
         }
 
-        private MarkingStore EvaluateBoard(IPieceEnumerationProvider board, MarkingStore store)
+        private MarkingStore MarkForMoves(IPieceEnumerationProvider board, IMove move, MarkingStore store)
         {
             var sw = new Stopwatch();
             sw.Start();
 
             var next = store.DeepClone();
+
+            if (move is PawnOpenMove open)
+            {
+                var pawn = board.First(tuple => tuple.Item1 == move.From).Item2;
+                next.Mark(open.EnPassant, new SimpleMarker(MarkerType.EnPassant, move.To, pawn, Direction.None));
+            }
+
+            sw.Stop();
+            Console.WriteLine($"Updated Markings for Move in {sw.ElapsedMilliseconds}mS");
+        
+            return next;
+        }
+
+        private MarkingStore EvaluateBoard(IPieceEnumerationProvider board, Color activePlayer, MarkingStore store)
+        {
+            var sw = new Stopwatch();
+            sw.Start();
+
+            var next = store.Filter(marker => marker.Type == MarkerType.EnPassant && ((SimpleMarker)marker).Piece.Color != activePlayer);
 
             foreach (var rule in m_rules)
             {
@@ -63,22 +83,5 @@ namespace Chess.Model.Reducers
         
             return next;
         }
-        
-        // private static MarkingStore UpdateAvailableMoves(IPieceEnumerationProvider board, MarkingStore store, IRules movementRules)
-        // {
-        //     var sw = new Stopwatch();
-        //     sw.Start();
-        //
-        //     var next = store.DeepClone();
-        //     foreach (var (point, piece) in board)
-        //     {
-        //         movementRules.Apply(point, piece, board, next);
-        //     }
-        //
-        //     sw.Stop();
-        //     Console.WriteLine($"Updated Available Moves in {sw.ElapsedMilliseconds}mS");
-        //
-        //     return next;
-        // }
     }
 }

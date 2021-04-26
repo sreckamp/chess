@@ -14,9 +14,6 @@ namespace Chess.Model.Models.Board
         public MarkerType Type => MarkerType.Move;
         public Point Source { get; }
         public IMove Move { get; }
-        public IMarker Clone()
-        {
-            throw new System.NotImplementedException();
-        }
+        public IMarker Clone() => new MoveMarker(Move);
     }
 }

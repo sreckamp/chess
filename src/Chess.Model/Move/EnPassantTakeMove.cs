@@ -29,6 +29,7 @@ namespace Chess.Model.Move
         public Piece Apply(IBoard board)
         {
             var taken = board[m_pawnLocation];
+            board[m_pawnLocation] = Piece.Empty;
 
             m_pawnMove.Apply(board);
 

@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Chess.Model.Models;
-using Chess.Model.Move;
-
-namespace Chess.Model.Rules
+﻿namespace Chess.Model.Evaluation.Rules
 {
     // public class PawnPromotionRule : IMoveRule
     // {

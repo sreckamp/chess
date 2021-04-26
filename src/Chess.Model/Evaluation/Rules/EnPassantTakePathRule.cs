@@ -2,20 +2,16 @@
 using Chess.Model.Models;
 using Chess.Model.Models.Board;
 using Chess.Model.Move;
-using Chess.Model.Stores;
+using Chess.Model.Rules;
 
-namespace Chess.Model.Rules
+namespace Chess.Model.Evaluation.Rules
 {
-    public sealed class EnPassantTakePathRule : IPathRule
+    public sealed class EnPassantTakePathRule : AbstractPathRule
     {
-        private readonly IPathRule m_chain;
-        public EnPassantTakePathRule(IPathRule chain)
-        {
-            m_chain = chain;
-        }
+        public EnPassantTakePathRule(IPathRule chain): base(chain) { }
 
         /// <inheritdoc />
-        public void Apply(IMarkingsProvider markings, Path path)
+        public override void Apply(IMarkingsProvider markings, Path path)
         {
             if (path.AllowTake && path.Piece.Type == PieceType.Pawn && path.Squares.Any())
             {
@@ -29,7 +25,7 @@ namespace Chess.Model.Rules
                     // return;
                 }
             }
-            m_chain.Apply(markings, path);
+            base.Apply(markings, path);
         }
     }
 }

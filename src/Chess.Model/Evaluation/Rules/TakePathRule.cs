@@ -1,19 +1,16 @@
 ﻿using System.Linq;
 using Chess.Model.Models.Board;
 using Chess.Model.Move;
+using Chess.Model.Rules;
 
-namespace Chess.Model.Rules
+namespace Chess.Model.Evaluation.Rules
 {
-    public sealed class TakePathRule : IPathRule
+    public sealed class TakePathRule : AbstractPathRule
     {
-        private readonly IPathRule m_chain;
+        public TakePathRule(IPathRule chain): base(chain) { }
 
-        public TakePathRule(IPathRule chain)
-        {
-            m_chain = chain;
-        }
-
-        public void Apply(IMarkingsProvider markings, Path path)
+        /// <inheritdoc/>
+        public override void Apply(IMarkingsProvider markings, Path path)
         {
             if (path.AllowTake)
             {
@@ -22,7 +19,7 @@ namespace Chess.Model.Rules
                         target => new MoveMarker(new SimpleMove(path.Start, target.Item1))));
             }
 
-            m_chain.Apply(markings, path);
+            base.Apply(markings, path);
         }
     }
 }
