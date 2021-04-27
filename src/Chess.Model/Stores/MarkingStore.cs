@@ -7,6 +7,9 @@ using Color = Chess.Model.Models.Color;
 
 namespace Chess.Model.Stores
 {
+    /// <summary>
+    /// Current state of marking
+    /// </summary>
     public sealed class MarkingStore : IMarkingsProvider
     {
         private Dictionary<Point, List<IMarker>> m_markers

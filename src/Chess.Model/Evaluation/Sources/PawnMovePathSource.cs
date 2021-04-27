@@ -12,21 +12,27 @@ namespace Chess.Model.Evaluation.Sources
         public IEnumerable<Path> GetPaths(Point start, Piece piece, IPieceEnumerationProvider squares)
         {
             return piece.Type == PieceType.Pawn
-                ? new[] {piece.Edge.Opposite()}
+                ? new[]
+                    {
+                        piece.Edge.RotateCounterClockwise(3),
+                        piece.Edge.Opposite(),
+                        piece.Edge.RotateClockwise(3)
+                    }
                     .Where(direction => squares.EnumerateStraightLine(start, direction).Any())
                     .Select(direction =>
                     {
+                        var isMove = direction == piece.Edge.Opposite();
                         var moves = squares.EnumerateStraightLine(start, direction).Take(2).ToList();
 
                         return new Path(GetType().Name)
                         {
-                            AllowMove = true,
-                            AllowTake = false,
+                            AllowMove = isMove,
+                            AllowTake = !isMove,
                             Direction = direction,
                             Start = start,
                             Piece = piece,
-                            OppositeEdge = moves.Count() == 1,
-                            Squares = moves.Take(piece.HasMoved ? 1 : 2)
+                            OppositeEdge = !squares.EnumerateStraightLine(start, piece.Edge.Opposite()).Skip(1).Any(),
+                            Squares = moves.Take(piece.HasMoved || !isMove ? 1 : 2)
                         };
                     })
                 : Enumerable.Empty<Path>();

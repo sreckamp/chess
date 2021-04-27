@@ -44,6 +44,7 @@
     <Compile Include="Actions\MoveAction.cs" />
     <Compile Include="Actions\UpdateMarkersAction.cs" />
     <Compile Include="Actions\UpdateAvailableMovesAction.cs" />
+    <Compile Include="Evaluation\MarkingFilter.cs" />
     <Compile Include="Evaluation\Models\CheckMarker.cs" />
     <Compile Include="Evaluation\Models\IDirectionalMarker.cs" />
     <Compile Include="Evaluation\Models\IMarker.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Evaluation\Rules\FilterPathRule.cs" />
     <Compile Include="Evaluation\Rules\IfPathRule.cs" />
     <Compile Include="Evaluation\Rules\IPathRule.cs" />
+    <Compile Include="Evaluation\Rules\KingInCheckRule.cs" />
     <Compile Include="Evaluation\Rules\MoveIntoCheckPathRule.cs" />
     <Compile Include="Evaluation\Rules\MovePathRule.cs" />
     <Compile Include="Evaluation\Rules\NopPathRule.cs" />
@@ -68,6 +70,7 @@
     <Compile Include="Evaluation\Rules\PawnPromotionRule.cs" />
     <Compile Include="Evaluation\Rules\PinMarkPathRule.cs" />
     <Compile Include="Evaluation\Rules\PinPathRule.cs" />
+    <Compile Include="Evaluation\Sources\CastlePathSource.cs" />
     <Compile Include="Extensions\ArrayExtensions.cs" />
     <Compile Include="Extensions\PointExtension.cs" />
     <Compile Include="Game.cs" />
