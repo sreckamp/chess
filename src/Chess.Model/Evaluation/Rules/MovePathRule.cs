@@ -1,35 +1,34 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Chess.Model.Evaluation.Models;
-using Chess.Model.Models;
 using Chess.Model.Move;
 
 namespace Chess.Model.Evaluation.Rules
 {
-    public sealed class MovePathRule : AbstractPathRule
+    public class MovePathRule : AbstractPathRule
     {
-        public MovePathRule(IPathRule chain): base(chain) { }
+        public MovePathRule(IPathRule chain) : base(chain) { }
 
         /// <inheritdoc />
         public override void Apply(IMarkingsProvider markings, Path path)
         {
-            if (path.Squares.Any() && path.AllowMove)
+            if (Applies(path))
             {
                 markings.Mark(path.Start, path.Squares.TakeWhile(square => square.Item2.IsEmpty)
-                    .Select(target =>
-                    {
-                        var (point, _) = target;
-                        IMove move = new SimpleMove(path.Start, point);
-                        if (path.Piece.Type == PieceType.Pawn && Math.Abs(point.X + point.Y - (path.Start.X + path.Start.Y)) > 1)
-                        {
-                            move = new PawnOpenMove((SimpleMove) move);
-                        }
-
-                        return new MoveMarker(move);
-                    }));
+                    .Select((target, idx) => new MoveMarker(
+                        GetMove(new SimpleMove(path.Start, target.Item1), idx)))
+                );
             }
 
-            base.Apply(markings, path);
+            if(Continue(path))
+            {
+                base.Apply(markings, path);
+            }
         }
+
+        protected virtual bool Applies(Path path) => path.Squares.Any() && path.AllowMove;
+
+        protected virtual bool Continue(Path path) => true;
+        
+        protected virtual IMove GetMove(SimpleMove move, int index) => move;
     }
 }

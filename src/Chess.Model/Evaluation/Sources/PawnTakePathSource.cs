@@ -24,12 +24,8 @@ namespace Chess.Model.Evaluation.Sources
                         Direction = direction,
                         Start = start,
                         Piece = piece,
+                        OppositeEdge = !squares.EnumerateStraightLine(start, piece.Edge.Opposite()).Skip(1).Any(),
                         Squares = squares.EnumerateStraightLine(start, direction).Take(1)
-                            // .Select(sq => sq.Edges.Contains(square.Piece.Edge.Opposite())
-                            //     ? (IMove) new PawnPromotionMove
-                            //         {Piece = square.Piece, From = square.Location, To = sq.Location}
-                            //     : new SimpleMove
-                            //         {Piece = square.Piece, From = square.Location, To = sq.Location})
                     })
                 : Enumerable.Empty<Path>();
     }

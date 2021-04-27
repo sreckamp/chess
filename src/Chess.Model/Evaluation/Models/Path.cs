@@ -31,6 +31,11 @@ namespace Chess.Model.Evaluation.Models
         public Piece Piece { get; set; }
 
         /// <summary>
+        /// True if the path ends at the far end of a pawn's path
+        /// </summary>
+        public bool OppositeEdge { get; set; } = false;
+
+        /// <summary>
         /// The direction the path travels
         /// </summary>
         public Direction Direction { get; set; }

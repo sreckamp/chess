@@ -16,9 +16,11 @@
         /// </summary>
         public static readonly IPathRule MoveRules =
             new MoveIntoCheckPathRule(
-                new PinPathRule(
-                    new EnPassantTakePathRule(
-                        new MovePathRule(
-                            new TakePathRule(NopPathRule.Instance)))));
+                new PawnOpenMovePathRule(
+                    new PawnPromotionRule(
+                        new PinPathRule(
+                            new EnPassantTakePathRule(
+                                new MovePathRule(
+                                    new TakePathRule(NopPathRule.Instance)))))));
     }
 }

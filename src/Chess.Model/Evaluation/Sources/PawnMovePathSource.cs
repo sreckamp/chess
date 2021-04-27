@@ -14,21 +14,20 @@ namespace Chess.Model.Evaluation.Sources
             return piece.Type == PieceType.Pawn
                 ? new[] {piece.Edge.Opposite()}
                     .Where(direction => squares.EnumerateStraightLine(start, direction).Any())
-                    .Select(direction => new Path(GetType().Name)
+                    .Select(direction =>
                     {
-                        AllowMove = true,
-                        AllowTake = false,
-                        Direction = direction,
-                        Start = start,
-                        Piece = piece,
-                        Squares = squares.EnumerateStraightLine(start, direction)
-                            .Take(piece.HasMoved ? 1 : 2)
-                            // .Select((sq, idx) => idx == 0
-                            //     ? sq.Edges.Contains(square.Piece.Edge.Opposite())
-                            //         ? (IMove)new PawnPromotionMove
-                            //             {Piece = square.Piece, From = square.Location, To = sq.Location}
-                            //         : new SimpleMove {Piece = square.Piece, From = square.Location, To = sq.Location}
-                            //     : new PawnOpenMove {Piece = square.Piece, From = square.Location, To = sq.Location})
+                        var moves = squares.EnumerateStraightLine(start, direction).Take(2).ToList();
+
+                        return new Path(GetType().Name)
+                        {
+                            AllowMove = true,
+                            AllowTake = false,
+                            Direction = direction,
+                            Start = start,
+                            Piece = piece,
+                            OppositeEdge = moves.Count() == 1,
+                            Squares = moves.Take(piece.HasMoved ? 1 : 2)
+                        };
                     })
                 : Enumerable.Empty<Path>();
         }
