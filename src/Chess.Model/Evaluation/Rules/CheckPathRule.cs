@@ -1,12 +1,11 @@
 ﻿using System.Linq;
 using Chess.Model.Evaluation.Models;
 using Chess.Model.Models;
-using Chess.Model.Models.Board;
 
 namespace Chess.Model.Evaluation.Rules
 {
     /// <summary>
-    /// Evaluates path for check
+    /// Mark paths that include check
     /// </summary>
     public sealed class CheckPathRule : AbstractPathRule
     {
@@ -30,6 +29,8 @@ namespace Chess.Model.Evaluation.Rules
 
                     if (targetPiece.Color == path.Piece.Color ||
                         targetPiece.Type != PieceType.King) break;
+
+                    markings.InCheck.Add(targetPiece.Color);
 
                     marker = new CheckMarker(path.Start, target, path.Direction);
                 }

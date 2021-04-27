@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Chess.Model.Evaluation.Models;
-using Chess.Model.Models.Board;
+using Color = Chess.Model.Models.Color;
 
 namespace Chess.Model.Stores
 {
@@ -30,6 +30,7 @@ namespace Chess.Model.Stores
             }
         }
 
+        public ISet<Color> InCheck { get; private set; } = new HashSet<Color>();
         public IEnumerable<T> GetMarkers<T>(Point location) where T : IMarker =>
             m_markers.ContainsKey(location)
                 ? m_markers[location].Where(marker => marker is T).Cast<T>()
@@ -44,6 +45,7 @@ namespace Chess.Model.Stores
 
         public MarkingStore Filter(Func<IMarker, bool> predicate = null) => new MarkingStore
         {
+            InCheck = InCheck.ToArray().ToHashSet(),
             m_markers = m_markers.ToDictionary(pair => pair.Key,
                 pair => pair.Value.Where(predicate ?? (_ => true)).Select(marker => marker.Clone()).ToList())
         };

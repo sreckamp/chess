@@ -7,7 +7,6 @@ using Chess.Model.Evaluation.Models;
 using Chess.Model.Evaluation.Rules;
 using Chess.Model.Evaluation.Sources;
 using Chess.Model.Models;
-using Chess.Model.Models.Board;
 using Chess.Model.Move;
 using Chess.Model.Stores;
 
@@ -66,6 +65,7 @@ namespace Chess.Model.Reducers
             sw.Start();
 
             var next = store.Filter(marker => marker.Type == MarkerType.EnPassant && ((SimpleMarker)marker).Piece.Color != activePlayer);
+            next.InCheck.Clear();
 
             foreach (var rule in m_rules)
             {

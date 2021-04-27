@@ -13,10 +13,23 @@ namespace Chess.Model.Evaluation.Rules
         {
             if (Applies(path))
             {
-                markings.Mark(path.Start, path.Squares.TakeWhile(square => square.Item2.IsEmpty)
-                    .Select((target, idx) => new MoveMarker(
-                        GetMove(new SimpleMove(path.Start, target.Item1), idx)))
-                );
+                if (path.AllowMove)
+                {
+                    markings.Mark(path.Start, path.Squares.TakeWhile(square => square.Item2.IsEmpty)
+                        .Select((target, idx) => new MoveMarker(
+                            GetMove(new SimpleMove(path.Start, target.Item1), idx)))
+                    );
+                }
+
+                if (path.AllowTake)
+                {
+                    markings.Mark(path.Start, path.Squares.SkipWhile((square) => path.AllowMove && square.Item2.IsEmpty)
+                        .TakeWhile((square, idx) => !square.Item2.IsEmpty && square.Item2.Color != path.Piece.Color
+                        ).Take(1)
+                        .Select((target, idx) => new MoveMarker(
+                            GetMove(new SimpleMove(path.Start, target.Item1), idx)))
+                    );
+                }
             }
 
             if(Continue(path))
@@ -25,7 +38,7 @@ namespace Chess.Model.Evaluation.Rules
             }
         }
 
-        protected virtual bool Applies(Path path) => path.Squares.Any() && path.AllowMove;
+        protected virtual bool Applies(Path path) => path.Squares.Any();
 
         protected virtual bool Continue(Path path) => true;
         

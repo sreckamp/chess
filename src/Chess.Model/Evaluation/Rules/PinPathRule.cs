@@ -1,10 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Chess.Model.Evaluation.Models;
 using Chess.Model.Models;
-using Chess.Model.Models.Board;
 
 namespace Chess.Model.Evaluation.Rules
 {
+    /// <summary>
+    /// Prevents a pinned piece from moving out of the pin
+    /// </summary>
     public sealed class PinPathRule : AbstractPathRule
     {
         public PinPathRule(IPathRule chain): base(chain) { }

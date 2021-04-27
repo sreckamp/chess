@@ -68,7 +68,6 @@
     <Compile Include="Evaluation\Rules\PawnPromotionRule.cs" />
     <Compile Include="Evaluation\Rules\PinMarkPathRule.cs" />
     <Compile Include="Evaluation\Rules\PinPathRule.cs" />
-    <Compile Include="Evaluation\Rules\TakePathRule.cs" />
     <Compile Include="Extensions\ArrayExtensions.cs" />
     <Compile Include="Extensions\PointExtension.cs" />
     <Compile Include="Game.cs" />

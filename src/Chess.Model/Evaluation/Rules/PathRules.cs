@@ -20,7 +20,6 @@
                     new PawnPromotionRule(
                         new PinPathRule(
                             new EnPassantTakePathRule(
-                                new MovePathRule(
-                                    new TakePathRule(NopPathRule.Instance)))))));
+                                new MovePathRule(NopPathRule.Instance))))));
     }
 }

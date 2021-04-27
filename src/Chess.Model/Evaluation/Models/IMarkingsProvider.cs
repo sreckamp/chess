@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using Color = Chess.Model.Models.Color;
 
 namespace Chess.Model.Evaluation.Models
 {
     public interface IMarkingsProvider
     {
+        ISet<Color> InCheck { get; }
+
         void Mark<T>(Point point, T marker) where T : IMarker;
 
         void Mark<T>(Point point, IEnumerable<T> markers) where T : IMarker;
