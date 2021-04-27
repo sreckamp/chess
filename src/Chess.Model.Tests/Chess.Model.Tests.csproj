@@ -18,4 +18,8 @@
     <ProjectReference Include="..\Chess.Model\Chess.Model.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Evaluation\Models" />
+  </ItemGroup>
+
 </Project>
