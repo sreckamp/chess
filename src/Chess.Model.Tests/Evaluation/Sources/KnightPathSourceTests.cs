@@ -2,13 +2,12 @@
 using Chess.Model.Evaluation.Models;
 using Chess.Model.Evaluation.Sources;
 using Chess.Model.Models;
-using Chess.Model.Models.Board;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using Color = Chess.Model.Models.Color;
 
-namespace Chess.Model.Tests.Rules
+namespace Chess.Model.Tests.Evaluation.Sources
 {
     public sealed class KnightPathSourceTests
     {

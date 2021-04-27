@@ -8,7 +8,7 @@ using Moq;
 using NUnit.Framework;
 using Color = Chess.Model.Models.Color;
 
-namespace Chess.Model.Tests.Rules
+namespace Chess.Model.Tests.Evaluation.Sources
 {
     public sealed class PawnPathSourceTests
     {

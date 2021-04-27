@@ -1,10 +1,9 @@
 ﻿using System.Drawing;
 using Chess.Model.Evaluation.Enumerables;
-using Chess.Model.Models;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Chess.Model.Tests.Rules
+namespace Chess.Model.Tests.Evaluation.Enumerables
 {
     public sealed class KnightOffsetEnumerableTests
     {

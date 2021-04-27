@@ -4,7 +4,7 @@ using Chess.Model.Models;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Chess.Model.Tests.Rules
+namespace Chess.Model.Tests.Evaluation.Enumerables
 {
     public class StraightLineEnumerableTests
     {

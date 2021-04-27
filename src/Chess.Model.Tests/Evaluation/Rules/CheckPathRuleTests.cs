@@ -1,13 +1,13 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using Chess.Model.Evaluation.Models;
 using Chess.Model.Evaluation.Rules;
 using Chess.Model.Models;
-using Chess.Model.Models.Board;
 using Moq;
 using NUnit.Framework;
 using Color = Chess.Model.Models.Color;
 
-namespace Chess.Model.Tests.Rules
+namespace Chess.Model.Tests.Evaluation.Rules
 {
     public class CheckPathRuleTests
     {
@@ -43,6 +43,8 @@ namespace Chess.Model.Tests.Rules
             // Arrange
             var markingsMock = new Mock<IMarkingsProvider>();
             markingsMock.Setup(provider => provider.Mark(It.IsAny<Point>(), It.IsAny<IMarker>())).Verifiable();
+            var setMock = new Mock<ISet<Color>>();
+            markingsMock.SetupGet(provider => provider.InCheck).Returns(setMock.Object);
             var chainPathRuleMock = new Mock<IPathRule>();
             chainPathRuleMock.Setup(pathRule => pathRule.Apply(It.IsAny<IMarkingsProvider>(), It.IsAny<Path>())).Verifiable();
 
