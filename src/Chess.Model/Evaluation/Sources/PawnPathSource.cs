@@ -6,7 +6,7 @@ using Chess.Model.Models;
 
 namespace Chess.Model.Evaluation.Sources
 {
-    public sealed class PawnMovePathSource : IPathSource
+    public sealed class PawnPathSource : IPathSource
     {
         /// <inheritdoc/>
         public IEnumerable<Path> GetPaths(Point start, Piece piece, IPieceEnumerationProvider squares)

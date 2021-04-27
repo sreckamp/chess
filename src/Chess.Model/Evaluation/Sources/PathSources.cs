@@ -8,7 +8,7 @@ namespace Chess.Model.Evaluation.Sources
         {
             new KingPathSource(),
             new RankPathSource(), 
-            new PawnMovePathSource(),
+            new PawnPathSource(),
             new DiagonalPathSource(),
             new CardinalPathSource(),
             new KnightPathSource(),
