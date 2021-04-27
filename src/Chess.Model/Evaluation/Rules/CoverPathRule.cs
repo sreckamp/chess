@@ -1,12 +1,11 @@
 ﻿using System.Linq;
 using Chess.Model.Evaluation.Models;
-using Chess.Model.Models.Board;
 
 namespace Chess.Model.Evaluation.Rules
 {
-    public sealed class CoverPathRule : AbstractPathRule
+    public sealed class MarkCoverPathRule : AbstractPathRule
     {
-        public CoverPathRule(IPathRule chain): base(chain) { }
+        public MarkCoverPathRule(IPathRule chain): base(chain) { }
 
         /// <inheritdoc />
         public override void Apply(IMarkingsProvider markings, Path path)

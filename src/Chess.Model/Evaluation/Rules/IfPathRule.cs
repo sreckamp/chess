@@ -1,6 +1,5 @@
 ﻿using System;
 using Chess.Model.Evaluation.Models;
-using Chess.Model.Models.Board;
 
 namespace Chess.Model.Evaluation.Rules
 {

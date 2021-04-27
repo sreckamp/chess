@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Chess.Model.Models;
 
 namespace Chess.Server.Model
 {

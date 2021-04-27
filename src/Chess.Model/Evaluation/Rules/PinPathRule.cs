@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Chess.Model.Evaluation.Models;
 using Chess.Model.Models;
 
@@ -8,9 +7,9 @@ namespace Chess.Model.Evaluation.Rules
     /// <summary>
     /// Prevents a pinned piece from moving out of the pin
     /// </summary>
-    public sealed class PinPathRule : AbstractPathRule
+    public sealed class PinMovePathRule : AbstractPathRule
     {
-        public PinPathRule(IPathRule chain): base(chain) { }
+        public PinMovePathRule(IPathRule chain): base(chain) { }
 
         /// <inheritdoc />
         public override void Apply(IMarkingsProvider markings, Path path)

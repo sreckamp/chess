@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
 using System.Linq;
 using Chess.Model.Evaluation.Models;
-using Chess.Model.Models.Board;
 using Chess.Server.Model;
 using Chess.Server.Services;
 using Microsoft.AspNetCore.Mvc;

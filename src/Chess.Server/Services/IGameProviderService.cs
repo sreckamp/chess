@@ -1,5 +1,4 @@
 ﻿using Chess.Model;
-using Chess.Server.Model;
 
 namespace Chess.Server.Services
 {

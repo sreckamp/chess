@@ -3,9 +3,9 @@
     /// <summary>
     /// Limit Squares to only those that prevents the king from being in check
     /// </summary>
-    public class KingInCheckRule : AbstractPathRule
+    public class KingInCheckMoveRule : AbstractPathRule
     {
-        public KingInCheckRule(IPathRule chain) : base(chain) { }
+        public KingInCheckMoveRule(IPathRule chain) : base(chain) { }
 
         // If in check:
         // - Remove all moves that don't fit

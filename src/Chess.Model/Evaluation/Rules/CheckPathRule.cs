@@ -7,9 +7,9 @@ namespace Chess.Model.Evaluation.Rules
     /// <summary>
     /// Mark paths that include check
     /// </summary>
-    public sealed class CheckPathRule : AbstractPathRule
+    public sealed class MarkCheckPathRule : AbstractPathRule
     {
-        public CheckPathRule(IPathRule chain): base(chain) { }
+        public MarkCheckPathRule(IPathRule chain): base(chain) { }
 
         /// <inheritdoc />
         public override void Apply(IMarkingsProvider markings, Path path)

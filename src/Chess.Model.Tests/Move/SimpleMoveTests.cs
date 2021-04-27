@@ -1,11 +1,4 @@
-﻿using System.Drawing;
-using Chess.Model.Models;
-using Chess.Model.Move;
-using FluentAssertions;
-using NUnit.Framework;
-using Color = Chess.Model.Models.Color;
-
-namespace Chess.Model.Tests.Move
+﻿namespace Chess.Model.Tests.Move
 {
     public class SimpleMoveTests
     {

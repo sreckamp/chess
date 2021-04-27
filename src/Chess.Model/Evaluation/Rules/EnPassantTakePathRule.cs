@@ -1,14 +1,13 @@
 ﻿using System.Linq;
 using Chess.Model.Evaluation.Models;
 using Chess.Model.Models;
-using Chess.Model.Models.Board;
 using Chess.Model.Move;
 
 namespace Chess.Model.Evaluation.Rules
 {
-    public sealed class EnPassantTakePathRule : AbstractPathRule
+    public sealed class EnPassantTakeMovePathRule : AbstractPathRule
     {
-        public EnPassantTakePathRule(IPathRule chain): base(chain) { }
+        public EnPassantTakeMovePathRule(IPathRule chain): base(chain) { }
 
         /// <inheritdoc />
         public override void Apply(IMarkingsProvider markings, Path path)

@@ -7,8 +7,8 @@
         /// </summary>
         public static readonly IPathRule MarkRules =
             new FilterPathRule((path => path.AllowTake),
-                new CheckPathRule(
-                    new CoverPathRule(
+                new MarkCheckPathRule(
+                    new MarkCoverPathRule(
                         new PinMarkPathRule(NopPathRule.Instance))));
 
         /// <summary>
@@ -17,9 +17,9 @@
         public static readonly IPathRule MoveRules =
             new MoveIntoCheckPathRule(
                 new PawnOpenMovePathRule(
-                    new PawnPromotionRule(
-                        new PinPathRule(
-                            new EnPassantTakePathRule(
+                    new PawnPromotionMoveRule(
+                        new PinMovePathRule(
+                            new EnPassantTakeMovePathRule(
                                 new MovePathRule(NopPathRule.Instance))))));
     }
 }

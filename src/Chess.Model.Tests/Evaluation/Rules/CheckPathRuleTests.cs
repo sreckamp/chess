@@ -27,7 +27,7 @@ namespace Chess.Model.Tests.Evaluation.Rules
                 Squares = new (Point, Piece)[0]
             };
 
-            var dut = new CheckPathRule(chainPathRuleMock.Object);
+            var dut = new MarkCheckPathRule(chainPathRuleMock.Object);
 
             // Act
             dut.Apply(markingsMock.Object, path);
@@ -60,7 +60,7 @@ namespace Chess.Model.Tests.Evaluation.Rules
                 }
             };
 
-            var dut = new CheckPathRule(chainPathRuleMock.Object);
+            var dut = new MarkCheckPathRule(chainPathRuleMock.Object);
             
             // Act
             dut.Apply(markingsMock.Object, path);

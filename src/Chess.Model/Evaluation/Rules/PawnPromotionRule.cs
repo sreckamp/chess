@@ -4,9 +4,9 @@ using Chess.Model.Move;
 
 namespace Chess.Model.Evaluation.Rules
 {
-    public class PawnPromotionRule : MovePathRule
+    public class PawnPromotionMoveRule : MovePathRule
     {
-        public PawnPromotionRule(IPathRule chain) : base(chain) { }
+        public PawnPromotionMoveRule(IPathRule chain) : base(chain) { }
 
         /// <inheritdoc />
         protected override bool Applies(Path path) => path.Piece.Type == PieceType.Pawn && path.OppositeEdge;

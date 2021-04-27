@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Chess.Model.Models;
-using Chess.Server.Services;
+﻿using Chess.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Chess.Server.Controllers

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using Chess.Model.Models;
-
-namespace Chess.Model.Stores
+﻿namespace Chess.Model.Stores
 {
     // public class BoardStore
     // {

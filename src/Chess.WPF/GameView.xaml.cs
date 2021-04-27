@@ -1,7 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Windows;
-using System.Windows.Media;
 using Chess.WPF.ViewModel;
 
 namespace Chess.WPF

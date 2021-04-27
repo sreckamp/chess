@@ -1,5 +1,4 @@
-﻿using System;
-using Chess.Model.Actions;
+﻿using Chess.Model.Actions;
 
 namespace Chess.Model.Reducers
 {

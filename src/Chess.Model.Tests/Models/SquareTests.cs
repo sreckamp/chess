@@ -1,8 +1,4 @@
-﻿using System.Linq;
-using Chess.Model.Models;
-using Chess.Model.Models.Board;
-using FluentAssertions;
-using NUnit.Framework;
+﻿
 // ReSharper disable PossibleMultipleEnumeration
 
 namespace Chess.Model.Tests.Models

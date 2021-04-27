@@ -1,7 +1,6 @@
 ﻿using Chess.Model.Actions;
 using Chess.Model.Evaluation.Models;
 using Chess.Model.Models;
-using Chess.Model.Models.Board;
 using Chess.Model.Stores;
 
 namespace Chess.Model.Reducers
