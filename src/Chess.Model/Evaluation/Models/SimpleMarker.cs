@@ -3,7 +3,7 @@ using Chess.Model.Models;
 
 namespace Chess.Model.Evaluation.Models
 {
-    public sealed class SimpleMarker : IDirectionalMarker
+    public class SimpleMarker : IDirectionalMarker
     {
         public SimpleMarker(MarkerType type, Point source, Piece piece, Direction direction)
         {
@@ -18,6 +18,6 @@ namespace Chess.Model.Evaluation.Models
         public Piece Piece { get; }
         public Direction Direction { get; }
 
-        public IMarker Clone() => new SimpleMarker(Type, Source, Piece, Direction);
+        public virtual IMarker Clone() => new SimpleMarker(Type, Source, Piece, Direction);
     }
 }

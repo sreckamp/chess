@@ -7,7 +7,6 @@ namespace Chess.Model.Evaluation.Sources
         public static readonly IEnumerable<IPathSource> Sources = new IPathSource[]
         {
             new KingPathSource(),
-            new RankPathSource(), 
             new PawnPathSource(),
             new DiagonalPathSource(),
             new CardinalPathSource(),

@@ -15,8 +15,10 @@ namespace Chess.Model.Evaluation.Rules
         public override void Apply(IMarkingsProvider markings, Path path)
         {
             if (path.Piece.Type == PieceType.King &&
-                path.Squares.Any(square => markings.GetMarkers<SimpleMarker>(square.Item1, MarkerType.Cover)
-                    .Any(marker => marker.Piece.Color != path.Piece.Color)))
+                path.Squares.Take(2).Any(square => 
+                    markings.GetMarkers<SimpleMarker>(square.Item1, MarkerType.Cover, MarkerType.Check)
+                        .Any(marker => marker.Piece.Color != path.Piece.Color)
+                ))
             {
                 // Reject this move
                 return;

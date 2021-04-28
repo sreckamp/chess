@@ -21,7 +21,7 @@ namespace Chess.Model.Evaluation.Rules
                 {
                     markings.Mark(path.Start, new MoveMarker(new EnPassantTakeMove(path.Start, target, marker.Source)));
 
-                    // return;
+                    return;
                 }
             }
             base.Apply(markings, path);

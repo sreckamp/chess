@@ -3,20 +3,16 @@ using Chess.Model.Models;
 
 namespace Chess.Model.Evaluation.Models
 {
-    public sealed class CheckMarker : IDirectionalMarker
+    public sealed class CheckMarker : SimpleMarker
     {
-        public CheckMarker(Point source, Point target, Direction direction)
+        public CheckMarker(Point source, Piece piece, Point kingLocation, Direction direction)
+            : base(MarkerType.Check, source, piece, direction)
         {
-            Source = source;
-            Target = target;
-            Direction = direction;
+            KingLocation = kingLocation;
         }
 
-        public MarkerType Type => MarkerType.Check;
-        public Point Source { get; }
-        public Point Target { get; }
-        public Direction Direction { get; }
+        public Point KingLocation { get; }
 
-        public IMarker Clone() => new CheckMarker(Source, Target, Direction);
+        public override IMarker Clone() => new CheckMarker(Source, Piece, KingLocation, Direction);
     }
 }

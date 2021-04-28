@@ -22,6 +22,8 @@ namespace Chess.Model.Evaluation.Rules
                 //   + If "None" must take piece or move king
                 //   + Can take piece, move king, or block attack
 
+                // Interceding move, square has a CheckMarker and the point is in the direction opposite of check from
+                // the king location.
                 return true;
             }, markings), path);
         }

@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using Chess.Model.Models;
 
 namespace Chess.Model.Extensions
@@ -39,6 +40,19 @@ namespace Chess.Model.Extensions
             }
 
             return new Point(pt.X + xOffset, pt.Y + yOffset);
+        }
+
+        public static bool IsBetween(this Point test, Point start, Point end)
+        {
+            var distTestStart = Distance(test, start);
+            var distTestEnd = Distance(test, end);
+            var distStartEnd = Distance(start, end);
+            return Math.Abs(distTestStart + distTestEnd - distStartEnd) < 0.1;
+        }
+
+        private static double Distance(Point start, Point end)
+        {
+            return Math.Sqrt(Math.Pow(end.X - start.X, 2) + Math.Pow(end.Y - start.Y, 2));
         }
     }
 }

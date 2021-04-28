@@ -39,9 +39,9 @@ namespace Chess.Model.Stores
                 ? m_markers[location].Where(marker => marker is T).Cast<T>()
                 : Enumerable.Empty<T>();
 
-        public IEnumerable<T> GetMarkers<T>(Point location, MarkerType type) where T : IMarker =>
+        public IEnumerable<T> GetMarkers<T>(Point location, params MarkerType[] types) where T : IMarker =>
             m_markers.ContainsKey(location)
-                ? m_markers[location].Where(marker => marker is T && marker.Type == type).Cast<T>()
+                ? m_markers[location].Where(marker => marker is T && types.Contains(marker.Type)).Cast<T>()
                 : Enumerable.Empty<T>();
 
         public MarkingStore DeepClone() => Filter();

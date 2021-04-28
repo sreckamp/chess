@@ -14,6 +14,6 @@ namespace Chess.Model.Evaluation.Models
 
         IEnumerable<T> GetMarkers<T>(Point location) where T : IMarker;
 
-        IEnumerable<T> GetMarkers<T>(Point location, MarkerType type) where T : IMarker;
+        IEnumerable<T> GetMarkers<T>(Point location, params MarkerType[] types) where T : IMarker;
     }
 }

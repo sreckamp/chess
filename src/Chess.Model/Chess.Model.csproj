@@ -55,6 +55,7 @@
     <Compile Include="Evaluation\Models\Path.cs" />
     <Compile Include="Evaluation\Models\SimpleMarker.cs" />
     <Compile Include="Evaluation\Rules\AbstractPathRule.cs" />
+    <Compile Include="Evaluation\Rules\CastleMovePathRule.cs" />
     <Compile Include="Evaluation\Rules\MarkCheckPathRule.cs" />
     <Compile Include="Evaluation\Rules\MarkCoverPathRule.cs" />
     <Compile Include="Evaluation\Rules\EnPassantTakeMovePathRule.cs" />
@@ -109,7 +110,6 @@
     <Compile Include="Evaluation\Sources\KnightPathSource.cs" />
     <Compile Include="Evaluation\Sources\PathSources.cs" />
     <Compile Include="Evaluation\Sources\PawnPathSource.cs" />
-    <Compile Include="Evaluation\Sources\RankPathSource.cs" />
     <Compile Include="Stores\BoardStore.cs" />
     <Compile Include="Stores\GameStore.cs" />
     <Compile Include="Stores\HistoryStore.cs" />

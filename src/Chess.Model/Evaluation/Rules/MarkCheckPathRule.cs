@@ -32,7 +32,7 @@ namespace Chess.Model.Evaluation.Rules
 
                     markings.InCheck.Add(targetPiece.Color);
 
-                    marker = new CheckMarker(path.Start, target, path.Direction);
+                    marker = new CheckMarker(path.Start, path.Piece, target, path.Direction);
                 }
 
                 if (marker != null)
