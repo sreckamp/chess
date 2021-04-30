@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Net.Mime;
 using Chess.Model.Models;
 
 namespace Chess.Model.Extensions
@@ -42,13 +43,18 @@ namespace Chess.Model.Extensions
             return new Point(pt.X + xOffset, pt.Y + yOffset);
         }
 
-        public static bool IsBetween(this Point test, Point start, Point end)
-        {
-            var distTestStart = Distance(test, start);
-            var distTestEnd = Distance(test, end);
-            var distStartEnd = Distance(start, end);
-            return Math.Abs(distTestStart + distTestEnd - distStartEnd) < 0.1;
-        }
+        public static bool IsBetween(this Point test, Point start, Point end) =>
+            test.X >= Math.Min(start.X, end.X) && test.X <= Math.Max(start.X, end.X)
+            && test.IsOnLine(start, end);
+
+        public static bool IsOnLine(this Point test, Point start, Point end) =>
+            test.Y * (start.X - end.X) == test.X * (start.Y - end.Y) - start.Y * end.X + start.X * end.Y;
+        // y1-y2 = m(x1-x2)
+        // m = (y1-y2)/(x1-x2)
+        // b = y1 - x1(y1-y2)/(x1-x2)
+        // y(x1-x2) = (y1-y2)x+y1(x1-x2)-x1(y1-y2)
+        // y(x1-x2) = x(y1-y2)+y1x1-y1x2-x1y1+x1y2
+        // y(x1-x2) = x(y1-y2)-y1x2+x1y2
 
         private static double Distance(Point start, Point end)
         {

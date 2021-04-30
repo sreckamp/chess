@@ -65,7 +65,7 @@ namespace Chess.Model.Reducers
             sw.Start();
 
             var next = store.Filter(marker => marker.Type == MarkerType.EnPassant && ((SimpleMarker)marker).Piece.Color != activePlayer);
-            next.InCheck.Clear();
+            next.KingLocations.Clear();
 
             foreach (var rule in m_rules)
             {

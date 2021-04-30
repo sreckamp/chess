@@ -1,4 +1,7 @@
-﻿using Chess.Model.Evaluation.Models;
+﻿using System.Linq;
+using Chess.Model.Evaluation.Models;
+using Chess.Model.Extensions;
+using Chess.Model.Models;
 
 namespace Chess.Model.Evaluation.Rules
 {
@@ -11,21 +14,32 @@ namespace Chess.Model.Evaluation.Rules
 
         public override void Apply(IMarkingsProvider markings, Path path)
         {
-            base.Apply(new MarkingFilter(tuple =>
+            var checkMarkers = markings.GetKingMarkers<CheckMarker>(path.Piece.Color).ToList();
+
+            base.Apply(checkMarkers.Any() ? new MarkingFilter(point =>
             {
-                var (marks, point) = tuple;
+                if (path.Piece.Type == PieceType.King)
+                {
+                    //   + All King moves
+                    return true;
+                }
+                if (checkMarkers.Count > 1)
+                {
+                    //   + If multiple checks, must move king
+                    return false;
+                }
 
-                // If in check:
-                // - Remove all moves that don't fit
-                //   + All King moves
-                //   + If multiple checks, must move king
-                //   + If "None" must take piece or move king
-                //   + Can take piece, move king, or block attack
+                var check = checkMarkers[0];
 
-                // Interceding move, square has a CheckMarker and the point is in the direction opposite of check from
-                // the king location.
-                return true;
-            }, markings), path);
+                //   + Take single checking piece
+                if (point == check.Source)
+                {
+                    return true;
+                }
+
+                //   + If "None" must take piece or move king otherwise intercede
+                return check.Direction != Direction.None && point.IsBetween(check.Source, check.KingLocation);
+            }, markings) : markings, path);
         }
     }
 }

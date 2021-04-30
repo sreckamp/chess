@@ -56,6 +56,7 @@
     <Compile Include="Evaluation\Models\SimpleMarker.cs" />
     <Compile Include="Evaluation\Rules\AbstractPathRule.cs" />
     <Compile Include="Evaluation\Rules\CastleMovePathRule.cs" />
+    <Compile Include="Evaluation\Rules\IdentifyKingRule.cs" />
     <Compile Include="Evaluation\Rules\MarkCheckPathRule.cs" />
     <Compile Include="Evaluation\Rules\MarkCoverPathRule.cs" />
     <Compile Include="Evaluation\Rules\EnPassantTakeMovePathRule.cs" />

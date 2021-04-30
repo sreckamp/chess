@@ -43,8 +43,8 @@ namespace Chess.Model.Tests.Evaluation.Rules
             // Arrange
             var markingsMock = new Mock<IMarkingsProvider>();
             markingsMock.Setup(provider => provider.Mark(It.IsAny<Point>(), It.IsAny<IMarker>())).Verifiable();
-            var setMock = new Mock<ISet<Color>>();
-            markingsMock.SetupGet(provider => provider.InCheck).Returns(setMock.Object);
+            var dictionaryMock = new Mock<IDictionary<Color, Point>>();
+            markingsMock.SetupGet(provider => provider.KingLocations).Returns(dictionaryMock.Object);
             var chainPathRuleMock = new Mock<IPathRule>();
             chainPathRuleMock.Setup(pathRule => pathRule.Apply(It.IsAny<IMarkingsProvider>(), It.IsAny<Path>())).Verifiable();
 

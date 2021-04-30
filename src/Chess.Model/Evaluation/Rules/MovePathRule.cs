@@ -17,7 +17,7 @@ namespace Chess.Model.Evaluation.Rules
                 {
                     markings.Mark(path.Start, path.Squares.TakeWhile(square => square.Item2.IsEmpty)
                         .Select((target, idx) => new MoveMarker(
-                            GetMove(new SimpleMove(path.Start, target.Item1), idx)))
+                            GetMove(new SimpleMove(path.Start, target.Item1), idx))).ToArray()
                     );
                 }
 
@@ -27,7 +27,7 @@ namespace Chess.Model.Evaluation.Rules
                         .TakeWhile((square, idx) => !square.Item2.IsEmpty && square.Item2.Color != path.Piece.Color
                         ).Take(1)
                         .Select((target, idx) => new MoveMarker(
-                            GetMove(new SimpleMove(path.Start, target.Item1), idx)))
+                            GetMove(new SimpleMove(path.Start, target.Item1), idx))).ToArray()
                     );
                 }
             }

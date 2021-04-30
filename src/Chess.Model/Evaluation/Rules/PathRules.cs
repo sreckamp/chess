@@ -6,10 +6,11 @@
         /// Rule chain to mark squares.
         /// </summary>
         public static readonly IPathRule MarkRules =
-            new FilterPathRule((path => path.AllowTake),
-                new MarkCheckPathRule(
-                    new MarkCoverPathRule(
-                        new MarkPinPathRule(NopPathRule.Instance))));
+            new IdentifyKingRule(
+                new FilterPathRule((path => path.AllowTake),
+                    new MarkCheckPathRule(
+                        new MarkCoverPathRule(
+                            new MarkPinPathRule(NopPathRule.Instance)))));
 
         /// <summary>
         /// Rule chain to identify available moves.

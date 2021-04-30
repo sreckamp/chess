@@ -30,8 +30,6 @@ namespace Chess.Model.Evaluation.Rules
                     if (targetPiece.Color == path.Piece.Color ||
                         targetPiece.Type != PieceType.King) break;
 
-                    markings.InCheck.Add(targetPiece.Color);
-
                     marker = new CheckMarker(path.Start, path.Piece, target, path.Direction);
                 }
 

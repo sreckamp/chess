@@ -241,5 +241,530 @@ namespace Chess.Model.Tests.Extensions
             result.X.Should().Be(-4);
             result.Y.Should().Be(3);
         }
+        
+        [Test]
+        public void IsBetween_WhenAtStart_ShouldReturnTrue()
+        {
+            // Arrange
+            var start = new Point(1,3);
+            var end = new Point(1,2);
+            var pt = new Point(1,3);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void IsBetween_WhenAtEnd_ShouldReturnTrue()
+        {
+            // Arrange
+            var start = new Point(1,3);
+            var end = new Point(1,2);
+            var pt = new Point(1,2);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void IsBetween_WhenPointIsAtSameStartAndEnd_ShouldReturnTrue()
+        {
+            // Arrange
+            var start = new Point(1,2);
+            var end = new Point(1,2);
+            var pt = new Point(1,2);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreHorizontalEndGreaterThanStart_ShouldReturnTrue()
+        {
+            // Arrange
+            var start = new Point(-1,0);
+            var end = new Point(1,0);
+            var pt = new Point(0,0);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreHorizontalStartGreaterThanEnd_ShouldReturnTrue()
+        {
+            // Arrange
+            var start = new Point(1,0);
+            var end = new Point(-1,0);
+            var pt = new Point(0,0);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreHorizontalEndGreaterThanStartAndPointIsLess_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(-1,0);
+            var end = new Point(1,0);
+            var pt = new Point(-2,0);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreHorizontalStartGreaterThanEndAndPointIsLess_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(1,0);
+            var end = new Point(-1,0);
+            var pt = new Point(-2,0);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreHorizontalEndGreaterThanStartAndPointIsGreater_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(-1,0);
+            var end = new Point(1,0);
+            var pt = new Point(2,0);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreHorizontalStartGreaterThanEndAndPointIsGreater_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(1,0);
+            var end = new Point(-1,0);
+            var pt = new Point(2,0);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreVerticalEndGreaterThanStart_ShouldReturnTrue()
+        {
+            // Arrange
+            var start = new Point(0,-1);
+            var end = new Point(0,1);
+            var pt = new Point(0,0);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreVerticalStartGreaterThanEnd_ShouldReturnTrue()
+        {
+            // Arrange
+            var start = new Point(0,1);
+            var end = new Point(0,-1);
+            var pt = new Point(0,0);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreVerticalEndGreaterThanStartAndPointIsLess_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(0,-1);
+            var end = new Point(0,1);
+            var pt = new Point(0,-2);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreVerticalStartGreaterThanEndAndPointIsLess_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(0,1);
+            var end = new Point(0,-1);
+            var pt = new Point(0,-2);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreVerticalEndGreaterThanStartAndPointIsGreater_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(0,-1);
+            var end = new Point(0,1);
+            var pt = new Point(0,2);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreVerticalStartGreaterThanEndAndPointIsGreater_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(0,1);
+            var end = new Point(0,-1);
+            var pt = new Point(0,2);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreNorthEastEndGreaterThanStart_ShouldReturnTrue()
+        {
+            // Arrange
+            var start = new Point(-1,-1);
+            var end = new Point(1,1);
+            var pt = new Point(0,0);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreNorthEastStartGreaterThanEnd_ShouldReturnTrue()
+        {
+            // Arrange
+            var start = new Point(1,1);
+            var end = new Point(-1,-1);
+            var pt = new Point(0,0);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreNorthEastEndGreaterThanStartAndPointIsLess_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(-1,-1);
+            var end = new Point(1,1);
+            var pt = new Point(-2,-2);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreNorthEastStartGreaterThanEndAndPointIsLess_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(1,1);
+            var end = new Point(-1,-1);
+            var pt = new Point(-2,-2);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreNorthEastEndGreaterThanStartAndPointIsGreater_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(-1,-1);
+            var end = new Point(1,1);
+            var pt = new Point(2,2);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreNorthEastStartGreaterThanEndAndPointIsGreater_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(1,1);
+            var end = new Point(-1,-1);
+            var pt = new Point(2,2);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreNorthWestEndGreaterThanStart_ShouldReturnTrue()
+        {
+            // Arrange
+            var start = new Point(-1,1);
+            var end = new Point(1,-1);
+            var pt = new Point(0,0);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreNorthWestStartGreaterThanEnd_ShouldReturnTrue()
+        {
+            // Arrange
+            var start = new Point(1,-1);
+            var end = new Point(-1,1);
+            var pt = new Point(0,0);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreNorthWestEndGreaterThanStartAndPointIsLess_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(-1,1);
+            var end = new Point(1,-1);
+            var pt = new Point(-2,2);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreNorthWestStartGreaterThanEndAndPointIsLess_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(1,-1);
+            var end = new Point(-1,1);
+            var pt = new Point(-2,2);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreNorthWestEndGreaterThanStartAndPointIsGreater_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(-1,1);
+            var end = new Point(1,-1);
+            var pt = new Point(2,-2);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreNorthWestStartGreaterThanEndAndPointIsGreater_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(1,-1);
+            var end = new Point(-1,1);
+            var pt = new Point(2,-2);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void IsBetween_WhenStartAndEndAreHorizontalStartGreaterThanEndAndPointIsSlightlyLow_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(1000,0);
+            var end = new Point(-1000,0);
+            var pt = new Point(0,-1);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void IsBetween_WhenStartAndEndAreHorizontalStartGreaterThanEndAndPointIsSlightlyHigh_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(1000,0);
+            var end = new Point(-1000,0);
+            var pt = new Point(0,1);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void IsBetween_WhenStartAndEndAreHorizontalEndGreaterThanStartAndPointIsSlightlyLow_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(-1000,0);
+            var end = new Point(1000,0);
+            var pt = new Point(0,-1);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void IsBetween_WhenStartAndEndAreHorizontalEndGreaterThanStartAndPointIsSlightlyHigh_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(-1000,0);
+            var end = new Point(1000,0);
+            var pt = new Point(0,1);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreVerticalStartGreaterThanEndAndPointIsSlightlyLeft_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(0,1000);
+            var end = new Point(0,-1000);
+            var pt = new Point(-1,0);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void IsBetween_WhenStartAndEndAreHorizontalStartGreaterThanEndAndPointIsSlightlyRight_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(0,1000);
+            var end = new Point(0,-1000);
+            var pt = new Point(1,0);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void IsBetween_WhenStartAndEndAreVerticalEndGreaterThanStartAndPointIsSlightlyLeft_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(0,-1000);
+            var end = new Point(0,1000);
+            var pt = new Point(-1,0);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
+        
+        [Test]
+        public void IsBetween_WhenStartAndEndAreHorizontalEndGreaterThanStartAndPointIsSlightlyRight_ShouldReturnFalse()
+        {
+            // Arrange
+            var start = new Point(0,-1000);
+            var end = new Point(0,1000);
+            var pt = new Point(1,0);
+            
+            // Act
+            var result = pt.IsBetween(start, end);
+            
+            // Assert
+            result.Should().BeFalse();
+        }
     }
 }
