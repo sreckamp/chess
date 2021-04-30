@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-
-namespace Chess.WPF
+﻿namespace Chess.WPF
 {
     public class PieceViewModel
     {

@@ -1,5 +1,5 @@
-﻿using System.ComponentModel;
-using System.Windows;
+﻿using System;
+using System.ComponentModel;
 using Chess.WPF.ViewModel;
 
 namespace Chess.WPF
@@ -14,15 +14,23 @@ namespace Chess.WPF
 
         public GameView()
         {
+            m_gameViewModel = new GameViewModel();
+            m_gameViewModel.Game.Init();
             InitializeComponent();
-            DataContext = m_gameViewModel = new GameViewModel();
-            m_worker.DoWork += m_worker_DoWork;
-            m_worker.RunWorkerAsync();
+            // m_worker.DoWork += m_worker_DoWork;
+            // m_worker.RunWorkerAsync();
         }
 
-        private void m_worker_DoWork(object sender, DoWorkEventArgs e)
+        protected override void OnInitialized(EventArgs e)
         {
-            m_gameViewModel.Run();
+            base.OnInitialized(e);
+            DataContext = m_gameViewModel;
+
+            // m_gameViewModel.Game.Start();
         }
+        // private void m_worker_DoWork(object sender, DoWorkEventArgs e)
+        // {
+        //     m_gameViewModel.Run();
+        // }
     }
 }

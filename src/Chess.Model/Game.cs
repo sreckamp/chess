@@ -1,123 +1,65 @@
-﻿using System.Collections.Generic;
-using System.Drawing.Drawing2D;
-using GameBase.Model;
+﻿using System.Drawing;
+using System.Linq;
+using Chess.Model.Actions;
+using Chess.Model.Evaluation.Models;
+using Chess.Model.Models;
+using Chess.Model.Reducers;
+using Chess.Model.Stores;
 
 namespace Chess.Model
 {
-    public enum ChessVersion
-    {
-        TwoPlayer = 2,
-        FourPlayer = 4,
-    }
     public class Game
     {
-        private static readonly Dictionary<ChessVersion, Dictionary<string, Direction>> TEAMS =
-            new Dictionary<ChessVersion, Dictionary<string, Direction>>
-            {
-                {
-                    ChessVersion.TwoPlayer, new Dictionary<string, Direction>
-                    {
-                        { "White", Direction.South },
-                        { "Black", Direction.North },
-                    }
-                },
-                {
-                    ChessVersion.FourPlayer, new Dictionary<string, Direction>
-                    {
-                        { "White", Direction.South },
-                        { "Black", Direction.North },
-                        { "Silver", Direction.West },
-                        { "Gold", Direction.East },
-                    }
-                }
-            };
+        private GameReducer m_gameReducer;
+        private readonly Version m_version;
+        private readonly GameBoard m_board;
 
-        private readonly ChessVersion m_version;
-
-        public Game(ChessVersion version)
+        public Game(Version version, GameBoard board = null)
         {
             m_version = version;
-            Board = new Board(version == ChessVersion.TwoPlayer ? 0 : 3);
+            Store = new GameStore();
+            m_board = board ?? BoardStoreFactory.Instance.Create(m_version);
         }
 
-        public Board Board { get; }
+        public GameStore Store { get; private set; }
 
-        public void Init(Dictionary<string, Direction> teams)
+        public void Init()
         {
-            foreach (var team in teams)
-            {
-                populateSide(team.Key, team.Value, Board);
-            }
+            ApplyAndUpdate(new InitializeAction{Version = m_version, Board = m_board});
         }
 
-        private void Place(Piece piece, int x, int y)
+        public void Move(Point from, Point to)
         {
-            var p = new Placement<Piece, Move>(piece, new Move(x, y));
-            Board.Add(p);
+            var move = Store.Markings.GetMarkers<MoveMarker>(from).FirstOrDefault(marker => marker.Move.To == to);
+            if (move == null) return;
+
+            ApplyAndUpdate(new MoveAction {Move = move.Move});
         }
 
-        public void Play()
+        private void ApplyAndUpdate(IAction action)
         {
-            Board.Clear();
-            Init(TEAMS[m_version]);
-            while(true);
+            var next = Reducer.Apply(action, Store);
+            Store = Reducer.Apply(new EvaluateBoardAction() {ActivePlayer = next.CurrentPlayer}, next);
         }
 
-        private void populateSide(string team, Direction dir, Board board)
-        {
-            var kingOnLeft = board.CornerSize > 0;
-            var vert = true;
-            var power = 0;
-            var pawn = 1;
-            var kingFile = 4;
+        private GameReducer Reducer => m_gameReducer ?? (m_gameReducer = GameReducerFactory.Instance.Create(m_version));
 
-            switch (dir)
-            {
-                case Direction.North:
-                    power = board.MaxY;
-                    pawn = board.MaxY - 1;
-                    kingFile = kingOnLeft ? 3 : kingFile;
-                    break;
-                case Direction.West:
-                    vert = false;
-                    kingFile = kingOnLeft ? 3 : kingFile;
-                    break;
-                case Direction.South:
-                    break;
-                case Direction.East:
-                    power = board.MaxX;
-                    pawn = board.MaxX - 1;
-                    vert = false;
-                    break;
-            }
-
-            for (var idx = 0; idx < 8; idx++)
-            {
-                Piece p = null;
-                switch (idx)
-                {
-                    case 0:
-                    case 7:
-                        p = Piece.CreateRook(team);
-                        break;
-                    case 1:
-                    case 6:
-                        p = Piece.CreateKnight(team);
-                        break;
-                    case 2:
-                    case 5:
-                        p = Piece.CreateBishop(team);
-                        break;
-                    default:
-                        p = idx == kingFile
-                            ? Piece.CreateKing(team)
-                            : Piece.CreateQueen(team);
-                        break;
-                }
-
-                Place(p, vert ? idx + board.CornerSize : power, vert ? power : idx + board.CornerSize);
-                Place(Piece.CreatePawn(team, dir), vert ? idx + board.CornerSize : pawn, vert ? pawn : idx + board.CornerSize);
-            }
-        }
+        // /// <summary>
+        // /// TODO: This should return the event for the particular player
+        // /// </summary>
+        // /// <param name="color"></param>
+        // /// <returns></returns>
+        // public async Task<object> GetEventsAsync(Color color)
+        // {
+        //     return new object();
+        // }
+        //
+        // /// <summary>
+        // /// This should trigger events for all the appropriate players
+        // /// </summary>
+        // private void PublishEvent()
+        // {
+        //     
+        // }
     }
 }

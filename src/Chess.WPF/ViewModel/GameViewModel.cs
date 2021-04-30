@@ -1,25 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Windows.Media;
-using System.Windows.Threading;
+﻿using System.ComponentModel;
 using Chess.Model;
-using GameBase.Model;
-using GameBase.WPF.ViewModel;
+using Version = Chess.Model.Models.Version;
 
 namespace Chess.WPF.ViewModel
 {
     public class GameViewModel : INotifyPropertyChanged
     {
-        private readonly Game m_game = new Game(ChessVersion.FourPlayer);
-
         public GameViewModel()
         {
-            BoardViewModel = new BoardViewModel(m_game.Board);
+            BoardViewModel = new BoardViewModel(Game.Store.Board);
         }
 
         public BoardViewModel BoardViewModel { get; }
+
+        public Game Game { get; } = new Game(Version.FourPlayer);
 
         #region INotifyPropertyChanged Members
 
@@ -32,12 +26,12 @@ namespace Chess.WPF.ViewModel
 
         #endregion
 
-        internal void Run()
-        {
-            while(true)
-            {
-                m_game.Play();
-            }
-        }
+        // internal void Run()
+        // {
+        //     while(true)
+        //     {
+        //         m_game.Play();
+        //     }
+        // }
     }
 }

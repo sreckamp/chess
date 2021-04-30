@@ -1,0 +1,37 @@
+/* Black & White */
+
+.dark {
+  background-color: #000;
+}
+
+.light {
+  background-color: #FFF;
+}
+
+.active {
+  background-color: yellow !important;
+}
+
+.available.light {
+  background-color: khaki;
+}
+
+.available.dark {
+  background-color: saddlebrown;
+}
+
+/*.opponent.light {*/
+/*  background-color: cyan;*/
+/*}*/
+
+/*.opponent.dark {*/
+/*  background-color: darkcyan;*/
+/*}*/
+
+.available.opponent.light {
+  background-color: red;
+}
+
+.available.opponent.dark {
+  background-color: darkred;
+}
