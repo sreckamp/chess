@@ -241,6 +241,30 @@ namespace Chess.Model.Tests.Evaluation.Sources
                     path.AllowMove.Should().BeTrue();
                     path.AllowTake.Should().BeTrue();
                     path.Squares.Should().SatisfyRespectively(sq => sq.Item1.Should().Be(new Point(1, 3)));
+                },
+                path =>
+                {
+                    path.Direction.Should().Be(Direction.East);
+                    path.Start.Should().Be(start);
+                    path.Piece.Should().Be(piece);
+                    path.AllowMove.Should().BeTrue();
+                    path.AllowTake.Should().BeFalse();
+                    path.Squares.Should().SatisfyRespectively(
+                        sq => sq.Item1.Should().Be(new Point(3, 2)),
+                        sq => sq.Item1.Should().Be(new Point(4, 2))
+                    );
+                },
+                path =>
+                {
+                    path.Direction.Should().Be(Direction.West);
+                    path.Start.Should().Be(start);
+                    path.Piece.Should().Be(piece);
+                    path.AllowMove.Should().BeTrue();
+                    path.AllowTake.Should().BeFalse();
+                    path.Squares.Should().SatisfyRespectively(
+                        sq => sq.Item1.Should().Be(new Point(1, 2)),
+                        sq => sq.Item1.Should().Be(new Point(0, 2))
+                    );
                 }
             );
         }
@@ -310,6 +334,30 @@ namespace Chess.Model.Tests.Evaluation.Sources
                     path.AllowMove.Should().BeTrue();
                     path.AllowTake.Should().BeTrue();
                     path.Squares.Should().SatisfyRespectively(sq => sq.Item1.Should().Be(new Point(1, 2)));
+                },
+                path =>
+                {
+                    path.Direction.Should().Be(Direction.East);
+                    path.Start.Should().Be(start);
+                    path.Piece.Should().Be(piece);
+                    path.AllowMove.Should().BeTrue();
+                    path.AllowTake.Should().BeFalse();
+                    path.Squares.Should().SatisfyRespectively(
+                        sq => sq.Item1.Should().Be(new Point(3, 2)),
+                        sq => sq.Item1.Should().Be(new Point(4, 2))
+                    );
+                },
+                path =>
+                {
+                    path.Direction.Should().Be(Direction.West);
+                    path.Start.Should().Be(start);
+                    path.Piece.Should().Be(piece);
+                    path.AllowMove.Should().BeTrue();
+                    path.AllowTake.Should().BeFalse();
+                    path.Squares.Should().SatisfyRespectively(
+                        sq => sq.Item1.Should().Be(new Point(1, 2)),
+                        sq => sq.Item1.Should().Be(new Point(0, 2))
+                    );
                 }
             );
         }
@@ -379,6 +427,30 @@ namespace Chess.Model.Tests.Evaluation.Sources
                     path.AllowMove.Should().BeTrue();
                     path.AllowTake.Should().BeTrue();
                     path.Squares.Should().SatisfyRespectively(sq => sq.Item1.Should().Be(new Point(1, 3)));
+                },
+                path =>
+                {
+                    path.Direction.Should().Be(Direction.East);
+                    path.Start.Should().Be(start);
+                    path.Piece.Should().Be(piece);
+                    path.AllowMove.Should().BeTrue();
+                    path.AllowTake.Should().BeFalse();
+                    path.Squares.Should().SatisfyRespectively(
+                        sq => sq.Item1.Should().Be(new Point(3, 2)),
+                        sq => sq.Item1.Should().Be(new Point(4, 2))
+                    );
+                },
+                path =>
+                {
+                    path.Direction.Should().Be(Direction.West);
+                    path.Start.Should().Be(start);
+                    path.Piece.Should().Be(piece);
+                    path.AllowMove.Should().BeTrue();
+                    path.AllowTake.Should().BeFalse();
+                    path.Squares.Should().SatisfyRespectively(
+                        sq => sq.Item1.Should().Be(new Point(1, 2)),
+                        sq => sq.Item1.Should().Be(new Point(0, 2))
+                    );
                 }
             );
         }
@@ -448,6 +520,18 @@ namespace Chess.Model.Tests.Evaluation.Sources
                     path.AllowMove.Should().BeTrue();
                     path.AllowTake.Should().BeTrue();
                     path.Squares.Should().SatisfyRespectively(sq => sq.Item1.Should().Be(new Point(1, 3)));
+                },
+                path =>
+                {
+                    path.Direction.Should().Be(Direction.West);
+                    path.Start.Should().Be(start);
+                    path.Piece.Should().Be(piece);
+                    path.AllowMove.Should().BeTrue();
+                    path.AllowTake.Should().BeFalse();
+                    path.Squares.Should().SatisfyRespectively(
+                        sq => sq.Item1.Should().Be(new Point(1, 2)),
+                        sq => sq.Item1.Should().Be(new Point(0, 2))
+                    );
                 }
             );
         }
@@ -517,6 +601,18 @@ namespace Chess.Model.Tests.Evaluation.Sources
                     path.AllowMove.Should().BeTrue();
                     path.AllowTake.Should().BeTrue();
                     path.Squares.Should().SatisfyRespectively(sq => sq.Item1.Should().Be(new Point(2, 1)));
+                },
+                path =>
+                {
+                    path.Direction.Should().Be(Direction.East);
+                    path.Start.Should().Be(start);
+                    path.Piece.Should().Be(piece);
+                    path.AllowMove.Should().BeTrue();
+                    path.AllowTake.Should().BeFalse();
+                    path.Squares.Should().SatisfyRespectively(
+                        sq => sq.Item1.Should().Be(new Point(3, 2)),
+                        sq => sq.Item1.Should().Be(new Point(4, 2))
+                    );
                 }
             );
         }

@@ -11,8 +11,7 @@ namespace Chess.Model.Evaluation.Sources
         /// <inheritdoc/>
         public IEnumerable<Path> GetPaths(Point start, Piece piece, IPieceEnumerationProvider squares)
             => piece.Type == PieceType.King
-                ? Directions.All.Where(direction => squares.EnumerateStraightLine(start, direction).Any())
-                    .Select(direction => new Path(GetType().Name)
+                ? Directions.All.Select(direction => new Path(GetType().Name)
                     {
                         AllowMove = true,
                         AllowTake = true,
@@ -33,7 +32,7 @@ namespace Chess.Model.Evaluation.Sources
                                 }
                             )
                         : Enumerable.Empty<Path>()
-                    )
+                    ).Where(path => path.Squares.Any())
                 : Enumerable.Empty<Path>();
         // TODO: if the king has not moved, include the horizontal paths for castling
     }
