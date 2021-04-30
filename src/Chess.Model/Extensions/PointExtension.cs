@@ -45,6 +45,7 @@ namespace Chess.Model.Extensions
 
         public static bool IsBetween(this Point test, Point start, Point end) =>
             test.X >= Math.Min(start.X, end.X) && test.X <= Math.Max(start.X, end.X)
+            && test.Y >= Math.Min(start.Y, end.Y) && test.Y <= Math.Max(start.Y, end.Y)
             && test.IsOnLine(start, end);
 
         public static bool IsOnLine(this Point test, Point start, Point end) =>
