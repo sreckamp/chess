@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\game-base\src\GameBase.Model\GameBase.Model.csproj" />
     <ProjectReference Include="..\Chess.Model\Chess.Model.csproj" />
   </ItemGroup>
 
