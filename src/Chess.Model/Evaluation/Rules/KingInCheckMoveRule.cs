@@ -16,9 +16,9 @@ namespace Chess.Model.Evaluation.Rules
         {
             var checkMarkers = markings.GetKingMarkers<CheckMarker>(path.Piece.Color).ToList();
 
-            base.Apply(checkMarkers.Any() ? new MarkingFilter(point =>
+            base.Apply(checkMarkers.Any() ? new MarkingFilter(marker =>
             {
-                if (path.Piece.Type == PieceType.King)
+                if (!(marker is MoveMarker moveMarker) || path.Piece.Type == PieceType.King)
                 {
                     //   + All King moves
                     return true;
@@ -29,16 +29,18 @@ namespace Chess.Model.Evaluation.Rules
                     return false;
                 }
 
+                var move = moveMarker.Move;
+
                 var check = checkMarkers[0];
 
                 //   + Take single checking piece
-                if (point == check.Source)
+                if (move.To == check.Source)
                 {
                     return true;
                 }
 
                 //   + If "None" must take piece or move king otherwise intercede
-                return check.Direction != Direction.None && point.IsBetween(check.Source, check.KingLocation);
+                return check.Direction != Direction.None && move.To.IsBetween(check.Source, check.KingLocation);
             }, markings) : markings, path);
         }
     }

@@ -15,7 +15,8 @@ namespace Chess.Model.Evaluation.Rules
             if (path.Piece.Type == PieceType.King && !path.AllowTake)
             {
                 var (point, piece) = path.Squares.SkipWhile((tuple, i) => tuple.Item2.IsEmpty).FirstOrDefault();
-                if (!piece.HasMoved && piece.Type == PieceType.Rook && path.Piece.Color == piece.Color)
+                if (!piece.HasMoved && piece.Type == PieceType.Rook && path.Piece.Color == piece.Color
+                    && !markings.GetKingMarkers<CheckMarker>(path.Piece.Color).Any())
                 {
                     markings.Mark(path.Start, new MoveMarker(new CastleMove(
                         new SimpleMove(path.Start, path.Start.PolarOffset(path.Direction, 2)),
