@@ -4,7 +4,7 @@ import {Rotation} from '../model/rotation';
 import {Placement, Point} from '../model/placement';
 import {Piece} from '../model/piece';
 import {Color} from '../model/color';
-import {ChessService} from '../services/chess.service';
+import {ChessService} from '../services/chess/chess.service';
 import {concatMap, switchMap, tap} from 'rxjs/operators';
 
 @Component({

@@ -9,7 +9,7 @@ import { EvaluatorComponent } from './evaluator/evaluator.component';
 import { GameComponent } from './game/game.component';
 import {RouterModule, Routes} from '@angular/router';
 import {HttpClientModule} from '@angular/common/http';
-import {ChessService} from './services/chess.service';
+import {ChessService} from './services/chess/chess.service';
 
 const routes: Routes = [
   { path: '', redirectTo: '/game', pathMatch: 'full' },
