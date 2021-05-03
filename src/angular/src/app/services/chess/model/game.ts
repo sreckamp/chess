@@ -5,10 +5,14 @@ export interface Marker {
   direction: string;
 }
 
+export interface Metadata {
+  markers: Marker[];
+}
+
 export interface Square {
   x: number;
   y: number;
-  metadata: Marker[];
+  metadata: Metadata;
 }
 
 export interface Piece {

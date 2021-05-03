@@ -6,7 +6,8 @@ import {Piece} from '../model/piece';
 import {Color, parseColor} from '../model/color';
 import {ChessService} from '../services/chess/chess.service';
 import {concatMap, tap} from 'rxjs/operators';
-import {Game as ApiGame} from "../services/chess/model/game";
+import {Game as ApiGame, Marker as ApiMarker} from "../services/chess/model/game";
+import {Marker} from "../model/marker";
 
 @Component({
   selector: 'app-game',
@@ -22,6 +23,8 @@ export class GameComponent implements OnInit {
   rotation = Rotation.NONE;
   rotations = Rotation;
   pieces: Placement<Piece>[] = [];
+  markers: Placement<Marker[]>[] = [];
+  showMarkers: boolean = true;
   rotationKeys = [];
   selected = new Point(-1, -1);
   highlighted = [];
@@ -52,7 +55,10 @@ export class GameComponent implements OnInit {
   }
 
   clickHandler(point: Point): void {
-    if(this.highlighted.some(value => value.x === point.x && value.y === point.y)) {
+    if(point.x === this.selected.x && point.y === this.selected.y) {
+      this.highlighted = [];
+      this.selected = new Point(-1,-1);
+    } else if(this.highlighted.some(value => value.x === point.x && value.y === point.y)) {
       this._service.move(this.id, this.selected, point).subscribe(value => {
         this.parseGame(value);
         this.highlighted = [];
@@ -90,5 +96,16 @@ export class GameComponent implements OnInit {
         console.log(value, piece, placement);
         return placement;
       }).filter(value => value.value.color !== Color.NONE);
+    this.markers = game.pieces
+      .map(value => {
+        const markers: Marker[] = value.location.metadata.markers.map(value => <Marker>{
+          direction: value.direction,
+          type: value.type,
+          source: <Piece> {type: parsePieceType(value.sourceType), color: parseColor(value.sourceColor)}
+        });
+        const placement = new Placement<Marker[]>(value.location.x, value.location.y, markers);
+        console.log(value, markers, placement);
+        return placement;
+      }).filter(value => value.value.length > 0);
   }
 }

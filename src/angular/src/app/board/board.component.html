@@ -25,13 +25,13 @@
                               'transparent': !visible,
                               'selected': isSelected(rowIdx, colIdx),
                               'highlighted': isHighlighted(rowIdx, colIdx),
-                              'opponent': isOpponent((getPiece(rowIdx, colIdx).color)),
-                              'selectable': (getPiece(rowIdx, colIdx).color) == (currentPlayer | lowercase),
+                              'opponent': isOpponent(rowIdx, colIdx),
+                              'selectable': isSelectable(rowIdx, colIdx),
                               'check': isInCheck(rowIdx, colIdx)
                           }"
              (click)="clickSquare(rowIdx, colIdx)">
           <app-piece [color] = "getPiece(rowIdx, colIdx).color" [piece]="getPiece(rowIdx, colIdx).type" ></app-piece>
-          <app-analysis></app-analysis>
+          <app-analysis [markers] = "getMarker(rowIdx, colIdx)" [rotation]="rotation"></app-analysis>
         </div>
       </div>
     </div>

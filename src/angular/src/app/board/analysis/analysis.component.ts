@@ -1,5 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Rotation} from '../../model/rotation';
+import {Color} from "../../model/color";
+import {Marker} from "../../model/marker";
 
 @Component({
   selector: 'app-analysis',
@@ -7,10 +9,11 @@ import {Rotation} from '../../model/rotation';
   styleUrls: ['./analysis.component.css']
 })
 export class AnalysisComponent implements OnInit {
-  markers = [];
+  @Input()
+  markers: Marker[] = [];
 
   @Input()
-  color = 'none';
+  color = Color.NONE;
 
   @Input()
   rotation = Rotation.NONE;

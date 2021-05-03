@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Rotation} from '../model/rotation';
 import {Piece} from '../model/piece';
-import {PieceType} from '../model/piece.type';
 import {Placement, Point} from '../model/placement';
+import {Marker} from "../services/chess/model/game";
 
 @Component({
   selector: 'app-board',
@@ -19,8 +19,6 @@ import {Placement, Point} from '../model/placement';
     ]
 })
 export class BoardComponent implements OnInit {
-  public currentPlayer = 'white';
-
   @Input()
   public rotation = Rotation.NONE;
 
@@ -31,6 +29,12 @@ export class BoardComponent implements OnInit {
 
   @Input()
   public pieces: Placement<Piece>[] = [];
+
+  @Input()
+  public markers: Placement<Marker[]>[] = [];
+
+  @Input()
+  public showMarkers: boolean = false;
 
   @Input()
   public selected: Point = new Point(-1, -1);
@@ -44,11 +48,11 @@ export class BoardComponent implements OnInit {
   private _ranks: string[] = [];
   private _files: string[] = [];
 
-  public get headers(): string[] {
+  get headers(): string[] {
     return [Rotation.CLOCKWISE, Rotation.COUNTERCLOCKWISE].includes(this.rotation) ? this._ranks : this._files;
   }
 
-  public get labels(): string[] {
+  get labels(): string[] {
     return [Rotation.CLOCKWISE, Rotation.COUNTERCLOCKWISE].includes(this.rotation) ? this._files : this._ranks;
   }
 
@@ -59,6 +63,15 @@ export class BoardComponent implements OnInit {
     this._corner = value[1];
     this.generateSquares();
   }
+
+  @Input()
+  public isOpponent: (row: number, col: number) => boolean = () => false;
+
+  @Input()
+  public isInCheck: (row: number, col: number) => boolean = () => false;
+
+  @Input()
+  public isSelectable: (row: number, col: number) => boolean = () => true;
 
   public get size(): number {
     return this._size;
@@ -73,32 +86,31 @@ export class BoardComponent implements OnInit {
   constructor() {
   }
 
-  private isVisible(row: number, col: number): boolean {
+  isVisible(row: number, col: number): boolean {
     return (this.corner === 0) ||
       !((row < this.corner || row >= this.size - this.corner) &&
       (col < this.corner || col >= this.size - this.corner));
   }
 
-  public isSelected(row: number, col: number): boolean {
+  isSelected(row: number, col: number): boolean {
     return this.selected.x === col && this.selected.y === row;
   }
 
-  public isHighlighted(row: number, col: number): boolean {
+  isHighlighted(row: number, col: number): boolean {
     return this.highlighted.some(value => value.x === col && value.y === row);
   }
 
-  public isOpponent(color: string): boolean {
-    return false;
-  }
-
-  public isInCheck(row: number, col: number): boolean {
-    return false;
-  }
-
-  public getPiece(row: number, col: number): Piece {
+  getPiece(row: number, col: number): Piece {
     const placement = this.pieces && this.pieces
       .find(value => value.location.y === row && value.location.x === col);
     return placement && placement.value || new Piece();
+  }
+
+  getMarker(row: number, col: number): Marker[] {
+    const placement = this.markers && this.markers
+      .find(value => value.location.y === row && value.location.x === col);
+    console.log(`[${row},${col}]`, placement && placement.value || []);
+    return placement && placement.value || [];
   }
 
   ngOnInit(): void {
