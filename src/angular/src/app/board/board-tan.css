@@ -1,0 +1,36 @@
+/* Tan */
+.tan-theme.dark {
+  background-color: saddlebrown;
+}
+
+.tan-theme.light {
+  background-color: khaki;
+}
+
+.tan-theme.selected {
+  background-color: yellow !important;
+}
+
+.tan-theme.highlighted.light {
+  background-color: #55F;
+}
+
+.tan-theme.highlighted.dark {
+  background-color: #003;
+}
+
+/*.opponent.light {*/
+/*  background-color: cyan;*/
+/*}*/
+
+/*.opponent.dark {*/
+/*  background-color: darkcyan;*/
+/*}*/
+
+.tan-theme.highlighted.opponent.light {
+  background-color: red;
+}
+
+.tan-theme.highlighted.opponent.dark {
+  background-color: darkred;
+}

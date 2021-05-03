@@ -1,0 +1,49 @@
+svg.piece {
+  width: 100px;
+  height: 100px;
+}
+
+svg.piece > image {
+  height: 400px;
+  width: 600px;
+}
+
+svg.black > image {
+  y:0;
+}
+
+svg.gold > image {
+  y:-100;
+}
+
+svg.silver > image {
+  y:-200;
+}
+
+svg.white > image {
+  y:-300;
+}
+
+svg.king > image {
+  x:0;
+}
+
+svg.queen > image {
+  x:-100;
+}
+
+svg.rook > image {
+  x:-200;
+}
+
+svg.bishop > image {
+  x:-300;
+}
+
+svg.knight > image {
+  x:-400;
+}
+
+svg.pawn > image {
+  x:-500;
+}

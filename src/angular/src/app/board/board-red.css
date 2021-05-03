@@ -1,0 +1,36 @@
+/* Red */
+.red-theme.dark {
+  background-color: #300;
+}
+
+.red-theme.light {
+  background-color: #F55;
+}
+
+.red-theme.selected {
+  background-color: yellow !important;
+}
+
+.red-theme.highlighted.light {
+  background-color: khaki;
+}
+
+.red-theme.highlighted.dark {
+  background-color: saddlebrown;
+}
+
+/*.opponent.light {*/
+/*  background-color: cyan;*/
+/*}*/
+
+/*.opponent.dark {*/
+/*  background-color: darkcyan;*/
+/*}*/
+
+.red-theme.highlighted.opponent.light {
+  background-color: #55F;
+}
+
+.red-theme.highlighted.opponent.dark {
+  background-color: #003;
+}

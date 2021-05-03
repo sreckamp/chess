@@ -1,0 +1,8 @@
+ <div>
+   <svg *ngIf="piece != 'empty'" class="piece" [ngClass]="[color, piece]">
+     <image href="assets/chess.png"/>
+   </svg>
+ </div>
+<!-- <svg *ngIf="showMeta && piece && piece.piece == 'enpassant'" class="piece pawn phantom" [ngClass]="[color]">-->
+<!--   <image href="assets/chess.png"/>-->
+<!-- </svg>-->

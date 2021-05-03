@@ -1,0 +1,7 @@
+<div *ngIf="visible" class = "meta">
+  <div *ngFor="let m of markers" [ngClass]="[m.types, m.direction, rotation]">
+    <svg *ngFor ="let mp of m.pieces" ng-show="mp.piece != 'empty'" class="piece" [ngClass]="[mp.color, mp.piece]">
+      <image href="assets/chess.png"/>
+    </svg>
+  </div>
+</div>
