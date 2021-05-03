@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import {PieceType} from '../model/piece.type';
+import {Component, OnInit} from '@angular/core';
+import {parsePieceType, PieceType} from '../model/piece.type';
 import {Rotation} from '../model/rotation';
 import {Placement, Point} from '../model/placement';
 import {Piece} from '../model/piece';
-import {Color} from '../model/color';
+import {Color, parseColor} from '../model/color';
 import {ChessService} from '../services/chess/chess.service';
-import {concatMap, switchMap, tap} from 'rxjs/operators';
+import {concatMap, tap} from 'rxjs/operators';
+import {Game as ApiGame} from "../services/chess/model/game";
 
 @Component({
   selector: 'app-game',
@@ -23,21 +24,23 @@ export class GameComponent implements OnInit {
   pieces: Placement<Piece>[] = [];
   rotationKeys = [];
   selected = new Point(-1, -1);
-  highlighted = [new Point(4, 2), new Point(4, 3), new Point(4, 4), new Point(4, 5)];
+  highlighted = [];
+  id: number;
+  name: string;
 
-  private _id: number;
+  private _activeColor: Color;
+
   constructor(private _service: ChessService) {
     this.rotationKeys = Object.keys(this.rotations);
   }
 
   ngOnInit(): void {
-    this.populate(2);
     this._service.newGame(2).pipe(
-      tap(value => this._id = value),
+      tap(value => this.id = value),
       concatMap(value => this._service.get(value).pipe(
         tap(x => console.log('game state', x))
       ))
-    ).subscribe();
+    ).subscribe(x => this.parseGame(x));
   }
 
   changeRotation(rotation: Rotation): void {
@@ -46,38 +49,46 @@ export class GameComponent implements OnInit {
 
   changePlayers(players: number): void {
     this.config = players === 4 ? [14, 3] : [8, 0];
-    this.populate(players);
-  }
-
-  private populate(players: number): void {
-    const pieces = [];
-    for (let idx = 0; idx < this._initialPower.length; idx++) {
-      pieces.push(this.createPlacement(this.config[1] + idx, this.config[0] - 2, Color.BLACK, PieceType.PAWN));
-      pieces.push(this.createPlacement(this.config[1] + idx, this.config[0] - 1, Color.BLACK, this._initialPower[idx]));
-      if (players < 4) {
-        pieces.push(this.createPlacement(this.config[1] + idx, 1, Color.WHITE, PieceType.PAWN));
-        pieces.push(this.createPlacement(this.config[1] + idx, 0, Color.WHITE, this._initialPower[idx]));
-      } else {
-        const reverseIdx = this._initialPower.length - 1 - idx;
-        pieces.push(this.createPlacement(this.config[1] + idx, 0, Color.WHITE, this._initialPower[reverseIdx]));
-        pieces.push(this.createPlacement(this.config[1] + idx, 1, Color.WHITE, PieceType.PAWN));
-        pieces.push(this.createPlacement(0, this.config[1] + idx, Color.SILVER, this._initialPower[idx]));
-        pieces.push(this.createPlacement(1, this.config[1] + idx, Color.SILVER, PieceType.PAWN));
-        pieces.push(this.createPlacement(this.config[0] - 1, this.config[1] + idx,
-          Color.GOLD, this._initialPower[reverseIdx]));
-        pieces.push(this.createPlacement(this.config[0] - 2, this.config[1] + idx,
-          Color.GOLD, PieceType.PAWN));
-      }
-    }
-    this.pieces = pieces;
-  }
-
-  private createPlacement(x: number, y: number, color: Color, type: PieceType): Placement<Piece> {
-    return new Placement<Piece>(x, y, { color, type } as Piece);
   }
 
   clickHandler(point: Point): void {
-    console.log(`click! (${point.x}, ${point.y})`);
-    this.selected = point;
+    if(this.highlighted.some(value => value.x === point.x && value.y === point.y)) {
+      this._service.move(this.id, this.selected, point).subscribe(value => {
+        this.parseGame(value);
+        this.highlighted = [];
+        this.selected = new Point(-1,-1);
+      });
+    } else {
+      const clickedPiece = this.getPiece(point);
+      if(this._activeColor === clickedPiece.color) {
+        this.selected = point;
+        this._service.getAvailable(this.id, point).subscribe(value => {
+          console.log('available', value)
+          this.highlighted = value;
+        });
+      }
+    }
+  }
+
+  private getPiece(point: Point): Piece {
+    const placement = this.pieces.find(value => value.location.x === point.x && value.location.y === point.y);
+    return placement && placement.value || new Piece();
+  }
+
+  private parseGame(game: ApiGame) {
+    this.id = game.gameId;
+    this.config = [game.size, game.corners];
+    this.name = game.name;
+    this._activeColor = game.currentPlayer && parseColor(game.currentPlayer) || Color.NONE;
+    this.pieces = game.pieces
+      .map(value => {
+        const piece = {
+          color: parseColor(value.color),
+          type: parsePieceType(value.type)
+        } as Piece;
+        const placement = new Placement<Piece>(value.location.x, value.location.y, piece);
+        console.log(value, piece, placement);
+        return placement;
+      }).filter(value => value.value.color !== Color.NONE);
   }
 }

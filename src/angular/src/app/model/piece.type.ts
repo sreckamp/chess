@@ -7,3 +7,7 @@ export enum PieceType {
   QUEEN = 'queen',
   KING = 'king'
 }
+
+export function parsePieceType(value: string): PieceType {
+  return value && PieceType[value.toUpperCase()] || PieceType.EMPTY;
+}

@@ -5,3 +5,7 @@ export enum Color {
   BLACK = 'black',
   GOLD = 'gold'
 }
+
+export function parseColor(value: string): Color {
+  return value && Color[value.toUpperCase()] || Color.NONE;
+}
