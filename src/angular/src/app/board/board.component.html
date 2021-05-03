@@ -23,15 +23,15 @@
                               'dark': (rowIdx + colIdx) % 2 == (corner + size) % 2,
                               'light': (rowIdx + colIdx) % 2 != (corner + size) % 2,
                               'transparent': !visible,
-                              'selected': isSelected(rowIdx, colIdx),
-                              'highlighted': isHighlighted(rowIdx, colIdx),
-                              'opponent': isOpponent(rowIdx, colIdx),
-                              'selectable': isSelectable(rowIdx, colIdx),
-                              'check': isInCheck(rowIdx, colIdx)
+                              'selected': isSelected(colIdx, rowIdx),
+                              'highlighted': isHighlighted(colIdx, rowIdx),
+                              'opponent': isOpponent(colIdx, rowIdx),
+                              'selectable': isSelectable(colIdx, rowIdx),
+                              'check': isInCheck(colIdx, rowIdx)
                           }"
-             (click)="clickSquare(rowIdx, colIdx)">
-          <app-piece [color] = "getPiece(rowIdx, colIdx).color" [piece]="getPiece(rowIdx, colIdx).type" ></app-piece>
-          <app-analysis [markers] = "getMarker(rowIdx, colIdx)" [rotation]="rotation"></app-analysis>
+             (click)="clickSquare(colIdx, rowIdx)">
+          <app-piece [color] = "getPiece(colIdx, rowIdx).color" [piece]="getPiece(colIdx, rowIdx).type" ></app-piece>
+          <app-analysis [visible]="showMarkers" [markers] = "getMarker(colIdx, rowIdx)" [rotation]="rotation"></app-analysis>
         </div>
       </div>
     </div>

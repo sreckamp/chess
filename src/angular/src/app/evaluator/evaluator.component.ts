@@ -67,7 +67,6 @@ export class EvaluatorComponent implements OnInit {
   }
 
   clickHandler(point: Point): void {
-    console.log(`click! (${point.x}, ${point.y})`);
     this.selected = point;
   }
 }

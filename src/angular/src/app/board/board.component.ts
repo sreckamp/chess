@@ -65,13 +65,13 @@ export class BoardComponent implements OnInit {
   }
 
   @Input()
-  public isOpponent: (row: number, col: number) => boolean = () => false;
+  public isOpponent: (x: number, y: number) => boolean = () => false;
 
   @Input()
-  public isInCheck: (row: number, col: number) => boolean = () => false;
+  public isInCheck: (x: number, y: number) => boolean = () => false;
 
   @Input()
-  public isSelectable: (row: number, col: number) => boolean = () => true;
+  public isSelectable: (x: number, y: number) => boolean = () => true;
 
   public get size(): number {
     return this._size;
@@ -86,30 +86,29 @@ export class BoardComponent implements OnInit {
   constructor() {
   }
 
-  isVisible(row: number, col: number): boolean {
+  isVisible(col: number, row: number): boolean {
     return (this.corner === 0) ||
       !((row < this.corner || row >= this.size - this.corner) &&
       (col < this.corner || col >= this.size - this.corner));
   }
 
-  isSelected(row: number, col: number): boolean {
+  isSelected(col: number, row: number): boolean {
     return this.selected.x === col && this.selected.y === row;
   }
 
-  isHighlighted(row: number, col: number): boolean {
+  isHighlighted(col: number, row: number): boolean {
     return this.highlighted.some(value => value.x === col && value.y === row);
   }
 
-  getPiece(row: number, col: number): Piece {
+  getPiece(col: number, row: number): Piece {
     const placement = this.pieces && this.pieces
       .find(value => value.location.y === row && value.location.x === col);
     return placement && placement.value || new Piece();
   }
 
-  getMarker(row: number, col: number): Marker[] {
+  getMarker(col: number, row: number): Marker[] {
     const placement = this.markers && this.markers
       .find(value => value.location.y === row && value.location.x === col);
-    console.log(`[${row},${col}]`, placement && placement.value || []);
     return placement && placement.value || [];
   }
 
@@ -137,9 +136,9 @@ export class BoardComponent implements OnInit {
     this._files = files;
   }
 
-  clickSquare(rowIdx: number, colIdx: number): void {
-    if (this.squares && this.squares[rowIdx] && this.squares[rowIdx][colIdx]) {
-      this.squareClicked.emit(new Point(colIdx, rowIdx));
+  clickSquare(col: number, row: number): void {
+    if (this.squares && this.squares[row] && this.squares[row][col]) {
+      this.squareClicked.emit(new Point(col, row));
     }
   }
 }

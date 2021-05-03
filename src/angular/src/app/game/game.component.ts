@@ -24,7 +24,7 @@ export class GameComponent implements OnInit {
   rotations = Rotation;
   pieces: Placement<Piece>[] = [];
   markers: Placement<Marker[]>[] = [];
-  showMarkers: boolean = true;
+  showMarkers: boolean = false;
   rotationKeys = [];
   selected = new Point(-1, -1);
   highlighted = [];
@@ -40,9 +40,7 @@ export class GameComponent implements OnInit {
   ngOnInit(): void {
     this._service.newGame(2).pipe(
       tap(value => this.id = value),
-      concatMap(value => this._service.get(value).pipe(
-        tap(x => console.log('game state', x))
-      ))
+      concatMap(value => this._service.get(value))
     ).subscribe(x => this.parseGame(x));
   }
 
@@ -68,12 +66,13 @@ export class GameComponent implements OnInit {
       const clickedPiece = this.getPiece(point);
       if(this._activeColor === clickedPiece.color) {
         this.selected = point;
-        this._service.getAvailable(this.id, point).subscribe(value => {
-          console.log('available', value)
-          this.highlighted = value;
-        });
+        this._service.getAvailable(this.id, point).subscribe(value => this.highlighted = value);
       }
     }
+  }
+
+  isSelectable(x: number, y: number): boolean {
+    return this.getPiece(new Point(x, y)).color === this._activeColor;
   }
 
   private getPiece(point: Point): Piece {
@@ -93,7 +92,6 @@ export class GameComponent implements OnInit {
           type: parsePieceType(value.type)
         } as Piece;
         const placement = new Placement<Piece>(value.location.x, value.location.y, piece);
-        console.log(value, piece, placement);
         return placement;
       }).filter(value => value.value.color !== Color.NONE);
     this.markers = game.pieces
@@ -104,7 +102,6 @@ export class GameComponent implements OnInit {
           source: <Piece> {type: parsePieceType(value.sourceType), color: parseColor(value.sourceColor)}
         });
         const placement = new Placement<Marker[]>(value.location.x, value.location.y, markers);
-        console.log(value, markers, placement);
         return placement;
       }).filter(value => value.value.length > 0);
   }
