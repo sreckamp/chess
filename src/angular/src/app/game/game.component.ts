@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { parsePieceType } from '../model/piece.type';
 import { Rotation } from '../model/rotation';
 import { Placement, Point } from '../model/placement';
 import { Piece } from '../model/piece';
-import { Color, parseColor } from '../model/color';
+import { Color } from '../model/color';
 import { ChessService } from '../services/chess/chess.service';
-import { concatMap, tap } from 'rxjs/operators';
-import { Game as ApiGame, Marker as ApiMarker, Piece as ApiPiece } from '../services/chess/model/game';
+import { concatMap } from 'rxjs/operators';
+import { GameTranslationService } from '../services/game.translation.service';
+import { Game } from '../model/game';
 import { Marker } from '../model/marker';
-import { parseDirection } from '../model/direction';
-import { parseMarkerType } from '../model/marker.type';
 
 @Component({
     selector: 'app-game',
@@ -17,29 +15,54 @@ import { parseMarkerType } from '../model/marker.type';
     styleUrls: ['./game.component.css']
 })
 export class GameComponent implements OnInit {
-    config: [number, number] = [8, 0];
+    private _game = {
+        size: 8,
+        corners: 0,
+        activeColor: Color.NONE,
+        pieces: [],
+        markers: []
+    } as Game;
+
+    get id(): number {
+        return this._game.id;
+    }
+
+    get pieces(): Placement<Piece>[] {
+        return this._game.pieces;
+    }
+
+    get markers(): Placement<Marker[]>[] {
+        return this._game.markers;
+    }
+
+    private _config: [number, number] = [8, 0];
+
+    set config(value: [number, number]) {
+        this._config = value;
+        [this._game.size, this._game.corners] = value;
+    }
+
+    get config(): [number, number] {
+        return this._config;
+    }
+
     rotation = Rotation.NONE;
     rotations = Rotation;
-    pieces: Placement<Piece>[] = [];
-    markers: Placement<Marker[]>[] = [];
     showMarkers = true;
     rotationKeys = [];
     selected = new Point(-1, -1);
     highlighted = [];
-    id: number;
-    name: string;
 
-    private _activeColor: Color;
-
-    constructor(private _service: ChessService) {
+    constructor(private _service: ChessService, private _translator: GameTranslationService) {
         this.rotationKeys = Object.keys(this.rotations);
     }
 
     ngOnInit(): void {
         this._service.newGame(2).pipe(
-            tap(value => this.id = value),
             concatMap(value => this._service.get(value))
-        ).subscribe(x => this.parseGame(x));
+        ).subscribe(value => {
+            this._game = this._translator.fromApi(value);
+        });
     }
 
     changeRotation(rotation: Rotation): void {
@@ -55,56 +78,26 @@ export class GameComponent implements OnInit {
             this.highlighted = [];
             this.selected = new Point(-1, -1);
         } else if (this.highlighted.some(value => value.x === point.x && value.y === point.y)) {
-            this._service.move(this.id, this.selected, point).subscribe(value => {
-                this.parseGame(value);
+            this._service.move(this._game.id, this.selected, point).subscribe(value => {
+                this._game = this._translator.fromApi(value);
                 this.highlighted = [];
                 this.selected = new Point(-1, -1);
             });
         } else {
             const clickedPiece = this.getPiece(point);
-            if (this._activeColor === clickedPiece.color) {
+            if (this._game.activeColor === clickedPiece.color) {
                 this.selected = point;
-                this._service.getAvailable(this.id, point).subscribe(value => this.highlighted = value);
+                this._service.getAvailable(this._game.id, point).subscribe(value => this.highlighted = value);
             }
         }
     }
 
-    isSelectable(x: number, y: number): boolean {
-        return this.getPiece(new Point(x, y)).color === this._activeColor;
-    }
+    isSelectable = (x: number, y: number) => this.getPiece(new Point(x, y)).color === this._game.activeColor;
 
-    isOpponent(piece: Piece): boolean {
-        return piece.color !== Color.NONE && piece.color !== this._activeColor;
-    }
+    isOpponent = (piece: Piece) => piece.color !== Color.NONE && piece.color !== this._game.activeColor;
 
     private getPiece(point: Point): Piece {
-        const placement = this.pieces.find(value => value.location.x === point.x && value.location.y === point.y);
+        const placement = this._game.pieces.find(value => value.location.x === point.x && value.location.y === point.y);
         return placement && placement.value || new Piece();
-    }
-
-    private parseGame(game: ApiGame): void {
-        this.id = game.gameId;
-        this.config = [game.size, game.corners];
-        this.name = game.name;
-        this._activeColor = game.currentPlayer && parseColor(game.currentPlayer) || Color.NONE;
-        this.pieces = game.pieces
-            .map(value => {
-                const piece = {
-                    color: parseColor(value.color),
-                    type: parsePieceType(value.type)
-                } as Piece;
-                return new Placement<Piece>(value.location.x, value.location.y, piece);
-            }).filter(value => value.value.color !== Color.NONE);
-        this.markers = game.pieces
-            .map((apiPiece: ApiPiece) => {
-                const markers: Marker[] = apiPiece.location.metadata.markers.map((marker: ApiMarker) => {
-                    return {
-                        direction: parseDirection(marker.direction),
-                        type: parseMarkerType(marker.type),
-                        source: {type: parsePieceType(marker.sourceType), color: parseColor(marker.sourceColor)} as Piece
-                    } as Marker;
-                });
-                return new Placement<Marker[]>(apiPiece.location.x, apiPiece.location.y, markers);
-            }).filter(value => value.value.length > 0);
     }
 }

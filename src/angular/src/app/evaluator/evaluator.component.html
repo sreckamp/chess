@@ -1,10 +1,12 @@
 <p>evaluator works!</p>
+<app-tray [playerCount]="playerCount" (pieceSelected)="pieceSelected($event)"></app-tray>
 <app-board [rotation]="rotation"
            [theme]="'tan'"
            [config]="config"
            [pieces]="pieces"
            [markers]="markers"
            [selected]="selected"
+           [isSelectable]="isSelectable"
            [highlighted]="highlighted"
            [showMarkers]="true"
            (squareClicked)="clickHandler($event)">
@@ -20,3 +22,4 @@
     <option [value]="4">four player</option>
 </select>
 
+<button (click)="submit($event)">Evaluate</button>
