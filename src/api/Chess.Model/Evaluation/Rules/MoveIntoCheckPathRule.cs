@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Chess.Model.Evaluation.Models;
 using Chess.Model.Models;
 
@@ -15,10 +16,22 @@ namespace Chess.Model.Evaluation.Rules
         public override void Apply(IMarkingsProvider markings, Path path)
         {
             if (path.Piece.Type == PieceType.King &&
-                path.Squares.Take(2).Any(square => 
-                    markings.GetMarkers<SimpleMarker>(square.Item1, MarkerType.Cover, MarkerType.Check)
-                        .Any(marker => marker.Piece.Color != path.Piece.Color)
-                ))
+                path.Squares.Take(2).Any(square =>
+                {
+                    var (point, piece) = square;
+                    return markings.GetMarkers<SimpleMarker>(point, MarkerType.Cover, MarkerType.Check)
+                        .Any(marker =>
+                        {
+                            if (path.Piece.Type == PieceType.King && path.Piece.Color == Color.Black &&
+                                path.Direction == Direction.SouthWest)
+                            {
+                                Console.WriteLine("King-SouthWest");
+                            }
+
+                            return piece.Color != marker.Piece.Color && piece.Type != marker.Piece.Type
+                                   && marker.Piece.Color != path.Piece.Color;
+                        });
+                }))
             {
                 // Reject this move
                 return;

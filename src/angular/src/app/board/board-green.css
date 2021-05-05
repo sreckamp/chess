@@ -1,0 +1,36 @@
+/* Green */
+.green-theme.dark {
+    background-color: #030;
+}
+
+.green-theme.light {
+    background-color: #5F5;
+}
+
+.green-theme.selected {
+    background-color: yellow !important;
+}
+
+.green-theme.highlighted.light {
+    background-color: khaki;
+}
+
+.green-theme.highlighted.dark {
+    background-color: saddlebrown;
+}
+
+/*.opponent.light {*/
+/*  background-color: cyan;*/
+/*}*/
+
+/*.opponent.dark {*/
+/*  background-color: darkcyan;*/
+/*}*/
+
+.green-theme.highlighted.opponent.light {
+    background-color: red;
+}
+
+.green-theme.highlighted.opponent.dark {
+    background-color: darkred;
+}

@@ -1,0 +1,53 @@
+svg {
+    width: 100%;
+    height: 100%;
+}
+
+svg > image {
+    height: 400%;
+    width: 600%;
+}
+
+:host.phantom svg > image {
+    opacity: .25;
+}
+
+:host.black svg > image {
+    y: 0;
+}
+
+:host.gold svg > image {
+    y: -100%;
+}
+
+:host.silver svg > image {
+    y: -200%;
+}
+
+:host.white svg > image {
+    y: -300%;
+}
+
+:host.king svg > image {
+    x: 0;
+}
+
+:host.queen svg > image {
+    x: -100%;
+}
+
+:host.rook svg > image {
+    x: -200%;
+}
+
+:host.bishop svg > image {
+    x: -300%;
+}
+
+:host.knight svg > image {
+    x: -400%;
+}
+
+:host.pawn svg > image {
+    x: -500%;
+}

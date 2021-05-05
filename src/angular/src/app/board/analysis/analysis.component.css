@@ -1,0 +1,229 @@
+:host > div > div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 33% 34% 33%;
+    grid-template-rows: 33% 34% 33%;
+}
+
+div.meta {
+    background-color: rgba(0, 0, 0, 0.6);
+    position: relative;
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.meta.pin {
+    background-color: yellow;
+}
+
+.meta.check::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border: 4px dashed darkred;
+}
+
+div.meta.northwest {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+div.meta.northwest.clockwise {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+div.meta.northwest.upsidedown {
+    grid-column: 3;
+    grid-row: 3;
+}
+
+div.meta.northwest.counterclockwise {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+div.meta.north {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+div.meta.north.clockwise {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+div.meta.north.upsidedown {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+div.meta.north.counterclockwise {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+div.meta.northeast {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+div.meta.northeast.clockwise {
+    grid-column: 3;
+    grid-row: 3;
+}
+
+div.meta.northeast.upsidedown {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+div.meta.northeast.counterclockwise {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+div.meta.west {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+div.meta.west.clockwise {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+div.meta.west.upsidedown {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+div.meta.west.counterclockwise {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.meta.multiple {
+    grid-column: 2;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 50% 50%;
+}
+
+div.meta.east {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+div.meta.east.clockwise {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+div.meta.east.upsidedown {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+div.meta.east.counterclockwise {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+div.meta.southwest {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+div.meta.southwest.clockwise {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+div.meta.southwest.upsidedown {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+div.meta.southwest.counterclockwise {
+    grid-column: 3;
+    grid-row: 3;
+}
+
+div.meta.south {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+div.meta.south.clockwise {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+div.meta.south.upsidedown {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+div.meta.south.counterclockwise {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+div.meta.southeast {
+    grid-column: 3;
+    grid-row: 3;
+}
+
+div.meta.southeast.clockwise {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+div.meta.southeast.upsidedown {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+div.meta.southeast.counterclockwise {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+div.meta.multiple app-piece.item0 {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+div.meta.multiple app-piece.item2 {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+div.meta.multiple app-piece.item3 {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+div.meta.multiple app-piece.item1 {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+app-piece {
+    height: 100%;
+    width: 100%;
+}
+
+:host div {
+    height: 100%;
+    width: 100%;
+}

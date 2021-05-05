@@ -18,10 +18,10 @@
         public static readonly IPathRule MoveRules =
             new KingInCheckMoveRule(
                 new MoveIntoCheckPathRule(
-                    new CastleMovePathRule(
-                        new PawnOpenMovePathRule(
-                            new PawnPromotionMoveRule(
-                                new PinMovePathRule(
+                    new PinMovePathRule(
+                        new CastleMovePathRule(
+                            new PawnOpenMovePathRule(
+                                new PawnPromotionMoveRule(
                                     new EnPassantTakeMovePathRule(
                                         new MovePathRule(NopPathRule.Instance))))))));
     }

@@ -1,0 +1,37 @@
+/* orange */
+
+.orange-theme.dark {
+    background-color: darkorange;
+}
+
+.orange-theme.light {
+    background-color: #FFC680;
+}
+
+.orange-theme.selected {
+    background-color: yellow !important;
+}
+
+.orange-theme.highlighted.light {
+    background-color: #55F;
+}
+
+.orange-theme.highlighted.dark {
+    background-color: #003;
+}
+
+/*.opponent.light {*/
+/*  background-color: cyan;*/
+/*}*/
+
+/*.opponent.dark {*/
+/*  background-color: darkcyan;*/
+/*}*/
+
+.orange-theme.highlighted.opponent.light {
+    background-color: red;
+}
+
+.orange-theme.highlighted.opponent.dark {
+    background-color: darkred;
+}
