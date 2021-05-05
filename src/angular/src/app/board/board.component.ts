@@ -1,15 +1,14 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Rotation} from '../model/rotation';
-import {Piece} from '../model/piece';
-import {Placement, Point} from '../model/placement';
-import {Marker} from "../services/chess/model/game";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Rotation } from '../model/rotation';
+import { Piece } from '../model/piece';
+import { Placement, Point } from '../model/placement';
+import { Marker } from '../services/chess/model/game';
 
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: [
     './board.component.css',
-    './board-meta.css',
     './board-black.css',
     './board-blue.css',
     './board-green.css',
@@ -34,7 +33,7 @@ export class BoardComponent implements OnInit {
   public markers: Placement<Marker[]>[] = [];
 
   @Input()
-  public showMarkers: boolean = false;
+  public showMarkers = true;
 
   @Input()
   public selected: Point = new Point(-1, -1);
@@ -47,6 +46,7 @@ export class BoardComponent implements OnInit {
 
   private _ranks: string[] = [];
   private _files: string[] = [];
+  private _corner = 0;
 
   get headers(): string[] {
     return [Rotation.CLOCKWISE, Rotation.COUNTERCLOCKWISE].includes(this.rotation) ? this._ranks : this._files;
@@ -65,19 +65,17 @@ export class BoardComponent implements OnInit {
   }
 
   @Input()
-  public isOpponent: (x: number, y: number) => boolean = () => false;
+  public isOpponent: (x: number, y: number) => boolean = () => false
 
   @Input()
-  public isInCheck: (x: number, y: number) => boolean = () => false;
+  public isInCheck: (x: number, y: number) => boolean = () => false
 
   @Input()
-  public isSelectable: (x: number, y: number) => boolean = () => true;
+  public isSelectable: (x: number, y: number) => boolean = () => true
 
   public get size(): number {
     return this._size;
   }
-
-  private _corner = 0;
 
   public get corner(): number {
     return this._corner;
@@ -106,7 +104,7 @@ export class BoardComponent implements OnInit {
     return placement && placement.value || new Piece();
   }
 
-  getMarker(col: number, row: number): Marker[] {
+  getMarkers(col: number, row: number): Marker[] {
     const placement = this.markers && this.markers
       .find(value => value.location.y === row && value.location.x === col);
     return placement && placement.value || [];

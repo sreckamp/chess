@@ -1,11 +1,16 @@
+div {
+  width: 100%;
+  height: 100%;
+}
+
 svg.piece {
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  height: 100%;
 }
 
 svg.piece > image {
-  height: 400px;
-  width: 600px;
+  height: 400%;
+  width: 600%;
 }
 
 svg.black > image {
@@ -13,15 +18,15 @@ svg.black > image {
 }
 
 svg.gold > image {
-  y:-100;
+  y:-100%;
 }
 
 svg.silver > image {
-  y:-200;
+  y:-200%;
 }
 
 svg.white > image {
-  y:-300;
+  y:-300%;
 }
 
 svg.king > image {
@@ -29,21 +34,21 @@ svg.king > image {
 }
 
 svg.queen > image {
-  x:-100;
+  x:-100%;
 }
 
 svg.rook > image {
-  x:-200;
+  x:-200%;
 }
 
 svg.bishop > image {
-  x:-300;
+  x:-300%;
 }
 
 svg.knight > image {
-  x:-400;
+  x:-400%;
 }
 
 svg.pawn > image {
-  x:-500;
+  x:-500%;
 }

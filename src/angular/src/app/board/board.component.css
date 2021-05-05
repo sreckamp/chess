@@ -101,3 +101,8 @@ div.labels > div {
 .selectable,.highlighted {
   cursor: pointer;
 }
+
+div > app-piece {
+  height: 100%;
+  width: 100%;
+}

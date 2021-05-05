@@ -30,8 +30,8 @@
                               'check': isInCheck(colIdx, rowIdx)
                           }"
              (click)="clickSquare(colIdx, rowIdx)">
-          <app-piece [color] = "getPiece(colIdx, rowIdx).color" [piece]="getPiece(colIdx, rowIdx).type" ></app-piece>
-          <app-analysis [visible]="showMarkers" [markers] = "getMarker(colIdx, rowIdx)" [rotation]="rotation"></app-analysis>
+          <app-analysis [visible]="showMarkers" [markers]="getMarkers(colIdx, rowIdx)" [rotation]="rotation"></app-analysis>
+          <app-piece [piece] = "getPiece(colIdx, rowIdx)"></app-piece>
         </div>
       </div>
     </div>

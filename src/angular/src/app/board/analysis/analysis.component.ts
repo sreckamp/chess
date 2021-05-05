@@ -1,8 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Rotation} from '../../model/rotation';
-import {Color} from "../../model/color";
-import {Marker} from "../../model/marker";
-import { PieceType } from 'src/app/model/piece.type';
+import { Component, Input, OnInit } from '@angular/core';
+import { Rotation } from '../../model/rotation';
+import { Color } from '../../model/color';
+import { Marker } from '../../model/marker';
 
 @Component({
   selector: 'app-analysis',
@@ -10,10 +9,17 @@ import { PieceType } from 'src/app/model/piece.type';
   styleUrls: ['./analysis.component.css']
 })
 export class AnalysisComponent implements OnInit {
-  PieceType = PieceType;
+  private _markers: Marker[] = [];
 
   @Input()
-  markers: Marker[] = [];
+  set markers(marks: Marker[]) {
+    this._markers = marks;
+  }
+
+  get markers(): Marker[] {
+    console.log('markers', this._markers);
+    return this._markers;
+  }
 
   @Input()
   color = Color.NONE;

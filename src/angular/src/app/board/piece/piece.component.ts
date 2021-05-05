@@ -1,23 +1,16 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {colors} from '@angular/cli/utilities/color';
+import {Component, Input} from '@angular/core';
+import {Piece} from '../../model/piece';
 import {PieceType} from '../../model/piece.type';
-import {Color} from '../../model/color';
 
 @Component({
   selector: 'app-piece',
   templateUrl: './piece.component.html',
   styleUrls: ['./piece.component.css']
 })
-export class PieceComponent implements OnInit {
+export class PieceComponent {
   @Input()
-  color = Color.NONE;
+  piece: Piece;
 
-  @Input()
-  piece = PieceType.EMPTY;
-
+  PieceType = PieceType;
   constructor() { }
-
-  ngOnInit(): void {
-  }
-
 }

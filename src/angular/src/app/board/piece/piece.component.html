@@ -1,5 +1,5 @@
  <div>
-   <svg *ngIf="piece != 'empty'" class="piece" [ngClass]="[color, piece]">
+   <svg *ngIf="piece.type != PieceType.EMPTY" class="piece" [ngClass]="[piece.type, piece.color]">
      <image href="assets/chess.png"/>
    </svg>
  </div>
