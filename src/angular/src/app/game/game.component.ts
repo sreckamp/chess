@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { parsePieceType, PieceType } from '../model/piece.type';
+import { parsePieceType } from '../model/piece.type';
 import { Rotation } from '../model/rotation';
 import { Placement, Point } from '../model/placement';
 import { Piece } from '../model/piece';

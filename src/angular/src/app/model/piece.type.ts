@@ -1,3 +1,4 @@
+// noinspection JSUnusedGlobalSymbols
 export enum PieceType {
     EMPTY = 'empty',
     PAWN = 'pawn',

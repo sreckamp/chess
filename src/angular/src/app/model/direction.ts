@@ -1,3 +1,4 @@
+// noinspection JSUnusedGlobalSymbols
 export enum Direction {
     NONE = 'none',
     NORTH = 'north',

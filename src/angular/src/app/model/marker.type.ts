@@ -1,3 +1,4 @@
+// noinspection JSUnusedGlobalSymbols
 export enum MarkerType {
     NONE = 'none',
     COVER = 'cover',
