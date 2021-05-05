@@ -3,6 +3,7 @@ import { Rotation } from '../model/rotation';
 import { Piece } from '../model/piece';
 import { Placement, Point } from '../model/placement';
 import { Marker } from '../services/chess/model/game';
+import { PieceType } from '../model/piece.type';
 
 @Component({
     selector: 'app-board',
@@ -66,13 +67,20 @@ export class BoardComponent implements OnInit {
     }
 
     @Input()
-    public isOpponent: (x: number, y: number) => boolean = () => false;
+    public isOpponent: (Piece) => boolean = () => false
+
+    public isInCheck(x: number, y: number): boolean {
+        const piece = this.pieces.find(value => value.location.x === x && value.location.y === y && value.value.type !== PieceType.EMPTY);
+        const placement = this.markers.find(value => value.location.x === x && value.location.y === y);
+        let markers = [] as Marker[];
+        if (placement) {
+            markers = placement.value;
+        }
+        return markers.some(value => value.type === 'check') && piece && piece.value.type === PieceType.KING;
+    }
 
     @Input()
-    public isInCheck: (x: number, y: number) => boolean = () => false;
-
-    @Input()
-    public isSelectable: (x: number, y: number) => boolean = () => true;
+    public isSelectable: (x: number, y: number) => boolean = () => true
 
     public get size(): number {
         return this._size;

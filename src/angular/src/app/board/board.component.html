@@ -25,14 +25,14 @@
                               'transparent': !visible,
                               'selected': isSelected(colIdx, rowIdx),
                               'highlighted': isHighlighted(colIdx, rowIdx),
-                              'opponent': isOpponent(colIdx, rowIdx),
+                              'opponent': isOpponent(getPiece(colIdx, rowIdx)),
                               'selectable': isSelectable(colIdx, rowIdx),
                               'check': isInCheck(colIdx, rowIdx)
                           }"
                      (click)="clickSquare(colIdx, rowIdx)">
+                    <app-piece [piece]="getPiece(colIdx, rowIdx)"></app-piece>
                     <app-analysis [visible]="showMarkers" [markers]="getMarkers(colIdx, rowIdx)"
                                   [rotation]="rotation"></app-analysis>
-                    <app-piece [piece]="getPiece(colIdx, rowIdx)"></app-piece>
                 </div>
             </div>
         </div>

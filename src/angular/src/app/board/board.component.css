@@ -103,6 +103,17 @@ div.labels > div {
 }
 
 div > app-piece {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+}
+
+div > app-analysis {
+    position: absolute;
+    top: 0;
+    right: 0;
     height: 100%;
     width: 100%;
 }

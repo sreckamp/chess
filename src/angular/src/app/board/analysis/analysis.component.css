@@ -9,10 +9,6 @@
     grid-template-rows: 33% 34% 33%;
 }
 
-svg.phantom > image {
-    opacity: .25;
-}
-
 .meta > div {
     background-color: rgba(0, 0, 0, 0.6);
     width: 100%;
@@ -32,10 +28,6 @@ svg.phantom > image {
     bottom: 0;
     left: 0;
     border: 4px dashed darkred;
-}
-
-.meta > div > svg.piece {
-    transform: scale(0.33, 0.33) translate(-100%, -100%);
 }
 
 .meta > div.northwest {
@@ -123,7 +115,7 @@ svg.phantom > image {
     grid-row: 2;
 }
 
-.meta > div.none:not(.enpassant) {
+.meta > div.none {
     display: grid;
     grid-template-columns: 50% 50%;
     grid-template-rows: 50% 50%;
@@ -209,26 +201,33 @@ svg.phantom > image {
     grid-row: 1;
 }
 
-.meta > div.none:not(.enpassant) > svg {
-    transform: scale(0.25, 0.25) translate(-166%, -166%);
-}
-
-.meta > div.none > svg.white {
+.meta > div.none app-piece.white {
     grid-column: 1;
     grid-row: 1;
 }
 
-.meta > div.none > svg.silver {
+.meta > div.none app-piece.silver {
     grid-column: 2;
     grid-row: 1;
 }
 
-.meta > div.none > svg.black {
+.meta > div.none app-piece.black {
     grid-column: 1;
     grid-row: 2;
 }
 
-.meta > div.none > svg.gold {
+.meta > div.none app-piece.gold {
     grid-column: 2;
     grid-row: 2;
+}
+
+div  app-piece {
+    height: 100%;
+    width: 100%;
+
+}
+
+:host div {
+    height: 100%;
+    width: 100%;
 }

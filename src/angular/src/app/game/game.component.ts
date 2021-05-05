@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { parsePieceType } from '../model/piece.type';
+import { parsePieceType, PieceType } from '../model/piece.type';
 import { Rotation } from '../model/rotation';
 import { Placement, Point } from '../model/placement';
 import { Piece } from '../model/piece';
 import { Color, parseColor } from '../model/color';
 import { ChessService } from '../services/chess/chess.service';
 import { concatMap, tap } from 'rxjs/operators';
-import { Game as ApiGame, Piece as ApiPiece, Marker as ApiMarker } from '../services/chess/model/game';
+import { Game as ApiGame, Marker as ApiMarker, Piece as ApiPiece } from '../services/chess/model/game';
 import { Marker } from '../model/marker';
+import { parseDirection } from '../model/direction';
+import { parseMarkerType } from '../model/marker.type';
 
 @Component({
     selector: 'app-game',
@@ -71,6 +73,10 @@ export class GameComponent implements OnInit {
         return this.getPiece(new Point(x, y)).color === this._activeColor;
     }
 
+    isOpponent(piece: Piece): boolean {
+        return piece.color !== Color.NONE && piece.color !== this._activeColor;
+    }
+
     private getPiece(point: Point): Piece {
         const placement = this.pieces.find(value => value.location.x === point.x && value.location.y === point.y);
         return placement && placement.value || new Piece();
@@ -93,8 +99,8 @@ export class GameComponent implements OnInit {
             .map((apiPiece: ApiPiece) => {
                 const markers: Marker[] = apiPiece.location.metadata.markers.map((marker: ApiMarker) => {
                     return {
-                        direction: marker.direction,
-                        type: marker.type,
+                        direction: parseDirection(marker.direction),
+                        type: parseMarkerType(marker.type),
                         source: {type: parsePieceType(marker.sourceType), color: parseColor(marker.sourceColor)} as Piece
                     } as Marker;
                 });

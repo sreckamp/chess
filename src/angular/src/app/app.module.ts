@@ -10,6 +10,10 @@ import { GameComponent } from './game/game.component';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { ChessService } from './services/chess/chess.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatCardModule } from '@angular/material/card';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { FormsModule } from '@angular/forms';
 
 const routes: Routes = [
     {path: '', redirectTo: '/game', pathMatch: 'full'},
@@ -29,7 +33,11 @@ const routes: Routes = [
     imports: [
         RouterModule.forRoot(routes),
         BrowserModule,
-        HttpClientModule
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MatCardModule,
+        MatSlideToggleModule,
+        FormsModule
     ],
     providers: [ChessService],
     bootstrap: [AppComponent]

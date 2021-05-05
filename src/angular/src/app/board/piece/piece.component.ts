@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 import { Piece } from '../../model/piece';
 import { PieceType } from '../../model/piece.type';
 
@@ -9,7 +9,15 @@ import { PieceType } from '../../model/piece.type';
 })
 export class PieceComponent {
     @Input()
-    piece: Piece;
+    piece = new Piece();
+
+    @Input()
+    phantom = false;
+
+    @HostBinding('class')
+    get classes(): string {
+        return `${this.piece.color} ${this.piece.type}` + (this.phantom ? ' phantom' : '');
+    }
 
     PieceType = PieceType;
 

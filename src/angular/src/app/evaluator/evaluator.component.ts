@@ -4,6 +4,9 @@ import { Rotation } from '../model/rotation';
 import { Placement, Point } from '../model/placement';
 import { Piece } from '../model/piece';
 import { Color } from '../model/color';
+import { Marker } from '../model/marker';
+import { Direction } from '../model/direction';
+import { MarkerType } from '../model/marker.type';
 
 @Component({
     selector: 'app-evaluator',
@@ -18,6 +21,17 @@ export class EvaluatorComponent implements OnInit {
     rotation = Rotation.NONE;
     rotations = Rotation;
     pieces: Placement<Piece>[] = [{location: {x: 3, y: 3}, value: {color: Color.BLACK, type: PieceType.KING}} as Placement<Piece>];
+    markers: Placement<Marker[]>[] = [
+        {location: {x: 4, y: 4}, value: [
+            {type: MarkerType.ENPASSANT, direction: Direction.NONE, source: {color: Color.WHITE, type: PieceType.PAWN}}
+        ]},
+        {location: {x: 5, y: 5}, value: [
+            {type: MarkerType.COVER, direction: Direction.NONE, source: {color: Color.WHITE, type: PieceType.KNIGHT}},
+            {type: MarkerType.COVER, direction: Direction.NONE, source: {color: Color.SILVER, type: PieceType.KNIGHT}},
+            {type: MarkerType.COVER, direction: Direction.NONE, source: {color: Color.BLACK, type: PieceType.KNIGHT}},
+            {type: MarkerType.COVER, direction: Direction.NONE, source: {color: Color.GOLD, type: PieceType.KNIGHT}}
+        ]}
+    ];
     rotationKeys = [];
     selected = new Point(-1, -1);
     highlighted = [];
