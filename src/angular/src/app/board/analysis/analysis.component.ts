@@ -18,6 +18,7 @@ export class AnalysisComponent implements OnInit {
 
     @Input()
     set markers(marks: Marker[]) {
+        this._enpassant = new Piece();
         this._markers = marks.reduce((markers, marker) => {
             if (marker.type === 'enpassant') {
                 this._enpassant = marker.source;
@@ -66,7 +67,6 @@ export class AnalysisComponent implements OnInit {
         if (marker.pieces.length > 1) {
             classes = classes.concat('multiple');
         }
-        console.log(classes);
         return classes;
     }
 }

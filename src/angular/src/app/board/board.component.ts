@@ -99,10 +99,6 @@ export class BoardComponent implements OnInit {
                 (col < this.corner || col >= this.size - this.corner));
     }
 
-    isSelected(col: number, row: number): boolean {
-        return this.selected.x === col && this.selected.y === row;
-    }
-
     isHighlighted(col: number, row: number): boolean {
         return this.highlighted.some(value => value.x === col && value.y === row);
     }
