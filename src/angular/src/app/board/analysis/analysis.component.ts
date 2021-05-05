@@ -4,35 +4,36 @@ import { Color } from '../../model/color';
 import { Marker } from '../../model/marker';
 
 @Component({
-  selector: 'app-analysis',
-  templateUrl: './analysis.component.html',
-  styleUrls: ['./analysis.component.css']
+    selector: 'app-analysis',
+    templateUrl: './analysis.component.html',
+    styleUrls: ['./analysis.component.css']
 })
 export class AnalysisComponent implements OnInit {
-  private _markers: Marker[] = [];
+    private _markers: Marker[] = [];
 
-  @Input()
-  set markers(marks: Marker[]) {
-    this._markers = marks;
-  }
+    @Input()
+    set markers(marks: Marker[]) {
+        this._markers = marks;
+    }
 
-  get markers(): Marker[] {
-    console.log('markers', this._markers);
-    return this._markers;
-  }
+    get markers(): Marker[] {
+        console.log('markers', this._markers);
+        return this._markers;
+    }
 
-  @Input()
-  color = Color.NONE;
+    @Input()
+    color = Color.NONE;
 
-  @Input()
-  rotation = Rotation.NONE;
+    @Input()
+    rotation = Rotation.NONE;
 
-  @Input()
-  visible = false;
+    @Input()
+    visible = false;
 
-  constructor() { }
+    constructor() {
+    }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+    }
 
 }

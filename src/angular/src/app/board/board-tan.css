@@ -1,22 +1,22 @@
 /* Tan */
 .tan-theme.dark {
-  background-color: saddlebrown;
+    background-color: saddlebrown;
 }
 
 .tan-theme.light {
-  background-color: khaki;
+    background-color: khaki;
 }
 
 .tan-theme.selected {
-  background-color: yellow !important;
+    background-color: yellow !important;
 }
 
 .tan-theme.highlighted.light {
-  background-color: #55F;
+    background-color: #55F;
 }
 
 .tan-theme.highlighted.dark {
-  background-color: #003;
+    background-color: #003;
 }
 
 /*.opponent.light {*/
@@ -28,9 +28,9 @@
 /*}*/
 
 .tan-theme.highlighted.opponent.light {
-  background-color: red;
+    background-color: red;
 }
 
 .tan-theme.highlighted.opponent.dark {
-  background-color: darkred;
+    background-color: darkred;
 }

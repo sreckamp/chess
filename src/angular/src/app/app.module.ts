@@ -7,31 +7,32 @@ import { PieceComponent } from './board/piece/piece.component';
 import { AnalysisComponent } from './board/analysis/analysis.component';
 import { EvaluatorComponent } from './evaluator/evaluator.component';
 import { GameComponent } from './game/game.component';
-import {RouterModule, Routes} from '@angular/router';
-import {HttpClientModule} from '@angular/common/http';
-import {ChessService} from './services/chess/chess.service';
+import { RouterModule, Routes } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { ChessService } from './services/chess/chess.service';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/game', pathMatch: 'full' },
-  {path: 'evaluate', component: EvaluatorComponent},
-  {path: 'game', component: GameComponent}
+    {path: '', redirectTo: '/game', pathMatch: 'full'},
+    {path: 'evaluate', component: EvaluatorComponent},
+    {path: 'game', component: GameComponent}
 ];
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    BoardComponent,
-    PieceComponent,
-    AnalysisComponent,
-    EvaluatorComponent,
-    GameComponent
-  ],
-  imports: [
-    RouterModule.forRoot(routes),
-    BrowserModule,
-    HttpClientModule
-  ],
-  providers: [ChessService],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        BoardComponent,
+        PieceComponent,
+        AnalysisComponent,
+        EvaluatorComponent,
+        GameComponent
+    ],
+    imports: [
+        RouterModule.forRoot(routes),
+        BrowserModule,
+        HttpClientModule
+    ],
+    providers: [ChessService],
+    bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

@@ -1,9 +1,9 @@
 <p>game {{id}} works!</p>
-<app-board [rotation] = "rotation"
-           [theme] = "'tan'"
+<app-board [rotation]="rotation"
+           [theme]="'tan'"
            [config]="config"
            [pieces]="pieces"
-           [selected] = "selected"
+           [selected]="selected"
            [highlighted]="highlighted"
            [showMarkers]="showMarkers"
            [markers]="markers"
@@ -12,12 +12,12 @@
 </app-board>
 
 <select (change)="changeRotation($event.target['value'])">
-  <option *ngFor="let name of rotationKeys" [value]="rotations[name]">
-    {{name}}
-  </option>
+    <option *ngFor="let name of rotationKeys" [value]="rotations[name]">
+        {{name}}
+    </option>
 </select>
 <select (change)="changePlayers(+$event.target['value'])">
-  <option [value]="2">two player</option>
-  <option [value]="4">four player</option>
+    <option [value]="2">two player</option>
+    <option [value]="4">four player</option>
 </select>
 

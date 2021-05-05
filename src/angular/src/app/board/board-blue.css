@@ -1,22 +1,22 @@
 /* Blue */
 .blue-theme.dark {
-  background-color: #003;
+    background-color: #003;
 }
 
 .blue-theme.light {
-  background-color: #55F;
+    background-color: #55F;
 }
 
 .blue-theme.selected {
-  background-color: yellow !important;
+    background-color: yellow !important;
 }
 
 .blue-theme.highlighted.light {
-  background-color: khaki;
+    background-color: khaki;
 }
 
 .blue-theme.highlighted.dark {
-  background-color: saddlebrown;
+    background-color: saddlebrown;
 }
 
 /*.opponent.light {*/
@@ -28,9 +28,9 @@
 /*}*/
 
 .blue-theme.highlighted.opponent.light {
-  background-color: red;
+    background-color: red;
 }
 
 .blue-theme.highlighted.opponent.dark {
-  background-color: darkred;
+    background-color: darkred;
 }

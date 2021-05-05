@@ -1,23 +1,23 @@
 /* orange */
 
 .orange-theme.dark {
-  background-color: darkorange;
+    background-color: darkorange;
 }
 
 .orange-theme.light {
-  background-color: #FFC680;
+    background-color: #FFC680;
 }
 
 .orange-theme.selected {
-  background-color: yellow !important;
+    background-color: yellow !important;
 }
 
 .orange-theme.highlighted.light {
-  background-color: #55F;
+    background-color: #55F;
 }
 
 .orange-theme.highlighted.dark {
-  background-color: #003;
+    background-color: #003;
 }
 
 /*.opponent.light {*/
@@ -29,9 +29,9 @@
 /*}*/
 
 .orange-theme.highlighted.opponent.light {
-  background-color: red;
+    background-color: red;
 }
 
 .orange-theme.highlighted.opponent.dark {
-  background-color: darkred;
+    background-color: darkred;
 }

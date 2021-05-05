@@ -7,19 +7,19 @@
 <!--<link *ngIf="theme == 'tan'" rel="stylesheet" href="/game/board/board-tan.css">-->
 
 <div>
-  <div class="header" [ngClass]="[rotation]">
-    <div class="corner"></div>
-    <div *ngFor="let head of headers">{{head}}</div>
-    <div class="corner"></div>
-  </div>
-  <div style="display: flex; flex-direction: row;">
-    <div class="labels" [ngClass]="[rotation]">
-      <div *ngFor="let label of labels">{{label}}</div>
+    <div class="header" [ngClass]="[rotation]">
+        <div class="corner"></div>
+        <div *ngFor="let head of headers">{{head}}</div>
+        <div class="corner"></div>
     </div>
-    <div class="grid" [ngClass]="[rotation]">
-      <div *ngFor="let row of squares; let rowIdx = index" class="row" [ngClass]="[rotation]">
-        <div *ngFor="let visible of row; let colIdx = index" class="square" [className]="theme + '-theme'"
-             [ngClass]="{
+    <div style="display: flex; flex-direction: row;">
+        <div class="labels" [ngClass]="[rotation]">
+            <div *ngFor="let label of labels">{{label}}</div>
+        </div>
+        <div class="grid" [ngClass]="[rotation]">
+            <div *ngFor="let row of squares; let rowIdx = index" class="row" [ngClass]="[rotation]">
+                <div *ngFor="let visible of row; let colIdx = index" class="square" [className]="theme + '-theme'"
+                     [ngClass]="{
                               'dark': (rowIdx + colIdx) % 2 == (corner + size) % 2,
                               'light': (rowIdx + colIdx) % 2 != (corner + size) % 2,
                               'transparent': !visible,
@@ -29,11 +29,12 @@
                               'selectable': isSelectable(colIdx, rowIdx),
                               'check': isInCheck(colIdx, rowIdx)
                           }"
-             (click)="clickSquare(colIdx, rowIdx)">
-          <app-analysis [visible]="showMarkers" [markers]="getMarkers(colIdx, rowIdx)" [rotation]="rotation"></app-analysis>
-          <app-piece [piece] = "getPiece(colIdx, rowIdx)"></app-piece>
+                     (click)="clickSquare(colIdx, rowIdx)">
+                    <app-analysis [visible]="showMarkers" [markers]="getMarkers(colIdx, rowIdx)"
+                                  [rotation]="rotation"></app-analysis>
+                    <app-piece [piece]="getPiece(colIdx, rowIdx)"></app-piece>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>

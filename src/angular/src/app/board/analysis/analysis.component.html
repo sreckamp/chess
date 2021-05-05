@@ -1,5 +1,5 @@
-<div *ngIf="visible" class = "meta">
-  <div *ngFor="let m of markers" [ngClass]="[m.type, m.direction, rotation]">
-    <app-piece [piece]="m.source"></app-piece>
-  </div>
+<div *ngIf="visible" class="meta">
+    <div *ngFor="let m of markers" [ngClass]="[m.type, m.direction, rotation]">
+        <app-piece [piece]="m.source"></app-piece>
+    </div>
 </div>
