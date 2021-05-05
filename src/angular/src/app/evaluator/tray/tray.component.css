@@ -1,0 +1,34 @@
+.grid {
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.square {
+    position: relative;
+    cursor: pointer;
+    height: 100px;
+    width: 100px;
+}
+
+.square.selected::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border: 12px dashed #000080;
+}
+
+div > app-piece {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+}

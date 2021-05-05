@@ -1,0 +1,9 @@
+<div class="grid">
+    <div *ngFor="let row of squares; let rowIdx = index" class="row">
+        <div *ngFor="let piece of row; let colIdx = index" class="square"
+             [ngClass]="{'selected': selected.x === colIdx && this.selected.y === rowIdx}"
+             (click)="clickSquare(colIdx, rowIdx)">
+            <app-piece [piece]="piece"></app-piece>
+        </div>
+    </div>
+</div>
