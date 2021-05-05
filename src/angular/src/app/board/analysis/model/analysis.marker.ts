@@ -1,11 +1,9 @@
 import { Piece } from '../../../model/piece';
+import { Direction } from '../../../model/direction';
+import { MarkerType } from '../../../model/marker.type';
 
 export interface AnalysisMarker {
-    direction: string;
-    types: AnalysisMarkerType[];
-}
-
-export interface AnalysisMarkerType {
-    type: string;
+    direction: Direction;
+    types: MarkerType[];
     pieces: Piece[];
 }

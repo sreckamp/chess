@@ -3,7 +3,8 @@ export enum MarkerType {
     NONE = 'none',
     COVER = 'cover',
     CHECK = 'check',
-    ENPASSANT = 'enpassant'
+    ENPASSANT = 'enpassant',
+    PIN = 'pin'
 }
 
 export function parseMarkerType(value: string): MarkerType {

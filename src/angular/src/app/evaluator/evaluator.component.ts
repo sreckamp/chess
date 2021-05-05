@@ -30,6 +30,32 @@ export class EvaluatorComponent implements OnInit {
             {type: MarkerType.COVER, direction: Direction.NONE, source: {color: Color.SILVER, type: PieceType.KNIGHT}},
             {type: MarkerType.COVER, direction: Direction.NONE, source: {color: Color.BLACK, type: PieceType.KNIGHT}},
             {type: MarkerType.COVER, direction: Direction.NONE, source: {color: Color.GOLD, type: PieceType.KNIGHT}}
+        ]},
+        {location: {x: 7, y: 5}, value: [
+            {type: MarkerType.COVER, direction: Direction.NONE, source: {color: Color.SILVER, type: PieceType.KNIGHT}},
+            {type: MarkerType.COVER, direction: Direction.NONE, source: {color: Color.BLACK, type: PieceType.KNIGHT}},
+            {type: MarkerType.COVER, direction: Direction.NONE, source: {color: Color.GOLD, type: PieceType.KNIGHT}}
+        ]},
+        {location: {x: 6, y: 6}, value: [
+            {type: MarkerType.COVER, direction: Direction.NONE, source: {color: Color.WHITE, type: PieceType.KNIGHT}}
+        ]},
+        {location: {x: 2, y: 6}, value: [
+            {type: MarkerType.COVER, direction: Direction.NORTHWEST, source: {color: Color.WHITE, type: PieceType.BISHOP}}
+        ]},
+        {location: {x: 3, y: 6}, value: [
+            {type: MarkerType.CHECK, direction: Direction.NORTHWEST, source: {color: Color.WHITE, type: PieceType.BISHOP}},
+            {type: MarkerType.COVER, direction: Direction.NORTHWEST, source: {color: Color.BLACK, type: PieceType.KING}}
+        ]},
+        {location: {x: 3, y: 5}, value: [
+            {type: MarkerType.PIN, direction: Direction.NORTHWEST, source: {color: Color.GOLD, type: PieceType.BISHOP}},
+            {type: MarkerType.COVER, direction: Direction.NORTHWEST, source: {color: Color.BLACK, type: PieceType.KING}}
+        ]},
+        {location: {x: 2, y: 5}, value: [
+            {type: MarkerType.PIN, direction: Direction.NORTH, source: {color: Color.GOLD, type: PieceType.QUEEN}}
+        ]},
+        {location: {x: 4, y: 5}, value: [
+            {type: MarkerType.CHECK, direction: Direction.NORTHEAST, source: {color: Color.WHITE, type: PieceType.QUEEN}},
+            {type: MarkerType.COVER, direction: Direction.NORTHEAST, source: {color: Color.WHITE, type: PieceType.BISHOP}}
         ]}
     ];
     rotationKeys = [];

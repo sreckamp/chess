@@ -26,19 +26,13 @@ export class AnalysisComponent implements OnInit {
                 if (!analysis) {
                     analysis = {
                         types: [],
+                        pieces: [],
                         direction: marker.direction
                     };
                     markers.push(analysis);
                 }
-                let typeMarker = analysis.types.find(value => value.type === marker.type);
-                if (!typeMarker) {
-                    typeMarker = {
-                        type: marker.type,
-                        pieces: []
-                    };
-                    analysis.types.push(typeMarker);
-                }
-                typeMarker.pieces.push(marker.source);
+                analysis.types = Array.from(new Set(analysis.types.concat(marker.type)).values());
+                analysis.pieces.push(marker.source);
             }
             return markers;
         }, [] as AnalysisMarker[]);
@@ -67,4 +61,12 @@ export class AnalysisComponent implements OnInit {
     ngOnInit(): void {
     }
 
+    getClasses(marker: AnalysisMarker): string[] {
+        let classes = marker.types.map(value => value.toString()).concat(marker.direction);
+        if (marker.pieces.length > 1) {
+            classes = classes.concat('multiple');
+        }
+        console.log(classes);
+        return classes;
+    }
 }

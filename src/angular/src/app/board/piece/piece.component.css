@@ -1,57 +1,53 @@
-div {
+svg {
     width: 100%;
     height: 100%;
 }
 
-svg.piece {
-    width: 100%;
-    height: 100%;
-}
-
-svg.piece > image {
+svg > image {
     height: 400%;
     width: 600%;
 }
-:host.phantom > div > svg > image {
+
+:host.phantom svg > image {
     opacity: .25;
 }
 
-:host.black > div > svg > image {
+:host.black svg > image {
     y: 0;
 }
 
-:host.gold > div > svg > image {
+:host.gold svg > image {
     y: -100%;
 }
 
-:host.silver > div > svg > image {
+:host.silver svg > image {
     y: -200%;
 }
 
-:host.white > div > svg > image {
+:host.white svg > image {
     y: -300%;
 }
 
-:host.king > div > svg > image {
+:host.king svg > image {
     x: 0;
 }
 
-:host.queen > div > svg > image {
+:host.queen svg > image {
     x: -100%;
 }
 
-:host.rook > div > svg > image {
+:host.rook svg > image {
     x: -200%;
 }
 
-:host.bishop > div > svg > image {
+:host.bishop svg > image {
     x: -300%;
 }
 
-:host.knight > div > svg > image {
+:host.knight svg > image {
     x: -400%;
 }
 
-:host.pawn > div > svg > image {
+:host.pawn svg > image {
     x: -500%;
 }

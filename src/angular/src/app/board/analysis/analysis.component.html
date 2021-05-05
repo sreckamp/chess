@@ -1,9 +1,7 @@
 <div *ngIf="visible">
-    <div *ngIf="analysisMarkers.length > 0" class="meta">
-        <div *ngFor="let m of analysisMarkers" [ngClass]="[m.direction, rotation]">
-            <div *ngFor="let t of m.types" [ngClass]="[t.type]">
-                <app-piece *ngFor="let piece of t.pieces" [piece]="piece"></app-piece>
-            </div>
+    <div *ngIf="analysisMarkers.length > 0">
+        <div *ngFor="let m of analysisMarkers" [className]="rotation" [ngClass]="getClasses(m)" class="meta">
+            <app-piece *ngFor="let piece of m.pieces; let idx = index;" [piece]="piece" [className]="'item' + idx"></app-piece>
         </div>
     </div>
     <app-piece *ngIf="enpassant.type !== PieceType.EMPTY" [piece]="enpassant" [phantom]="true"></app-piece>
