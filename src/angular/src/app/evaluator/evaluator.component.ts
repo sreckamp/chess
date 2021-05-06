@@ -143,7 +143,7 @@ export class EvaluatorComponent implements OnInit {
         });
     }
 
-    changeActiveColor(color: Color) {
+    changeActiveColor(color: Color): void {
         this._game.activeColor = color;
     }
 }

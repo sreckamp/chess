@@ -22,6 +22,7 @@ namespace Chess.Server.Model
             return Enum.Parse<PieceType>(name);
         }
 
+        /// <inheritdoc/>
         public (int, GameStore) ToModel(GameState state)
         {
             var store = new GameStore
@@ -41,8 +42,17 @@ namespace Chess.Server.Model
             return (state.GameId, store);
         }
 
+        /// <inheritdoc/>
         public GameState FromModel(int id, GameStore store, bool includeMoves)
         {
+            //TODO: Preserve the source or the mar
+            var markers = store.Board.SelectMany(square => store.Markings
+                    .GetMarkers<IDirectionalMarker>(square.Item1)
+                    .Where(marker => includeMoves || marker.Type != MarkerType.Move)
+                    .Select(marker => (marker is MoveMarker move ? move.Move.To : square.Item1, marker)))
+                .GroupBy(kvp => kvp.Item1)
+                .ToDictionary(grouping => grouping.Key, grouping => grouping.Select(tuple => tuple.Item2));
+                 
             var state = new GameState
             {
                 GameId = id,
@@ -50,7 +60,8 @@ namespace Chess.Server.Model
 
                 CurrentPlayer = store.CurrentPlayer.ToString(),
 
-                Pieces = store.Board.Where((square) => !square.Item2.IsEmpty || store.Markings.GetMarkers<IMarker>(square.Item1).Any()).Select(
+                Pieces = store.Board.Where(square => !square.Item2.IsEmpty
+                                                     || markers.ContainsKey(square.Item1) && markers[square.Item1].Any()).Select(
                     square => new Piece
                         {
                             Location = new Location
@@ -59,15 +70,15 @@ namespace Chess.Server.Model
                                 Y = square.Item1.Y,
                                 Metadata = new Metadata
                                 {
-                                    Markers = store.Markings.GetMarkers<IDirectionalMarker>(square.Item1)
-                                        .GroupBy(marker => marker.Direction)
-                                        .ToDictionary(markers => markers.Key,
-                                            markers =>  markers.GroupBy(marker => store.Board[marker.Source].ToString())
-                                                .ToDictionary(grouping => grouping.Key, grouping => grouping.OrderByDescending(
+                                    Markers = markers[square.Item1].GroupBy(marker => marker.Direction)
+                                        .ToDictionary(grouping => grouping.Key,
+                                            grouping =>  grouping.GroupBy(marker => store.Board[marker.Source].ToString())
+                                                .ToDictionary(sourceGrouping => sourceGrouping.Key, sourceGrouping => grouping.OrderByDescending(
                                                     marker => marker.Type switch
                                                         {
-                                                            MarkerType.Check => 3,
-                                                            MarkerType.Pin => 2,
+                                                            MarkerType.Check => 4,
+                                                            MarkerType.Pin => 3,
+                                                            MarkerType.Move => 2,
                                                             MarkerType.Cover => 1,
                                                             _ => 0
                                                     }).First())).SelectMany(pair => pair.Value).Select(pair =>  
@@ -108,6 +119,9 @@ namespace Chess.Server.Model
                 Corners = store.Board.Corners,
                 Size = store.Board.Size
             };
+            if (includeMoves)
+            {
+            }
             return state;
         }
     }

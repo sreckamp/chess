@@ -33,7 +33,8 @@ export class AnalysisComponent implements OnInit {
                     markers.push(analysis);
                 }
                 analysis.types = Array.from(new Set(analysis.types.concat(marker.type)).values());
-                analysis.pieces.push(marker.source);
+                analysis.pieces = analysis.pieces.concat([marker.source]
+                    .filter(value => !analysis.pieces.some(piece => piece.color === value.color && piece.type === value.type)));
             }
             return markers;
         }, [] as AnalysisMarker[]);
@@ -68,5 +69,9 @@ export class AnalysisComponent implements OnInit {
             classes = classes.concat('multiple');
         }
         return classes;
+    }
+
+    createTitle(marker: AnalysisMarker): string {
+        return marker.types.join('\r\n');
     }
 }
