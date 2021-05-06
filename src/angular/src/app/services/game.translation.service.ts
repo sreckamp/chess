@@ -11,12 +11,32 @@ import { Game } from '../model/game';
 
 @Injectable()
 export class GameTranslationService {
-    public toApi(game: Game): ApiGame {
+    public toApi(game: Game, includeMarkers = false): ApiGame {
         return {
             gameId: game.id,
             name: game.name,
             size: game.size,
-            corners: game.corners
+            corners: game.corners,
+            currentPlayer: game.activeColor,
+            moveHistory: null,
+            pieces: game.pieces.map(placement => {
+                const markers = includeMarkers && game.markers.find(place =>
+                    place.location.x === placement.location.x && place.location.y === placement.location.y);
+                return {
+                    color: placement.value.color.toString(),
+                    type: placement.value.type.toString(),
+                    location: {
+                        x: placement.location.x,
+                        y: placement.location.y,
+                        metadata: {markers: ((markers && markers.value) || []).map(value => ({
+                                direction: value.direction,
+                                type: value.type,
+                                sourceColor: value.source.color,
+                                sourceType: value.source.type
+                            }))}
+                    }
+                } as ApiPiece;
+            })
         } as ApiGame;
     }
 
@@ -27,14 +47,14 @@ export class GameTranslationService {
             corners: game.corners,
             name: game.name,
             activeColor: game.currentPlayer && parseColor(game.currentPlayer) || Color.NONE,
-            pieces: game.pieces.map(value => {
+            pieces: (game.pieces || []).map(value => {
                 const piece = {
                     color: parseColor(value.color),
                     type: parsePieceType(value.type)
                 } as Piece;
                 return new Placement<Piece>(value.location.x, value.location.y, piece);
             }).filter(value => value.value.color !== Color.NONE),
-            markers: game.pieces.map((apiPiece: ApiPiece) => {
+            markers: (game.pieces || []).map((apiPiece: ApiPiece) => {
                 const markers: Marker[] = apiPiece.location.metadata.markers.map((marker: ApiMarker) => {
                     return {
                         direction: parseDirection(marker.direction),

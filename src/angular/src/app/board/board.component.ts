@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Rotation } from '../model/rotation';
 import { Piece } from '../model/piece';
 import { Placement, Point } from '../model/placement';
-import { Marker } from '../services/chess/model/game';
+import { Marker } from '../model/marker';
 import { PieceType } from '../model/piece.type';
 
 @Component({

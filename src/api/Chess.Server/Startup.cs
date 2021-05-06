@@ -30,6 +30,7 @@ namespace Chess.Server
             });
             services.AddControllers();
             services.AddSingleton<IGameProviderService, LocalGameProviderService>();
+            services.AddSingleton<IGameTranslator, GameTranslator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

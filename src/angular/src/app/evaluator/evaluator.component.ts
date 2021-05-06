@@ -18,6 +18,7 @@ import { Game } from '../model/game';
 })
 export class EvaluatorComponent implements OnInit {
     private _game = {
+        id: 1234,
         size: 8,
         corners: 0,
         pieces: [{location: {x: 3, y: 3}, value: {color: Color.BLACK, type: PieceType.KING}} as Placement<Piece>],

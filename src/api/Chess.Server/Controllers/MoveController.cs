@@ -11,10 +11,12 @@ namespace Chess.Server.Controllers
     public class MovesController : ControllerBase
     {
         private readonly IGameProviderService m_gameService;
+        private readonly IGameTranslator m_translator;
 
-        public MovesController(IGameProviderService gameProvider)
+        public MovesController(IGameProviderService gameProvider, IGameTranslator translator)
         {
             m_gameService = gameProvider;
+            m_translator = translator;
         }
 
         [HttpGet]
@@ -45,7 +47,7 @@ namespace Chess.Server.Controllers
 
             game.Move(m.From, m.To);
 
-            var resp = GamesController.BuildResponse(gameId, game.Store); 
+            var resp =  m_translator.fromModel(gameId, game.Store);
             return game.Store != before ? (object)Ok(resp) : BadRequest(resp);
 
             // return game.Move(m.To) ?
