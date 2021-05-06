@@ -47,7 +47,7 @@ namespace Chess.Server.Controllers
 
             game.Move(m.From, m.To);
 
-            var resp =  m_translator.fromModel(gameId, game.Store);
+            var resp =  m_translator.FromModel(gameId, game.Store);
             return game.Store != before ? (object)Ok(resp) : BadRequest(resp);
 
             // return game.Move(m.To) ?

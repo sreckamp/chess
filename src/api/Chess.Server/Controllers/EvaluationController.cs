@@ -1,25 +1,25 @@
-﻿using System;
+﻿using Chess.Model;
 using Chess.Server.Model;
+using Chess.Server.Services;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace Chess.Server.Controllers
 {
     [Route("chess/evaluate")]
     public class EvaluationController
     {
-        [HttpPost]
-        public GameState EvaluateBoard([FromBody] GameState game)
+        private readonly IGameTranslator m_translator;
+
+        public EvaluationController(IGameTranslator translator)
         {
-            Console.WriteLine($"Evaluate: {game}");
-            return game;
+            m_translator = translator;
         }
-        
-        [HttpPost("raw")]
-        public GameState EvaluateRawBoard([FromBody] dynamic game)
+
+        [HttpPost]
+        public GameState EvaluateBoard([FromBody] GameState state)
         {
-            Console.WriteLine($"Evaluate: {game}");
-            return null;
+            var (id, store) = m_translator.ToModel(state);
+            return m_translator.FromModel(id, Evaluator.Instance.Evaluate(store));
         }
     }
 }

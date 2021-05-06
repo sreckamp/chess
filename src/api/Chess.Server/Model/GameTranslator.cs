@@ -3,28 +3,46 @@ using System.Linq;
 using Chess.Model.Evaluation.Models;
 using Chess.Model.Models;
 using Chess.Model.Stores;
-using Chess.Server.Model;
-using Piece = Chess.Server.Model.Piece;
+using Chess.Server.Services;
 using Version = Chess.Model.Models.Version;
+using ModelPiece = Chess.Model.Models.Piece;
 
-namespace Chess.Server.Services
+namespace Chess.Server.Model
 {
     public class GameTranslator: IGameTranslator
     {
-        public (int, GameStore) toModel(GameState state)
+        private static Color ToColor(string name)
+        {
+            name = char.ToUpper(name[0]) + name[1..];
+            return Enum.Parse<Color>(name);
+        }
+
+        private static PieceType ToPieceType(string name)
+        {
+            name = char.ToUpper(name[0]) + name[1..];
+            return Enum.Parse<PieceType>(name);
+        }
+
+        public (int, GameStore) ToModel(GameState state)
         {
             var store = new GameStore
             {
-                Board = BoardStoreFactory.Instance.Create(state.Size > 8 ? Version.FourPlayer : Version.TwoPlayer),
+                Board = BoardStoreFactory.Instance.CreateEmpty(state.Size > 8 ? Version.FourPlayer : Version.TwoPlayer),
                 Markings = new MarkingStore(),
                 Version = state.Size > 8 ? Version.FourPlayer : Version.TwoPlayer,
-                CurrentPlayer = Enum.Parse<Color>(state.CurrentPlayer)
+                CurrentPlayer = ToColor(state.CurrentPlayer)
             };
-            
+
+            foreach (var piece in state.Pieces)
+            {
+                var color = ToColor(piece.Color);
+                var edge = BoardStoreFactory.Instance.DirectionFromColor(color);
+                store.Board[piece.Location.X, piece.Location.Y] = new ModelPiece(ToPieceType(piece.Type), color, edge);
+            }
             return (state.GameId, store);
         }
 
-        public GameState fromModel(int id, GameStore store)
+        public GameState FromModel(int id, GameStore store)
         {
             var state = new GameState
             {

@@ -1,3 +1,4 @@
+using Chess.Server.Model;
 using Chess.Server.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

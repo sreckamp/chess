@@ -20,9 +20,19 @@ namespace Chess.Model.Models
         public GameBoard Create(Version version)
         {
             var template = m_templates[version];
+
             var board = new GameBoard(template.BoardSize, template.CornerSize);
+
             foreach (var color in template.Colors)
                 PopulateColor(board, color, template.CornerSize, template.KingOnLeft);
+
+            return board;
+        }
+
+        public GameBoard CreateEmpty(Version version)
+        {
+            var template = m_templates[version];
+            var board = new GameBoard(template.BoardSize, template.CornerSize);
 
             return board;
         }
@@ -106,6 +116,11 @@ namespace Chess.Model.Models
             public int CornerSize;
             public int BoardSize;
             public bool KingOnLeft => CornerSize > 0;
+        }
+
+        public Direction DirectionFromColor(Color color)
+        {
+            return m_sides.Where(side => side.Color == color).First().Edge;
         }
     }
 }

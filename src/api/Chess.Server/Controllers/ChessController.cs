@@ -37,7 +37,7 @@ namespace Chess.Server.Controllers
                 game.Init();
             }
 
-            return m_translator.fromModel(id, game.Store);
+            return m_translator.FromModel(id, game.Store);
         }
     }
 }

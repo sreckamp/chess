@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { PieceType } from '../model/piece.type';
-import { Rotation } from '../model/rotation';
-import { Placement, Point } from '../model/placement';
-import { Piece } from '../model/piece';
-import { Color } from '../model/color';
-import { Marker } from '../model/marker';
-import { Direction } from '../model/direction';
-import { MarkerType } from '../model/marker.type';
-import { ChessService } from '../services/chess/chess.service';
-import { GameTranslationService } from '../services/game.translation.service';
-import { Game } from '../model/game';
+import {Component, OnInit} from '@angular/core';
+import {PieceType} from '../model/piece.type';
+import {Rotation} from '../model/rotation';
+import {Placement, Point} from '../model/placement';
+import {Piece} from '../model/piece';
+import {Color} from '../model/color';
+import {Marker} from '../model/marker';
+import {Direction} from '../model/direction';
+import {MarkerType} from '../model/marker.type';
+import {ChessService} from '../services/chess/chess.service';
+import {GameTranslationService} from '../services/game.translation.service';
+import {Game} from '../model/game';
 
 @Component({
     selector: 'app-evaluator',
@@ -18,6 +18,7 @@ import { Game } from '../model/game';
 })
 export class EvaluatorComponent implements OnInit {
     private _game = {
+        activeColor: Color.NONE,
         id: 1234,
         size: 8,
         corners: 0,
@@ -75,6 +76,8 @@ export class EvaluatorComponent implements OnInit {
     rotation = Rotation.NONE;
     rotations = Rotation;
 
+    colors = Color;
+
     get pieces(): Placement<Piece>[] {
         return this._game.pieces;
     }
@@ -84,6 +87,7 @@ export class EvaluatorComponent implements OnInit {
     }
 
     rotationKeys = [];
+    colorKeys = [];
     selected = new Point(-1, -1);
     highlighted = [];
 
@@ -91,6 +95,7 @@ export class EvaluatorComponent implements OnInit {
 
     constructor(private _service: ChessService, private _translator: GameTranslationService) {
         this.rotationKeys = Object.keys(this.rotations);
+        this.colorKeys = Object.keys(this.colors);
     }
 
     ngOnInit(): void {
@@ -136,5 +141,9 @@ export class EvaluatorComponent implements OnInit {
         this._service.evaluate(this._translator.toApi(this._game)).subscribe(value => {
             this._game = this._translator.fromApi(value);
         });
+    }
+
+    changeActiveColor(color: Color) {
+        this._game.activeColor = color;
     }
 }

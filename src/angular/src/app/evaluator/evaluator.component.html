@@ -21,5 +21,10 @@
     <option [value]="2">two player</option>
     <option [value]="4">four player</option>
 </select>
+<select (change)="changeActiveColor($event.target['value'])">
+    <option *ngFor="let name of colorKeys" [value]="colors[name]">
+        {{name}}
+    </option>
+</select>
 
 <button (click)="submit($event)">Evaluate</button>
