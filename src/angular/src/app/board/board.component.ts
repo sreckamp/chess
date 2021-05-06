@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Rotation } from '../model/rotation';
 import { Piece } from '../model/piece';
 import { Placement, Point } from '../model/placement';
-import { Marker } from '../services/chess/model/game';
+import { Marker } from '../model/marker';
 import { PieceType } from '../model/piece.type';
 
 @Component({
@@ -97,10 +97,6 @@ export class BoardComponent implements OnInit {
         return (this.corner === 0) ||
             !((row < this.corner || row >= this.size - this.corner) &&
                 (col < this.corner || col >= this.size - this.corner));
-    }
-
-    isSelected(col: number, row: number): boolean {
-        return this.selected.x === col && this.selected.y === row;
     }
 
     isHighlighted(col: number, row: number): boolean {

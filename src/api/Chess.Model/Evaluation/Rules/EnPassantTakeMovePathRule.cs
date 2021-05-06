@@ -16,10 +16,11 @@ namespace Chess.Model.Evaluation.Rules
             {
                 var (target, _) = path.Squares.First();
 
-                if (markings.GetMarkers<SimpleMarker>(target, MarkerType.EnPassant).FirstOrDefault() is SimpleMarker marker
+                SimpleMarker marker;
+                if ((marker = markings.GetMarkers<SimpleMarker>(target, MarkerType.EnPassant).FirstOrDefault()) != null
                     && path.Piece.Color != marker.Piece.Color)
                 {
-                    markings.Mark(path.Start, new MoveMarker(new EnPassantTakeMove(path.Start, target, marker.Source)));
+                    markings.Mark(path.Start, new MoveMarker(new EnPassantTakeMove(path.Start, target, marker.Source), path.Direction));
 
                     return;
                 }

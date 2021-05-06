@@ -1,11 +1,3 @@
-<!--<link rel="stylesheet" href="/game/board/board-meta.css">-->
-<!--<link *ngIf="theme == 'black'" rel="stylesheet" href="/game/board/board-black.css">-->
-<!--<link *ngIf="theme == 'blue'" rel="stylesheet" href="/game/board/board-blue.css">-->
-<!--<link *ngIf="theme == 'green'" rel="stylesheet" href="/game/board/board-green.css">-->
-<!--<link *ngIf="theme == 'orange'" rel="stylesheet" href="/game/board/board-orange.css">-->
-<!--<link *ngIf="theme == 'red'" rel="stylesheet" href="/game/board/board-red.css">-->
-<!--<link *ngIf="theme == 'tan'" rel="stylesheet" href="/game/board/board-tan.css">-->
-
 <div>
     <div class="header" [ngClass]="[rotation]">
         <div class="corner"></div>
@@ -23,10 +15,10 @@
                               'dark': (rowIdx + colIdx) % 2 == (corner + size) % 2,
                               'light': (rowIdx + colIdx) % 2 != (corner + size) % 2,
                               'transparent': !visible,
-                              'selected': isSelected(colIdx, rowIdx),
+                              'selected': selected.x === colIdx && this.selected.y === rowIdx,
                               'highlighted': isHighlighted(colIdx, rowIdx),
                               'opponent': isOpponent(getPiece(colIdx, rowIdx)),
-                              'selectable': isSelectable(colIdx, rowIdx),
+                              'selectable': visible && isSelectable(colIdx, rowIdx),
                               'check': isInCheck(colIdx, rowIdx)
                           }"
                      (click)="clickSquare(colIdx, rowIdx)">

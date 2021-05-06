@@ -21,7 +21,7 @@ namespace Chess.Model.Evaluation.Rules
                     markings.Mark(path.Start, new MoveMarker(new CastleMove(
                         new SimpleMove(path.Start, path.Start.PolarOffset(path.Direction, 2)),
                         new SimpleMove(point, path.Start.PolarOffset(path.Direction, 1))
-                        )));
+                        ), path.Direction));
                 }
 
                 return;

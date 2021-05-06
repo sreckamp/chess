@@ -4,6 +4,7 @@ export enum MarkerType {
     COVER = 'cover',
     CHECK = 'check',
     ENPASSANT = 'enpassant',
+    MOVE = 'move',
     PIN = 'pin'
 }
 

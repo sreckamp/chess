@@ -1,6 +1,6 @@
 <div *ngIf="visible">
     <div *ngIf="analysisMarkers.length > 0">
-        <div *ngFor="let m of analysisMarkers" [className]="rotation" [ngClass]="getClasses(m)" class="meta">
+        <div *ngFor="let m of analysisMarkers" [className]="rotation" [ngClass]="getClasses(m)" class="meta" [title]="createTitle(m)">
             <app-piece *ngFor="let piece of m.pieces; let idx = index;" [piece]="piece" [className]="'item' + idx"></app-piece>
         </div>
     </div>

@@ -18,6 +18,7 @@ export class AnalysisComponent implements OnInit {
 
     @Input()
     set markers(marks: Marker[]) {
+        this._enpassant = new Piece();
         this._markers = marks.reduce((markers, marker) => {
             if (marker.type === 'enpassant') {
                 this._enpassant = marker.source;
@@ -32,7 +33,8 @@ export class AnalysisComponent implements OnInit {
                     markers.push(analysis);
                 }
                 analysis.types = Array.from(new Set(analysis.types.concat(marker.type)).values());
-                analysis.pieces.push(marker.source);
+                analysis.pieces = analysis.pieces.concat([marker.source]
+                    .filter(value => !analysis.pieces.some(piece => piece.color === value.color && piece.type === value.type)));
             }
             return markers;
         }, [] as AnalysisMarker[]);
@@ -66,7 +68,10 @@ export class AnalysisComponent implements OnInit {
         if (marker.pieces.length > 1) {
             classes = classes.concat('multiple');
         }
-        console.log(classes);
         return classes;
+    }
+
+    createTitle(marker: AnalysisMarker): string {
+        return marker.types.join('\r\n');
     }
 }

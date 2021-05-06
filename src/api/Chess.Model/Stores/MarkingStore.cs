@@ -37,7 +37,7 @@ namespace Chess.Model.Stores
                 : Enumerable.Empty<T>();
 
         public IEnumerable<T> GetKingMarkers<T>(Color color, params MarkerType[] types) where T : IMarker =>
-            GetMarkers<T>(KingLocations[color], types);
+            KingLocations.ContainsKey(color) ? GetMarkers<T>(KingLocations[color], types) : Enumerable.Empty<T>();
 
         public MarkingStore DeepClone() => Filter();
 

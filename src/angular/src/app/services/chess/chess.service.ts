@@ -34,4 +34,8 @@ export class ChessService {
         return this._http.post<Game>(`${this.localhost}/chess/games/${id}/moves`,
             {from: {x: from.x, y: from.y}, to: {x: to.x, y: to.y}});
     }
+
+    public evaluate(game: Game): Observable<Game> {
+        return this._http.post<Game>(`${this.localhost}/chess/evaluate`, game);
+    }
 }

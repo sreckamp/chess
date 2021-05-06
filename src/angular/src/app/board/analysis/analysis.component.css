@@ -20,6 +20,10 @@ div.meta {
     background-color: yellow;
 }
 
+.meta.move {
+    background-color: rgba(0, 255, 0, 0.6);
+}
+
 .meta.check::after {
     content: '';
     position: absolute;

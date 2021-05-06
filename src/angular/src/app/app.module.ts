@@ -14,6 +14,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
+import { TrayComponent } from './evaluator/tray/tray.component';
+import { GameTranslationService } from './services/game.translation.service';
 
 const routes: Routes = [
     {path: '', redirectTo: '/game', pathMatch: 'full'},
@@ -28,7 +30,8 @@ const routes: Routes = [
         PieceComponent,
         AnalysisComponent,
         EvaluatorComponent,
-        GameComponent
+        GameComponent,
+        TrayComponent
     ],
     imports: [
         RouterModule.forRoot(routes),
@@ -39,7 +42,10 @@ const routes: Routes = [
         MatSlideToggleModule,
         FormsModule
     ],
-    providers: [ChessService],
+    providers: [
+        ChessService,
+        GameTranslationService
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {
