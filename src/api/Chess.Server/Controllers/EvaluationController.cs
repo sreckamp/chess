@@ -1,6 +1,5 @@
 ﻿using Chess.Model;
 using Chess.Server.Model;
-using Chess.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Chess.Server.Controllers
@@ -19,7 +18,7 @@ namespace Chess.Server.Controllers
         public GameState EvaluateBoard([FromBody] GameState state)
         {
             var (id, store) = m_translator.ToModel(state);
-            return m_translator.FromModel(id, Evaluator.Instance.Evaluate(store));
+            return m_translator.FromModel(id, Evaluator.Instance.Evaluate(store), true);
         }
     }
 }

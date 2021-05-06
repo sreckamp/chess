@@ -3,7 +3,6 @@ using System.Linq;
 using Chess.Model.Evaluation.Models;
 using Chess.Model.Models;
 using Chess.Model.Stores;
-using Chess.Server.Services;
 using Version = Chess.Model.Models.Version;
 using ModelPiece = Chess.Model.Models.Piece;
 
@@ -42,7 +41,7 @@ namespace Chess.Server.Model
             return (state.GameId, store);
         }
 
-        public GameState FromModel(int id, GameStore store)
+        public GameState FromModel(int id, GameStore store, bool includeMoves)
         {
             var state = new GameState
             {
