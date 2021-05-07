@@ -19,47 +19,11 @@ import {Game} from '../model/game';
 export class EvaluatorComponent implements OnInit {
     private _game = {
         activeColor: Color.NONE,
-        id: 1234,
+        id: 0,
         size: 8,
         corners: 0,
-        pieces: [{location: {x: 3, y: 3}, value: {color: Color.BLACK, type: PieceType.KING}} as Placement<Piece>],
-        markers: [
-            {location: {x: 4, y: 4}, value: [
-                    {type: MarkerType.ENPASSANT, direction: Direction.NONE, source: {color: Color.WHITE, type: PieceType.PAWN}}
-                ]},
-            {location: {x: 5, y: 5}, value: [
-                    {type: MarkerType.COVER, direction: Direction.NONE, source: {color: Color.WHITE, type: PieceType.KNIGHT}},
-                    {type: MarkerType.COVER, direction: Direction.NONE, source: {color: Color.SILVER, type: PieceType.KNIGHT}},
-                    {type: MarkerType.COVER, direction: Direction.NONE, source: {color: Color.BLACK, type: PieceType.KNIGHT}},
-                    {type: MarkerType.COVER, direction: Direction.NONE, source: {color: Color.GOLD, type: PieceType.KNIGHT}}
-                ]},
-            {location: {x: 7, y: 5}, value: [
-                    {type: MarkerType.COVER, direction: Direction.NONE, source: {color: Color.SILVER, type: PieceType.KNIGHT}},
-                    {type: MarkerType.COVER, direction: Direction.NONE, source: {color: Color.BLACK, type: PieceType.KNIGHT}},
-                    {type: MarkerType.COVER, direction: Direction.NONE, source: {color: Color.GOLD, type: PieceType.KNIGHT}}
-                ]},
-            {location: {x: 6, y: 6}, value: [
-                    {type: MarkerType.COVER, direction: Direction.NONE, source: {color: Color.WHITE, type: PieceType.KNIGHT}}
-                ]},
-            {location: {x: 2, y: 6}, value: [
-                    {type: MarkerType.COVER, direction: Direction.NORTHWEST, source: {color: Color.WHITE, type: PieceType.BISHOP}}
-                ]},
-            {location: {x: 3, y: 6}, value: [
-                    {type: MarkerType.CHECK, direction: Direction.NORTHWEST, source: {color: Color.WHITE, type: PieceType.BISHOP}},
-                    {type: MarkerType.COVER, direction: Direction.NORTHWEST, source: {color: Color.BLACK, type: PieceType.KING}}
-                ]},
-            {location: {x: 3, y: 5}, value: [
-                    {type: MarkerType.PIN, direction: Direction.NORTHWEST, source: {color: Color.GOLD, type: PieceType.BISHOP}},
-                    {type: MarkerType.COVER, direction: Direction.NORTHWEST, source: {color: Color.BLACK, type: PieceType.KING}}
-                ]},
-            {location: {x: 2, y: 5}, value: [
-                    {type: MarkerType.PIN, direction: Direction.NORTH, source: {color: Color.GOLD, type: PieceType.QUEEN}}
-                ]},
-            {location: {x: 4, y: 5}, value: [
-                    {type: MarkerType.CHECK, direction: Direction.NORTHEAST, source: {color: Color.WHITE, type: PieceType.QUEEN}},
-                    {type: MarkerType.COVER, direction: Direction.NORTHEAST, source: {color: Color.WHITE, type: PieceType.BISHOP}}
-                ]}
-        ]
+        pieces: [],
+        markers: []
     } as Game;
     private _config: [number, number] = [8, 0];
 
@@ -70,6 +34,10 @@ export class EvaluatorComponent implements OnInit {
 
     get config(): [number, number] {
         return this._config;
+    }
+
+    get activeColor(): Color {
+        return this._game.activeColor;
     }
 
     playerCount: number;
@@ -115,8 +83,10 @@ export class EvaluatorComponent implements OnInit {
         if (placement.value.type !== this._activePiece.type || placement.value.color !== this._activePiece.color) {
             placement.value.type = this._activePiece.type;
             placement.value.color = this._activePiece.color;
+            this._game.markers = [];
         } else {
             this._game.pieces = this.pieces.filter(value => value.location.x !== point.x || value.location.y !== point.y);
+            this._game.markers = [];
         }
     }
 

@@ -24,7 +24,7 @@
                      (click)="clickSquare(colIdx, rowIdx)">
                     <app-piece [piece]="getPiece(colIdx, rowIdx)"></app-piece>
                     <app-analysis [visible]="showMarkers" [markers]="getMarkers(colIdx, rowIdx)"
-                                  [rotation]="rotation"></app-analysis>
+                                  [moveColor]="moveColor" [rotation]="rotation"></app-analysis>
                 </div>
             </div>
         </div>

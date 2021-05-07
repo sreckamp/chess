@@ -5,6 +5,7 @@ import { Marker } from '../../model/marker';
 import { AnalysisMarker } from './model/analysis.marker';
 import { Piece } from '../../model/piece';
 import { PieceType } from '../../model/piece.type';
+import { MarkerType } from '../../model/marker.type';
 
 @Component({
     selector: 'app-analysis',
@@ -14,30 +15,13 @@ import { PieceType } from '../../model/piece.type';
 export class AnalysisComponent implements OnInit {
     PieceType = PieceType;
     private _enpassant: Piece = new Piece();
+    private _sourceMarkers: Marker[] = [];
     private _markers: AnalysisMarker[] = [];
 
     @Input()
     set markers(marks: Marker[]) {
-        this._enpassant = new Piece();
-        this._markers = marks.reduce((markers, marker) => {
-            if (marker.type === 'enpassant') {
-                this._enpassant = marker.source;
-            } else {
-                let analysis = markers.find(mark => mark.direction === marker.direction);
-                if (!analysis) {
-                    analysis = {
-                        types: [],
-                        pieces: [],
-                        direction: marker.direction
-                    };
-                    markers.push(analysis);
-                }
-                analysis.types = Array.from(new Set(analysis.types.concat(marker.type)).values());
-                analysis.pieces = analysis.pieces.concat([marker.source]
-                    .filter(value => !analysis.pieces.some(piece => piece.color === value.color && piece.type === value.type)));
-            }
-            return markers;
-        }, [] as AnalysisMarker[]);
+        this._sourceMarkers = marks;
+        this.updateAnalysisMarkers();
     }
 
     get analysisMarkers(): AnalysisMarker[] {
@@ -48,8 +32,13 @@ export class AnalysisComponent implements OnInit {
         return this._enpassant;
     }
 
+    private _moveColor = Color.NONE;
+
     @Input()
-    color = Color.NONE;
+    set moveColor(value: Color) {
+        this._moveColor = value;
+        this.updateAnalysisMarkers();
+    }
 
     @Input()
     rotation = Rotation.NONE;
@@ -73,5 +62,28 @@ export class AnalysisComponent implements OnInit {
 
     createTitle(marker: AnalysisMarker): string {
         return marker.types.join('\r\n');
+    }
+
+    private updateAnalysisMarkers(): void {
+        this._enpassant = new Piece();
+        this._markers = this._sourceMarkers.reduce((markers, marker) => {
+            if (marker.type === MarkerType.ENPASSANT) {
+                this._enpassant = marker.source;
+            } else if (marker.type !== MarkerType.MOVE || this._moveColor === marker.source.color) {
+                let analysis = markers.find(mark => mark.direction === marker.direction);
+                if (!analysis) {
+                    analysis = {
+                        types: [],
+                        pieces: [],
+                        direction: marker.direction
+                    };
+                    markers.push(analysis);
+                }
+                analysis.types = Array.from(new Set(analysis.types.concat(marker.type)).values());
+                analysis.pieces = analysis.pieces.concat([marker.source]
+                    .filter(value => !analysis.pieces.some(piece => piece.color === value.color && piece.type === value.type)));
+            }
+            return markers;
+        }, [] as AnalysisMarker[]);
     }
 }

@@ -45,7 +45,6 @@ namespace Chess.Server.Model
         /// <inheritdoc/>
         public GameState FromModel(int id, GameStore store, bool includeMoves)
         {
-            //TODO: Preserve the source or the mar
             var markers = store.Board.SelectMany(square => store.Markings
                     .GetMarkers<IDirectionalMarker>(square.Item1)
                     .Where(marker => includeMoves || marker.Type != MarkerType.Move)
@@ -53,7 +52,7 @@ namespace Chess.Server.Model
                 .GroupBy(kvp => kvp.Item1)
                 .ToDictionary(grouping => grouping.Key, grouping => grouping.Select(tuple => tuple.Item2));
                  
-            var state = new GameState
+            return new GameState
             {
                 GameId = id,
                 Name = $"Game {id}",
@@ -70,59 +69,25 @@ namespace Chess.Server.Model
                                 Y = square.Item1.Y,
                                 Metadata = new Metadata
                                 {
-                                    Markers = markers[square.Item1].GroupBy(marker => marker.Direction)
-                                        .ToDictionary(grouping => grouping.Key,
-                                            grouping =>  grouping.GroupBy(marker => store.Board[marker.Source].ToString())
-                                                .ToDictionary(sourceGrouping => sourceGrouping.Key, sourceGrouping => grouping.OrderByDescending(
-                                                    marker => marker.Type switch
-                                                        {
-                                                            MarkerType.Check => 4,
-                                                            MarkerType.Pin => 3,
-                                                            MarkerType.Move => 2,
-                                                            MarkerType.Cover => 1,
-                                                            _ => 0
-                                                    }).First())).SelectMany(pair => pair.Value).Select(pair =>  
+                                    Markers = markers.ContainsKey(square.Item1)
+                                        ? markers[square.Item1].Select(marker =>  
                                             new Marker
                                             {
-                                                Type = pair.Value.Type.ToString().ToLower(),
-                                                SourceColor = store.Board[pair.Value.Source].Color.ToString().ToLower(),
-                                                SourceType = store.Board[pair.Value.Source].Type.ToString().ToLower(),
-                                                Direction = pair.Value.Direction.ToString().ToLower()
+                                                Type = marker.Type.ToString().ToLower(),
+                                                SourceColor = store.Board[marker.Source].Color.ToString().ToLower(),
+                                                SourceType = store.Board[marker.Source].Type.ToString().ToLower(),
+                                                Direction = marker.Direction.ToString().ToLower()
                                             })
+                                        : Enumerable.Empty<Marker>()
                                 }
                             },
                             Color = square.Item2.Color.ToString().ToLower(),
                             Type = square.Item2.Type.ToString().ToLower(),
                         }),
 
-                // MoveHistory = store.Board.History.Select(history =>
-                // {
-                //     if (history.Move is SimpleMove sm)
-                //     {
-                //         return new Move
-                //         {
-                //             From = sm.From,
-                //             To = sm.To
-                //         };
-                //     }
-                //     else
-                //     {
-                //         var castle = (CastleMove) history.Move;
-                //         return new Move
-                //         {
-                //             From = castle.KingMove.From,
-                //             To = castle.KingMove.To
-                //         };
-                //     }
-                // }),
-
                 Corners = store.Board.Corners,
                 Size = store.Board.Size
             };
-            if (includeMoves)
-            {
-            }
-            return state;
         }
     }
 }
