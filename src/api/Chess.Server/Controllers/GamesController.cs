@@ -6,7 +6,7 @@ using Version = Chess.Model.Models.Version;
 
 namespace Chess.Server.Controllers
 {
-    [Route("chess/games")]
+    [Route("api/games")]
     public class GamesController : ControllerBase
     {
         private readonly IGameProviderService m_gameService;
