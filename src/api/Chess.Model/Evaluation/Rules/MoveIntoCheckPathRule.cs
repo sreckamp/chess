@@ -19,8 +19,10 @@ namespace Chess.Model.Evaluation.Rules
                 {
                     var (point, piece) = square;
                     return markings.GetMarkers<SimpleMarker>(point, MarkerType.Cover, MarkerType.Check)
-                        .Any(marker => piece.Color != marker.Piece.Color && piece.Type != marker.Piece.Type
-                                   && marker.Piece.Color != path.Piece.Color);
+                        .Any(marker => !(marker.Type == MarkerType.Check
+                                         && piece.Type == marker.Piece.Type
+                                         && piece.Color == marker.Piece.Color
+                                         || marker.Piece.Color == path.Piece.Color));
                 }))
             {
                 // Reject this move
