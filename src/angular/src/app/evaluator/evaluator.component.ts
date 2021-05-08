@@ -5,8 +5,6 @@ import {Placement, Point} from '../model/placement';
 import {Piece} from '../model/piece';
 import {Color} from '../model/color';
 import {Marker} from '../model/marker';
-import {Direction} from '../model/direction';
-import {MarkerType} from '../model/marker.type';
 import {ChessService} from '../services/chess/chess.service';
 import {GameTranslationService} from '../services/game.translation.service';
 import {Game} from '../model/game';
@@ -36,11 +34,29 @@ export class EvaluatorComponent implements OnInit {
         return this._config;
     }
 
+    set activeColor(value: Color) {
+        this._game.activeColor = value;
+    }
+
     get activeColor(): Color {
         return this._game.activeColor;
     }
 
-    playerCount: number;
+    private _playerCount = 2;
+    get playerCount(): number {
+        return this._playerCount;
+    }
+
+    set playerCount(value: number) {
+        if (this._playerCount !== value) {
+            this._playerCount = value;
+            const config: [number, number] = value === 4 ? [14, 3] : [8, 0];
+            this._game.pieces = [];
+            this._game.markers = [];
+            this.config = config;
+        }
+    }
+
     rotation = Rotation.NONE;
     rotations = Rotation;
 
@@ -67,15 +83,6 @@ export class EvaluatorComponent implements OnInit {
     }
 
     ngOnInit(): void {
-    }
-
-    changeRotation(rotation: Rotation): void {
-        this.rotation = rotation;
-    }
-
-    changePlayers(players: number): void {
-        this.playerCount = players;
-        this.config = players === 4 ? [14, 3] : [8, 0];
     }
 
     clickHandler(point: Point): void {
@@ -111,9 +118,5 @@ export class EvaluatorComponent implements OnInit {
         this._service.evaluate(this._translator.toApi(this._game)).subscribe(value => {
             this._game = this._translator.fromApi(value);
         });
-    }
-
-    changeActiveColor(color: Color): void {
-        this._game.activeColor = color;
     }
 }

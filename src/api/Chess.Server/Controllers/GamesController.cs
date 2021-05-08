@@ -1,8 +1,8 @@
-﻿using Chess.Model;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Chess.Server.Model;
 using Chess.Server.Services;
 using Microsoft.AspNetCore.Mvc;
-using Version = Chess.Model.Models.Version;
 
 namespace Chess.Server.Controllers
 {
@@ -11,7 +11,6 @@ namespace Chess.Server.Controllers
     {
         private readonly IGameProviderService m_gameService;
         private readonly IGameTranslator m_translator;
-        private static int s_gameId = 10000;
 
         public GamesController(IGameProviderService gameProvider, IGameTranslator translator)
         {
@@ -19,18 +18,24 @@ namespace Chess.Server.Controllers
             m_translator = translator;
         }
 
-        [HttpGet("{gameId?}")]
-        public GameState GetGame(int? gameId, int players=2)
+        [HttpPost]
+        public IActionResult Create([FromBody] GameSummary request)
         {
-            if (gameId == null)
-            {
-                gameId = s_gameId;
-                s_gameId++;
-                var g = new Game(players == 4 ? Version.FourPlayer : Version.TwoPlayer);
-                m_gameService.StoreGame((int)gameId, g);
-            }
-            var id = (int) gameId;
+            var id = m_gameService.CreateGame(request.Players);
 
+            return Created(Url.RouteUrl("GetGame", new { id }), null);
+        }
+
+        [HttpGet]
+        public IEnumerable<GameSummary> ListGame() => m_gameService.ListGames().Select(item => new GameSummary
+        {
+            Id = item.Item1,
+            Players = item.Item2.Version
+        });
+
+        [HttpGet("{id:int}", Name = "GetGame")]
+        public GameState GetGame(int id)
+        {
             var game = m_gameService.GetGame(id);
             if (game.Store.Board == null)
             {

@@ -4,10 +4,10 @@ import { Placement, Point } from '../model/placement';
 import { Piece } from '../model/piece';
 import { Color } from '../model/color';
 import { ChessService } from '../services/chess/chess.service';
-import { concatMap } from 'rxjs/operators';
 import { GameTranslationService } from '../services/game.translation.service';
 import { Game } from '../model/game';
 import { Marker } from '../model/marker';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-game',
@@ -48,20 +48,22 @@ export class GameComponent implements OnInit {
 
     rotation = Rotation.NONE;
     rotations = Rotation;
-    showMarkers = true;
+    showMarkers = false;
     rotationKeys = [];
     selected = new Point(-1, -1);
     highlighted = [];
 
-    constructor(private _service: ChessService, private _translator: GameTranslationService) {
+    constructor(private _service: ChessService,
+                private _translator: GameTranslationService,
+                private _route: ActivatedRoute) {
         this.rotationKeys = Object.keys(this.rotations);
     }
 
     ngOnInit(): void {
-        this._service.newGame(2).pipe(
-            concatMap(value => this._service.get(value))
-        ).subscribe(value => {
+        this._game.id = +this._route.snapshot.params.id;
+        this._service.get(this._game.id).subscribe(value => {
             this._game = this._translator.fromApi(value);
+            this.config = [value.size, value.corners];
         });
     }
 
