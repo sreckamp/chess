@@ -4,6 +4,7 @@ import { Piece } from '../model/piece';
 import { Placement, Point } from '../model/placement';
 import { Marker } from '../model/marker';
 import { PieceType } from '../model/piece.type';
+import { Color } from '../model/color';
 
 @Component({
     selector: 'app-board',
@@ -21,6 +22,9 @@ import { PieceType } from '../model/piece.type';
 export class BoardComponent implements OnInit {
     @Input()
     public rotation = Rotation.NONE;
+
+    @Input()
+    public moveColor = Color.NONE;
 
     @Input()
     public theme = 'tan';

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Chess.Server.Controllers
 {
-    [Route("chess/games/{gameId}/history")]
+    [Route("api/games/{gameId}/history")]
     public class HistoryController : ControllerBase
     {
         private readonly IGameProviderService m_gameService;

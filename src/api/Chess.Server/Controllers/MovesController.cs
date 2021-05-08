@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Chess.Server.Controllers
 {
-    [Route("chess/games/{gameId}/moves")]
+    [Route("api/games/{gameId}/moves")]
     public class MovesController : ControllerBase
     {
         private readonly IGameProviderService m_gameService;

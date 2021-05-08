@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Chess.Server.Controllers
 {
-    [Route("chess/evaluate")]
+    [Route("api/evaluate")]
     public class EvaluationController
     {
         private readonly IGameTranslator m_translator;

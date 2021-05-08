@@ -2,6 +2,7 @@ using Chess.Server.Model;
 using Chess.Server.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,6 +16,8 @@ namespace Chess.Server
             Configuration = configuration;
         }
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        // ReSharper disable once MemberCanBePrivate.Global
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -30,6 +33,11 @@ namespace Chess.Server
                 });
             });
             services.AddControllers();
+
+            services.AddSpaStaticFiles(configuration => {
+                configuration.RootPath = @"C:\development\git\fun\chess\src\angular\dist\angular";
+            });
+
             services.AddSingleton<IGameProviderService, LocalGameProviderService>();
             services.AddSingleton<IGameTranslator, GameTranslator>();
         }
@@ -44,13 +52,18 @@ namespace Chess.Server
 
             app.UseCors("chessCORS");
 
-            app.UseHttpsRedirection();
+            app.UseSpaStaticFiles();
 
             app.UseRouting();
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+            app.UseWhen(context => HttpMethods.IsGet(context.Request.Method), builder =>
+            {
+                builder.UseSpa(spa => { });
+            });
         }
     }
 }
