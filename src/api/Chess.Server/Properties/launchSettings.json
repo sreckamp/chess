@@ -13,7 +13,9 @@
       "commandName": "IISExpress",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "launchUrl": "http:localhost:5000",
+      "launchBrowser": true
     }
   }
 }
