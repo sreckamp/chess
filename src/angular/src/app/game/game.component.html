@@ -1,14 +1,11 @@
 <p>game {{id}} works!</p>
 <mat-card>
-    <select (change)="changeRotation($event.target['value'])">
-        <option *ngFor="let name of rotationKeys" [value]="rotations[name]">
+    <mat-select [(ngModel)]="rotation">
+        <mat-option *ngFor="let name of rotationKeys" [value]="rotations[name]">
             {{name}}
-        </option>
-    </select>
-    <select (change)="changePlayers(+$event.target['value'])">
-        <option [value]="2">two player</option>
-        <option [value]="4">four player</option>
-    </select>
+        </mat-option>
+    </mat-select>
+    <p></p>
     <mat-slide-toggle [(ngModel)]="showMarkers">Show Analysis</mat-slide-toggle>
 </mat-card>
 <app-board [rotation]="rotation"

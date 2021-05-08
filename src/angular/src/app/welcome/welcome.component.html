@@ -1,0 +1,13 @@
+<div class="card-container">
+    <a class="card" *ngFor="let game of games" (click)="joinGame(game.id)">
+    </a>
+
+    <a class="card" (click)="newGame(2)">
+        <span>New Two-Player Game</span>
+    </a>
+
+    <a class="card" (click)="newGame(4)">
+        <span>New Four-Player Game</span>
+    </a>
+</div>
+

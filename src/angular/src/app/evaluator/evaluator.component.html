@@ -1,19 +1,25 @@
-Number of Players: <select (change)="changePlayers(+$event.target['value'])">
-    <option [value]="2">two player</option>
-    <option [value]="4">four player</option>
-</select>
-<p></p>Rotation:<select (change)="changeRotation($event.target['value'])">
-    <option *ngFor="let name of rotationKeys" [value]="rotations[name]">
-        {{name}}
-    </option>
-</select>
-<app-tray [playerCount]="playerCount" (pieceSelected)="pieceSelected($event)"></app-tray>
-<p></p>Current Player:<select (change)="changeActiveColor($event.target['value'])">
-    <option *ngFor="let name of colorKeys" [value]="colors[name]">
-        {{name}}
-    </option>
-</select>
-<p></p><button (click)="submit($event)">Evaluate</button>
+<mat-card class="config">
+    Number of Players: <mat-select [(ngModel)]="playerCount">
+        <mat-option [value]="2">two player</mat-option>
+        <mat-option [value]="4">four player</mat-option>
+    </mat-select>
+    <p></p>Rotation:<mat-select [(ngModel)]="rotation">
+        <mat-option *ngFor="let name of rotationKeys" [value]="rotations[name]">
+            {{name}}
+        </mat-option>
+    </mat-select>
+</mat-card>
+<mat-card class="config">
+    <app-tray [playerCount]="playerCount" (pieceSelected)="pieceSelected($event)"></app-tray>
+</mat-card>
+<mat-card class="config">
+    <p></p>Current Player:<mat-select [(ngModel)]="activeColor">
+        <mat-option *ngFor="let name of colorKeys" [value]="colors[name]">
+            {{name}}
+        </mat-option>
+    </mat-select>
+    <p></p><button mat-raised-button (click)="submit($event)">Evaluate</button>
+</mat-card>
 <app-board [rotation]="rotation"
            [theme]="'tan'"
            [config]="config"

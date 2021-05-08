@@ -11,16 +11,21 @@ import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { ChessService } from './services/chess/chess.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatCardModule } from '@angular/material/card';
+import { MatCardImage, MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
 import { TrayComponent } from './evaluator/tray/tray.component';
 import { GameTranslationService } from './services/game.translation.service';
+import { WelcomeComponent } from './welcome/welcome.component';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
 
 const routes: Routes = [
-    {path: '', redirectTo: '/game', pathMatch: 'full'},
+    {path: '', redirectTo: '/welcome', pathMatch: 'full'},
     {path: 'evaluate', component: EvaluatorComponent},
-    {path: 'game', component: GameComponent}
+    {path: 'game/:id', component: GameComponent},
+    {path: 'welcome', component: WelcomeComponent}
 ];
 
 @NgModule({
@@ -31,7 +36,8 @@ const routes: Routes = [
         AnalysisComponent,
         EvaluatorComponent,
         GameComponent,
-        TrayComponent
+        TrayComponent,
+        WelcomeComponent
     ],
     imports: [
         RouterModule.forRoot(routes),
@@ -40,7 +46,10 @@ const routes: Routes = [
         BrowserAnimationsModule,
         MatCardModule,
         MatSlideToggleModule,
-        FormsModule
+        FormsModule,
+        MatSelectModule,
+        MatOptionModule,
+        MatButtonModule
     ],
     providers: [
         ChessService,
