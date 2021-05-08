@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ChessService } from '../services/chess/chess.service';
-import { GameTranslationService } from '../services/game.translation.service';
 import { Router } from '@angular/router';
-import { Game } from '../model/game';
+import { GameSummary } from '../services/chess/model/game.summary';
 
 @Component({
     selector: 'app-welcome',
@@ -11,12 +10,15 @@ import { Game } from '../model/game';
 })
 export class WelcomeComponent implements OnInit {
 
-    games = [] as Game[];
+    games = [] as GameSummary[];
 
     constructor(private _service: ChessService, private _router: Router) {
     }
 
     ngOnInit(): void {
+        this._service.list().subscribe(games => {
+            this.games = games;
+        });
     }
 
     newGame(players: number): void {

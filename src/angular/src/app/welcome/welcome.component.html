@@ -1,13 +1,20 @@
+<div class="terminal">
+    <pre>HOW ABOUT A NICE GAME OF CHESS....</pre>
+</div>
 <div class="card-container">
-    <a class="card" *ngFor="let game of games" (click)="joinGame(game.id)">
-    </a>
+    <mat-card class="card" *ngFor="let game of games" (click)="joinGame(game.id)">
+        <mat-card-title>Game #{{game.id}}</mat-card-title>
+        <mat-card-subtitle>{{game.players === 2 ? 'Two' : 'Four'}}-Player Game</mat-card-subtitle>
+    </mat-card>
 
-    <a class="card" (click)="newGame(2)">
-        <span>New Two-Player Game</span>
-    </a>
+    <mat-card class="card" (click)="newGame(2)">
+        <mat-card-title>New Game</mat-card-title>
+        <mat-card-subtitle>Two-Player Game</mat-card-subtitle>
+    </mat-card>
 
-    <a class="card" (click)="newGame(4)">
-        <span>New Four-Player Game</span>
-    </a>
+    <mat-card class="card" (click)="newGame(4)">
+        <mat-card-title>New Game</mat-card-title>
+        <mat-card-subtitle>Four-Player Game</mat-card-subtitle>
+    </mat-card>
 </div>
 

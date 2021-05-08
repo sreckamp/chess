@@ -11,21 +11,21 @@ namespace Chess.Model
     public class Game
     {
         private GameReducer m_gameReducer;
-        private readonly Version m_version;
+        public Version Version { get; }
         private readonly GameBoard m_board;
 
         public Game(Version version, GameBoard board = null)
         {
-            m_version = version;
+            Version = version;
             Store = new GameStore();
-            m_board = board ?? BoardStoreFactory.Instance.Create(m_version);
+            m_board = board ?? BoardStoreFactory.Instance.Create(Version);
         }
 
         public GameStore Store { get; private set; }
 
         public void Init()
         {
-            ApplyAndUpdate(new InitializeAction{Version = m_version, Board = m_board});
+            ApplyAndUpdate(new InitializeAction{Version = Version, Board = m_board});
         }
 
         public void Move(Point from, Point to)
@@ -42,7 +42,7 @@ namespace Chess.Model
             Store = Reducer.Apply(new EvaluateBoardAction() {ActivePlayer = next.CurrentPlayer}, next);
         }
 
-        private GameReducer Reducer => m_gameReducer ?? (m_gameReducer = GameReducerFactory.Instance.Create(m_version));
+        private GameReducer Reducer => m_gameReducer ?? (m_gameReducer = GameReducerFactory.Instance.Create(Version));
 
         // /// <summary>
         // /// TODO: This should return the event for the particular player

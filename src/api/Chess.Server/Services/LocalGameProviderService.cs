@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Chess.Model;
 using Chess.Model.Models;
 using Piece = Chess.Model.Models.Piece;
@@ -7,6 +8,7 @@ namespace Chess.Server.Services
 {
     public class LocalGameProviderService : IGameProviderService
     {
+        private static int s_gameId = 10000;
         private static readonly Dictionary<int, Game> GameState = new Dictionary<int, Game>
         {
             {1, new Game(Version.FourPlayer, new GameBoard(5, 0)
@@ -34,14 +36,18 @@ namespace Chess.Server.Services
         }
         };
 
-        public Game GetGame(int id)
-        {
-            return GameState[id];
-        }
+        public Game GetGame(int id) => GameState[id];
 
-        public void StoreGame(int id, Game state)
+        public IEnumerable<(int, Game)> ListGames() => GameState.Select(pair => (pair.Key, pair.Value));
+
+        public int CreateGame(Version version)
         {
-            GameState[id] = state;
+            var id = s_gameId;
+            s_gameId++;
+            var g = new Game(version);
+            GameState[id] = g;
+
+            return id;
         }
     }
 }

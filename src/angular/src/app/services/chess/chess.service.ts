@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Game } from './model/game';
 import { map } from 'rxjs/operators';
 import { Point } from '../../model/placement';
+import { GameSummary } from './model/game.summary';
 
 @Injectable({
     providedIn: 'root'
@@ -14,9 +15,14 @@ export class ChessService {
     }
 
     public newGame(players: number): Observable<number> {
-        return this._http.get<Game>(`${this.API_BASE}/games?players=${players}`).pipe(
-            map(value => value.gameId)
-        );
+        return this._http.post<HttpResponse<any>>(`${this.API_BASE}/games`, {players}, {observe: 'response'})
+            .pipe(
+                map(response => +response.headers.get('location').split('/').pop())
+            );
+    }
+
+    public list(): Observable<GameSummary[]> {
+        return this._http.get<GameSummary[]>(`${this.API_BASE}/games`);
     }
 
     public get(id: number): Observable<Game> {
