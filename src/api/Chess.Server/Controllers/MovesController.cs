@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Linq;
+using Chess.Model;
 using Chess.Model.Evaluation.Models;
 using Chess.Server.Model;
 using Chess.Server.Services;
@@ -22,36 +23,32 @@ namespace Chess.Server.Controllers
         [HttpGet]
         public object GetMoves(int gameId, int x, int y)
         {
-            // if (!m_gameState.ContainsKey(gameId))
-            // {
-            //     return NotFound($"Game {gameId} has not been initialized.");
-            // }
-
             var game = m_gameService.GetGame(gameId);
 
-            var available = game.Store.Markings.GetMarkers<MoveMarker>(new Point(x,y)).Select(move => move.Move.To);
+            if (game == null)
+            {
+                return NotFound($"Game {gameId} does not exist.");
+            }
 
-            return game.Store.Board.IsOnBoard(x, y) ? (object)Ok(available) : BadRequest(Enumerable.Empty<Location>());
+            var available = game.Markings.GetMarkers<MoveMarker>(new Point(x,y)).Select(move => move.Move.To);
+
+            return game.Board.IsOnBoard(x, y) ? (object)Ok(available) : BadRequest(Enumerable.Empty<Location>());
         }
 
         [HttpPost]
         public object PostMove(int gameId, [FromBody] Move m)
         {
-            // if (!m_gameState.ContainsKey(gameId))
-            // {
-            //     return NotFound($"Game {gameId} has not been initialized.");
-            // }
-
             var game = m_gameService.GetGame(gameId);
-            var before = game.Store;
 
-            game.Move(m.From, m.To);
+            if (game == null)
+            {
+                return NotFound($"Game {gameId} does not exist.");
+            }
 
-            var resp =  m_translator.FromModel(gameId, game.Store);
-            return game.Store != before ? (object)Ok(resp) : BadRequest(resp);
+            var newState = Evaluator.Instance.Move(game, m.From, m.To);
 
-            // return game.Move(m.To) ?
-            //     (object)Ok() : BadRequest($"{m} is not a valid move.");
+            var resp =  m_translator.FromModel(gameId, newState);
+            return newState != game ? (object)Ok(resp) : BadRequest(resp);
         }
     }
 }

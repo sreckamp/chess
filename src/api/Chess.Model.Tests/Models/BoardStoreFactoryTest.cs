@@ -13,7 +13,7 @@ namespace Chess.Model.Tests.Models
         public void Create_WithTwoPlayers_ShouldHave8x8With0CornersWithWhiteAtSouthAndBlackAtNorth()
         {
             // Arrange
-            var factory = BoardStoreFactory.Instance;
+            var factory = BoardFactory.Instance;
             
             // Act
             var board = factory.Create(Version.TwoPlayer);
@@ -53,7 +53,7 @@ namespace Chess.Model.Tests.Models
         public void Create_WithFourPlayers_ShouldHave14x14With3CornersWithWhiteAtSouthAndSilverAtEastAndBlackAtNorthAndGoldAtEast()
         {
             // Arrange
-            var factory = BoardStoreFactory.Instance;
+            var factory = BoardFactory.Instance;
             
             // Act
             var board = factory.Create(Version.FourPlayer);

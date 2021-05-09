@@ -37,12 +37,8 @@ namespace Chess.Server.Controllers
         public GameState GetGame(int id)
         {
             var game = m_gameService.GetGame(id);
-            if (game.Store.Board == null)
-            {
-                game.Init();
-            }
 
-            return m_translator.FromModel(id, game.Store);
+            return m_translator.FromModel(id, game);
         }
     }
 }

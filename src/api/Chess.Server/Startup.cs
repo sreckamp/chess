@@ -1,3 +1,4 @@
+using System.IO;
 using Chess.Server.Model;
 using Chess.Server.Services;
 using Microsoft.AspNetCore.Builder;
@@ -35,7 +36,8 @@ namespace Chess.Server
             services.AddControllers();
 
             services.AddSpaStaticFiles(configuration => {
-                configuration.RootPath = @"C:\development\git\fun\chess\src\angular\dist\angular";
+                configuration.RootPath = @"C:\Users\Steve\git\chess\src\angular\dist\angular";
+                // configuration.RootPath = @"C:\development\git\fun\chess\src\angular\dist\angular";
             });
 
             services.AddSingleton<IGameProviderService, LocalGameProviderService>();

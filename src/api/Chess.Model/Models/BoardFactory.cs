@@ -8,14 +8,14 @@ namespace Chess.Model.Models
     /// Y is along file axis (0 = south, max = north)
     /// X is along rank axis (0 = west, max = east)
     /// </summary>
-    public sealed class BoardStoreFactory
+    public sealed class BoardFactory
     {
         private static class Lazy
         {
-            public static readonly BoardStoreFactory BoardFactory = new BoardStoreFactory();
+            public static readonly BoardFactory BoardFactory = new BoardFactory();
         }
 
-        public static BoardStoreFactory Instance => Lazy.BoardFactory;
+        public static BoardFactory Instance => Lazy.BoardFactory;
 
         public GameBoard Create(Version version)
         {
@@ -120,7 +120,7 @@ namespace Chess.Model.Models
 
         public Direction DirectionFromColor(Color color)
         {
-            return m_sides.Where(side => side.Color == color).First().Edge;
+            return m_sides.First(side => side.Color == color).Edge;
         }
     }
 }
