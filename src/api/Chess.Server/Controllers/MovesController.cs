@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Chess.Model;
 using Chess.Model.Evaluation.Models;
@@ -21,7 +22,7 @@ namespace Chess.Server.Controllers
         }
 
         [HttpGet]
-        public object GetMoves(int gameId, int x, int y)
+        public ActionResult<IEnumerable<Location>> GetMoves(int gameId, int x, int y)
         {
             var game = m_gameService.GetGame(gameId);
 
@@ -30,13 +31,17 @@ namespace Chess.Server.Controllers
                 return NotFound($"Game {gameId} does not exist.");
             }
 
-            var available = game.Markings.GetMarkers<MoveMarker>(new Point(x,y)).Select(move => move.Move.To);
+            if (!game.Board.IsOnBoard(x, y))
+            {
+                return BadRequest($"({x}, {y}) is not on the board.");
+            }
 
-            return game.Board.IsOnBoard(x, y) ? (object)Ok(available) : BadRequest(Enumerable.Empty<Location>());
+            return game.Markings
+                .GetMarkers<MoveMarker>(new Point(x,y)).Select(move => (Location)move.Move.To).ToList();
         }
 
         [HttpPost]
-        public object PostMove(int gameId, [FromBody] Move m)
+        public ActionResult<GameState> PostMove(int gameId, [FromBody] Move m)
         {
             var game = m_gameService.GetGame(gameId);
 
@@ -47,8 +52,12 @@ namespace Chess.Server.Controllers
 
             var newState = Evaluator.Instance.Move(game, m.From, m.To);
 
-            var resp =  m_translator.FromModel(gameId, newState);
-            return newState != game ? (object)Ok(resp) : BadRequest(resp);
+            if (newState == game)
+            {
+                return BadRequest($"{m} is not a valid move.");
+            }
+
+            return m_translator.FromModel(gameId, newState);
         }
     }
 }
