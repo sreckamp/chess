@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using Chess.Model.Models;
-using Chess.Model.Models.Board;
 
 namespace Chess.Model.Move
 {
