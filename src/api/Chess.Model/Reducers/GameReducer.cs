@@ -33,14 +33,14 @@ namespace Chess.Model.Reducers
                 return new GameStore
                 {
                     Version = action is InitializeAction ia ? ia.Version : store.Version,
-                    CurrentColor = m_playerReducer.Apply(action, (Version.None, store.CurrentColor)).Item2,
+                    CurrentColor = m_playerReducer.Apply(action, (store.Version, store.CurrentColor)).Item2,
                     Board = m_boardReducer.Apply(action, store.Board),
                     Markings = m_markingReducer.Apply(action, (store.Board, store.Markings)).Item2,
                 };
             }
-            catch
+            catch(Exception e)
             {
-                Console.Error.WriteLine("Error processing");
+                Console.Error.WriteLine("Error reducing state.", e);
             }
 
             return store;

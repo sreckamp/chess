@@ -3,6 +3,7 @@ using System.Linq;
 using Chess.Model;
 using Chess.Model.Models;
 using Chess.Model.Stores;
+using Chess.Server.Model;
 using Piece = Chess.Model.Models.Piece;
 
 namespace Chess.Server.Services
@@ -38,6 +39,11 @@ namespace Chess.Server.Services
 
         public GameStore GetGame(int id) => GameStores.ContainsKey(id) ? GameStores[id] : null;
 
+        public void Update(int id, GameStore game)
+        {
+            GameStores[id] = game;
+        }
+
         public IEnumerable<(int, GameStore)> ListGames() => GameStores.Select(pair => (pair.Key, pair.Value));
 
         public int CreateGame(Version version)
@@ -45,7 +51,7 @@ namespace Chess.Server.Services
             var id = _gameId;
             _gameId++;
             var g = Evaluator.Instance.Init(version);
-            GameStores[id] = g;
+            Update(id, g);
 
             return id;
         }

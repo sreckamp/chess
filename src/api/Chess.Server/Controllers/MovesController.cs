@@ -57,6 +57,7 @@ namespace Chess.Server.Controllers
                 return BadRequest($"{m} is not a valid move.");
             }
 
+            m_gameService.Update(gameId, newState);
             return m_translator.FromModel(gameId, newState);
         }
     }

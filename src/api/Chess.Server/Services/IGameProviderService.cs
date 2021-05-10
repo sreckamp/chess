@@ -9,5 +9,6 @@ namespace Chess.Server.Services
         GameStore GetGame(int id);
         IEnumerable<(int, GameStore)> ListGames();
         int CreateGame(Version version);
+        void Update(int id, GameStore store);
     }
 }

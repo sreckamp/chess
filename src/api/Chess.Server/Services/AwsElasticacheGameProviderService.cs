@@ -20,5 +20,10 @@ namespace Chess.Server.Services
         {
             throw new System.NotImplementedException();
         }
+        
+        public void Update(int id, GameStore store)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
