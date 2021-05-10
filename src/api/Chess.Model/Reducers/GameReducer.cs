@@ -20,7 +20,7 @@ namespace Chess.Model.Reducers
             IReducer<(IPieceEnumerationProvider, MarkingStore)> markingReducer = null)
         {
             m_boardReducer = boardReducer ?? new BoardReducer();
-            m_playerReducer = playerReducer ?? new PlayerReducer();
+            m_playerReducer = playerReducer ?? new ColorReducer();
             m_markingReducer = markingReducer
                                ?? new MarkingsReducer(new [] {PathRules.MarkRules, PathRules.MoveRules},
                                    PathSources.Sources);
@@ -38,7 +38,6 @@ namespace Chess.Model.Reducers
                     Markings = m_markingReducer.Apply(action, (store.Board, store.Markings)).Item2,
                 };
             }
-            // ReSharper disable once EmptyGeneralCatchClause
             catch
             {
                 Console.Error.WriteLine("Error processing");

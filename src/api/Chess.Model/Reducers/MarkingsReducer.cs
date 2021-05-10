@@ -27,17 +27,13 @@ namespace Chess.Model.Reducers
         {
             var (board, markings) = store;
 
-            switch (action)
+            return action switch
             {
-                case InitializeAction _:
-                    return (board, new MarkingStore());
-                case MoveAction ma:
-                    return (board, MarkForMoves(board, ma.Move, markings));
-                case EvaluateBoardAction eba:
-                    return (board, EvaluateBoard(board, eba.ActivePlayer, markings));
-                default:
-                    return store;
-            }
+                InitializeAction _ => (board, new MarkingStore()),
+                MoveAction ma => (board, MarkForMoves(board, ma.Move, markings)),
+                EvaluateBoardAction eba => (board, EvaluateBoard(board, eba.ActivePlayer, markings)),
+                _ => store
+            };
         }
 
         private MarkingStore MarkForMoves(IPieceEnumerationProvider board, IMove move, MarkingStore store)

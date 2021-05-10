@@ -12,7 +12,7 @@ namespace Chess.Server.Services
         private static int _gameId = 10000;
         private static readonly Dictionary<int, GameStore> GameStores = new Dictionary<int, GameStore>();
 
-        private LocalGameProviderService()
+        static LocalGameProviderService()
         {
             GameStores[1] = Evaluator.Instance.Init(Version.FourPlayer, new GameBoard(5, 0)
             {

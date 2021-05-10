@@ -5,11 +5,20 @@ using Chess.Model.Evaluation.Models;
 using Chess.Model.Models;
 using Chess.Model.Reducers;
 using Chess.Model.Stores;
+using Color = Chess.Model.Models.Color;
 
 namespace Chess.Model
 {
     public class Evaluator
     {
+        private static readonly GameStore InitialStore = new GameStore
+        {
+            Board = BoardFactory.Instance.Create(Version.None),
+            Markings = new MarkingStore(),
+            Version = Version.None,
+            CurrentColor = Color.None
+        };
+
         public static readonly Evaluator Instance = new Evaluator();
         private readonly GameReducer m_reducer = new GameReducer();
 
@@ -19,7 +28,7 @@ namespace Chess.Model
         {
             var action = new InitializeAction {Version = version, Board = board};
 
-            return Evaluate(m_reducer.Apply(action, null));
+            return Evaluate(m_reducer.Apply(action, Evaluator.InitialStore));
         }
 
         public GameStore Move(GameStore store, Point from, Point to)

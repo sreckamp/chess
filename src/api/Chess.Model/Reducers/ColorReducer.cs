@@ -4,20 +4,17 @@ using Chess.Model.Models;
 
 namespace Chess.Model.Reducers
 {
-    public sealed class PlayerReducer : IReducer<(Version, Color)>
+    public sealed class ColorReducer : IReducer<(Version, Color)>
     {
         public (Version, Color) Apply(IAction action, (Version, Color) store)
         {
             var (version, color) = store;
-            switch (action)
+            return action switch
             {
-                case InitializeAction _:
-                    return (version, Color.White);
-                case MoveAction _:
-                    return (version, m_nextMapPerVersion[version][color]);
-                default:
-                    return (version, color);
-            }
+                InitializeAction _ => (version, Color.White),
+                MoveAction _ => (version, m_nextMapPerVersion[version][color]),
+                _ => (version, color)
+            };
         }
 
         private readonly Dictionary<Version, Dictionary<Color, Color>> m_nextMapPerVersion =
