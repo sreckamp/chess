@@ -34,15 +34,16 @@ namespace Chess.Server.Controllers
         });
 
         [HttpGet("{id:int}", Name = "GetGame")]
-        public GameState GetGame(int id)
+        public ActionResult<GameState> GetGame(int id)
         {
             var game = m_gameService.GetGame(id);
-            if (game.Store.Board == null)
+
+            if (game == null)
             {
-                game.Init();
+                return BadRequest();
             }
 
-            return m_translator.FromModel(id, game.Store);
+            return m_translator.FromModel(id, game);
         }
     }
 }

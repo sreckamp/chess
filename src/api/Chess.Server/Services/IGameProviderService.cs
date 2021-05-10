@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
-using Chess.Model;
 using Chess.Model.Models;
+using Chess.Model.Stores;
 
 namespace Chess.Server.Services
 {
     public interface IGameProviderService
     {
-        Game GetGame(int id);
-        IEnumerable<(int, Game)> ListGames();
+        GameStore GetGame(int id);
+        IEnumerable<(int, GameStore)> ListGames();
         int CreateGame(Version version);
+        void Update(int id, GameStore store);
     }
 }

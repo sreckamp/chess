@@ -1,3 +1,4 @@
+using System.IO;
 using Chess.Server.Model;
 using Chess.Server.Services;
 using Microsoft.AspNetCore.Builder;
@@ -25,7 +26,7 @@ namespace Chess.Server
         {
             services.AddCors(options =>
             {
-                options.AddPolicy(name: "chessCORS", builder =>
+                options.AddPolicy("chessCORS", builder =>
                 {
                     builder.AllowAnyOrigin()
                         .AllowAnyHeader()
@@ -35,7 +36,7 @@ namespace Chess.Server
             services.AddControllers();
 
             services.AddSpaStaticFiles(configuration => {
-                configuration.RootPath = @"C:\development\git\fun\chess\src\angular\dist\angular";
+                configuration.RootPath = Path.Join(Directory.GetCurrentDirectory(), @"..\..\angular\dist\angular");
             });
 
             services.AddSingleton<IGameProviderService, LocalGameProviderService>();

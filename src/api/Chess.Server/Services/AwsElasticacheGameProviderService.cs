@@ -1,22 +1,27 @@
 ﻿using System.Collections.Generic;
-using Chess.Model;
 using Chess.Model.Models;
+using Chess.Model.Stores;
 
 namespace Chess.Server.Services
 {
     public class AwsElasticacheGameProviderService : IGameProviderService
     {
-        public Game GetGame(int id)
+        public GameStore GetGame(int id)
         {
             throw new System.NotImplementedException();
         }
 
-        public IEnumerable<(int, Game)> ListGames()
+        public IEnumerable<(int, GameStore)> ListGames()
         {
             throw new System.NotImplementedException();
         }
 
         public int CreateGame(Version version)
+        {
+            throw new System.NotImplementedException();
+        }
+        
+        public void Update(int id, GameStore store)
         {
             throw new System.NotImplementedException();
         }

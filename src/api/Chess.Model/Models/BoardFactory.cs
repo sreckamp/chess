@@ -8,14 +8,14 @@ namespace Chess.Model.Models
     /// Y is along file axis (0 = south, max = north)
     /// X is along rank axis (0 = west, max = east)
     /// </summary>
-    public sealed class BoardStoreFactory
+    public sealed class BoardFactory
     {
         private static class Lazy
         {
-            public static readonly BoardStoreFactory BoardFactory = new BoardStoreFactory();
+            public static readonly BoardFactory BoardFactory = new BoardFactory();
         }
 
-        public static BoardStoreFactory Instance => Lazy.BoardFactory;
+        public static BoardFactory Instance => Lazy.BoardFactory;
 
         public GameBoard Create(Version version)
         {
@@ -23,7 +23,7 @@ namespace Chess.Model.Models
 
             var board = new GameBoard(template.BoardSize, template.CornerSize);
 
-            foreach (var color in template.Colors)
+            foreach (var color in template.Colors.Where(color => color != Color.None))
                 PopulateColor(board, color, template.CornerSize, template.KingOnLeft);
 
             return board;
@@ -95,6 +95,12 @@ namespace Chess.Model.Models
 
         private readonly Dictionary<Version, Template> m_templates = new Dictionary<Version, Template>
         {
+            {Version.None, new Template
+            {
+                Colors = new[] {Color.None},
+                BoardSize = 0,
+                CornerSize = 0
+            }},
             {Version.TwoPlayer, new Template
             {
                 Colors = new[] {Color.White, Color.Black},
@@ -120,7 +126,7 @@ namespace Chess.Model.Models
 
         public Direction DirectionFromColor(Color color)
         {
-            return m_sides.Where(side => side.Color == color).First().Edge;
+            return m_sides.First(side => side.Color == color).Edge;
         }
     }
 }

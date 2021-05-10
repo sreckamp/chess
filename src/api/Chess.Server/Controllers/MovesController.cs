@@ -1,5 +1,7 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using Chess.Model;
 using Chess.Model.Evaluation.Models;
 using Chess.Server.Model;
 using Chess.Server.Services;
@@ -20,38 +22,43 @@ namespace Chess.Server.Controllers
         }
 
         [HttpGet]
-        public object GetMoves(int gameId, int x, int y)
+        public ActionResult<IEnumerable<Location>> GetMoves(int gameId, int x, int y)
         {
-            // if (!m_gameState.ContainsKey(gameId))
-            // {
-            //     return NotFound($"Game {gameId} has not been initialized.");
-            // }
-
             var game = m_gameService.GetGame(gameId);
 
-            var available = game.Store.Markings.GetMarkers<MoveMarker>(new Point(x,y)).Select(move => move.Move.To);
+            if (game == null)
+            {
+                return NotFound($"Game {gameId} does not exist.");
+            }
 
-            return game.Store.Board.IsOnBoard(x, y) ? (object)Ok(available) : BadRequest(Enumerable.Empty<Location>());
+            if (!game.Board.IsOnBoard(x, y))
+            {
+                return BadRequest($"({x}, {y}) is not on the board.");
+            }
+
+            return game.Markings
+                .GetMarkers<MoveMarker>(new Point(x,y)).Select(move => (Location)move.Move.To).ToList();
         }
 
         [HttpPost]
-        public object PostMove(int gameId, [FromBody] Move m)
+        public ActionResult<GameState> PostMove(int gameId, [FromBody] Move m)
         {
-            // if (!m_gameState.ContainsKey(gameId))
-            // {
-            //     return NotFound($"Game {gameId} has not been initialized.");
-            // }
-
             var game = m_gameService.GetGame(gameId);
-            var before = game.Store;
 
-            game.Move(m.From, m.To);
+            if (game == null)
+            {
+                return NotFound($"Game {gameId} does not exist.");
+            }
 
-            var resp =  m_translator.FromModel(gameId, game.Store);
-            return game.Store != before ? (object)Ok(resp) : BadRequest(resp);
+            var newState = Evaluator.Instance.Move(game, m.From, m.To);
 
-            // return game.Move(m.To) ?
-            //     (object)Ok() : BadRequest($"{m} is not a valid move.");
+            if (newState == game)
+            {
+                return BadRequest($"{m} is not a valid move.");
+            }
+
+            m_gameService.Update(gameId, newState);
+            return m_translator.FromModel(gameId, newState);
         }
     }
 }

@@ -11,7 +11,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { ChessService } from './services/chess/chess.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatCardImage, MatCardModule } from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
 import { TrayComponent } from './evaluator/tray/tray.component';
@@ -20,6 +20,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from "@angular/material/toolbar";
+import { MatIconModule } from "@angular/material/icon";
 
 const routes: Routes = [
     {path: '', redirectTo: '/welcome', pathMatch: 'full'},
@@ -49,7 +51,9 @@ const routes: Routes = [
         FormsModule,
         MatSelectModule,
         MatOptionModule,
-        MatButtonModule
+        MatButtonModule,
+        MatToolbarModule,
+        MatIconModule
     ],
     providers: [
         ChessService,

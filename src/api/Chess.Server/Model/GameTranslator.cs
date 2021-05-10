@@ -27,16 +27,16 @@ namespace Chess.Server.Model
         {
             var store = new GameStore
             {
-                Board = BoardStoreFactory.Instance.CreateEmpty(state.Size > 8 ? Version.FourPlayer : Version.TwoPlayer),
+                Board = BoardFactory.Instance.CreateEmpty(state.Size > 8 ? Version.FourPlayer : Version.TwoPlayer),
                 Markings = new MarkingStore(),
                 Version = state.Size > 8 ? Version.FourPlayer : Version.TwoPlayer,
-                CurrentPlayer = ToColor(state.CurrentPlayer)
+                CurrentColor = ToColor(state.CurrentPlayer)
             };
 
             foreach (var piece in state.Pieces)
             {
                 var color = ToColor(piece.Color);
-                var edge = BoardStoreFactory.Instance.DirectionFromColor(color);
+                var edge = BoardFactory.Instance.DirectionFromColor(color);
                 store.Board[piece.Location.X, piece.Location.Y] = new ModelPiece(ToPieceType(piece.Type), color, edge);
             }
             return (state.GameId, store);
@@ -57,7 +57,7 @@ namespace Chess.Server.Model
                 GameId = id,
                 Name = $"Game {id}",
 
-                CurrentPlayer = store.CurrentPlayer.ToString(),
+                CurrentPlayer = store.CurrentColor.ToString(),
 
                 Pieces = store.Board.Where(square => !square.Item2.IsEmpty
                                                      || markers.ContainsKey(square.Item1) && markers[square.Item1].Any()).Select(
