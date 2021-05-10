@@ -24,7 +24,7 @@ namespace Chess.Model.Evaluation.Sources
                         var isMove = direction == piece.Edge.Opposite();
                         var moves = squares.EnumerateStraightLine(start, direction).Take(2).ToList();
 
-                        return new Path(GetType().Name)
+                        return new Path
                         {
                             AllowMove = isMove,
                             AllowTake = !isMove,

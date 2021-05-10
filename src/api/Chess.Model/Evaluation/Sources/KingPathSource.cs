@@ -11,7 +11,7 @@ namespace Chess.Model.Evaluation.Sources
         /// <inheritdoc/>
         public IEnumerable<Path> GetPaths(Point start, Piece piece, IPieceEnumerationProvider squares)
             => piece.Type == PieceType.King
-                ? Directions.All.Select(direction => new Path(GetType().Name)
+                ? Directions.All.Select(direction => new Path
                     {
                         AllowMove = true,
                         AllowTake = true,
@@ -22,7 +22,7 @@ namespace Chess.Model.Evaluation.Sources
                     }).Concat(
                         !piece.HasMoved
                         ? Directions.Cardinals.Where(dir => dir.IsPerpendicular(piece.Edge))
-                            .Select(direction => new Path(GetType().Name)
+                            .Select(direction => new Path
                                 {
                                     AllowMove = true,
                                     Start = start,

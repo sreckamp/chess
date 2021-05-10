@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Chess.Model.Evaluation.Models;
 using Chess.Model.Evaluation.Rules;
@@ -21,12 +22,12 @@ namespace Chess.Model.Tests.Evaluation.Rules
             chainPathRuleMock.Setup(pathRule => pathRule.Apply(It.IsAny<IMarkingsProvider>(), It.IsAny<Path>()))
                 .Verifiable();
 
-            var path = new Path("Test")
+            var path = new Path
             {
                 Direction = Direction.None,
                 AllowMove = true,
                 AllowTake = true,
-                Squares = new (Point, Piece)[0]
+                Squares = Array.Empty<(Point, Piece)>()
             };
 
             var dut = new MoveIntoCheckPathRule(chainPathRuleMock.Object);
@@ -51,7 +52,7 @@ namespace Chess.Model.Tests.Evaluation.Rules
             chainPathRuleMock.Setup(pathRule => pathRule.Apply(It.IsAny<IMarkingsProvider>(), It.IsAny<Path>()))
                 .Verifiable();
 
-            var path = new Path("Test")
+            var path = new Path
             {
                 Direction = Direction.None,
                 AllowMove = true,

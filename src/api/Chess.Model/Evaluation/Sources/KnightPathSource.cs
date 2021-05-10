@@ -11,7 +11,7 @@ namespace Chess.Model.Evaluation.Sources
         /// <inheritdoc/>
         public IEnumerable<Path> GetPaths(Point start, Piece piece, IPieceEnumerationProvider squares)
             => piece.Type == PieceType.Knight
-                ? squares.EnumerateKnight(start).Select(sq => new Path(GetType().Name)
+                ? squares.EnumerateKnight(start).Select(sq => new Path
                 {
                     AllowMove = true,
                     AllowTake = true,

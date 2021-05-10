@@ -10,12 +10,6 @@ namespace Chess.Model.Evaluation.Models
     /// </summary>
     public sealed class Path
     {
-        private readonly string m_source;
-        public Path(string source)
-        {
-            m_source = source;
-        }
-
         /// <summary>
         /// If true this path is allowed to occupy empty squares
         /// </summary>
@@ -33,7 +27,7 @@ namespace Chess.Model.Evaluation.Models
         /// <summary>
         /// True if the path ends at the far end of a pawn's path
         /// </summary>
-        public bool OppositeEdge { get; set; } = false;
+        public bool OppositeEdge { get; set; }
 
         /// <summary>
         /// The direction the path travels
@@ -47,7 +41,7 @@ namespace Chess.Model.Evaluation.Models
 
         public override string ToString()
         {
-            return $"{Piece} @ ({Start.X}, {Start.Y}) => {Direction}[{Squares?.Count() ?? 0}] <{m_source}>";
+            return $"{Piece} @ ({Start.X}, {Start.Y}) => {Direction}[{Squares?.Count() ?? 0}]";
         }
     }
 }
