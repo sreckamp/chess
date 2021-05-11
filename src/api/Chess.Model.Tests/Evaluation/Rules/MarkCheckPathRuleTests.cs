@@ -406,12 +406,11 @@ namespace Chess.Model.Tests.Evaluation.Rules
             
             // Assert
             markingsMock.Verify(provider =>
-                provider.Mark(It.IsAny<Point>(), It.IsAny<CheckMarker>()), Times.Exactly(5));
+                provider.Mark(It.IsAny<Point>(), It.IsAny<CheckMarker>()), Times.Exactly(4));
             markingsMock.Verify(provider => provider.Mark(new Point(3,5), It.IsAny<CheckMarker>()));
             markingsMock.Verify(provider => provider.Mark(new Point(3,4), It.IsAny<CheckMarker>()));
             markingsMock.Verify(provider => provider.Mark(new Point(3,3), It.IsAny<CheckMarker>()));
             markingsMock.Verify(provider => provider.Mark(new Point(3,2), It.IsAny<CheckMarker>()));
-            markingsMock.Verify(provider => provider.Mark(new Point(3,1), It.IsAny<CheckMarker>()));
             chainPathRuleMock.Verify(pathRule => pathRule.Apply(It.IsAny<IMarkingsProvider>(), path));
         }
 
