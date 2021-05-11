@@ -15,7 +15,9 @@ namespace Chess.Model.Stores
         private Dictionary<Point, List<IMarker>> m_markers
             = new Dictionary<Point, List<IMarker>>();
 
-        public IDictionary<Color ,Point> KingLocations { get; private set; } = new Dictionary<Color, Point>();
+        public IDictionary<Color, Point> KingLocations { get; private set; } = new Dictionary<Color, Point>();
+
+        public IEnumerable<Color> AvailableColors { get; set; } = Enumerable.Empty<Color>();
 
         public void Mark<T>(Point point, params T[] markers) where T : IMarker
         {
@@ -45,7 +47,8 @@ namespace Chess.Model.Stores
         {
             KingLocations = KingLocations.ToArray().ToDictionary(pair => pair.Key, pair => pair.Value),
             m_markers = m_markers.ToDictionary(pair => pair.Key,
-                pair => pair.Value.Where(predicate ?? (_ => true)).Select(marker => marker.Clone()).ToList())
+                pair => pair.Value.Where(predicate ?? (_ => true)).Select(marker => marker.Clone()).ToList()),
+            AvailableColors = AvailableColors.ToList()
         };
     }
 }
