@@ -22,6 +22,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatIconModule } from "@angular/material/icon";
+import {EventService} from "./services/event/event.service";
 
 const routes: Routes = [
     {path: '', redirectTo: '/welcome', pathMatch: 'full'},
@@ -57,7 +58,8 @@ const routes: Routes = [
     ],
     providers: [
         ChessService,
-        GameTranslationService
+        GameTranslationService,
+        EventService
     ],
     bootstrap: [AppComponent]
 })

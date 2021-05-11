@@ -8,6 +8,7 @@ import { GameTranslationService } from '../services/game.translation.service';
 import { Game } from '../model/game';
 import { Marker } from '../model/marker';
 import { ActivatedRoute } from '@angular/router';
+import { EventService } from "../services/event/event.service";
 
 @Component({
     selector: 'app-game',
@@ -55,16 +56,24 @@ export class GameComponent implements OnInit {
 
     constructor(private _service: ChessService,
                 private _translator: GameTranslationService,
-                private _route: ActivatedRoute) {
+                private _route: ActivatedRoute,
+                private _events: EventService) {
         this.rotationKeys = Object.keys(this.rotations);
     }
 
     ngOnInit(): void {
         this._game.id = +this._route.snapshot.params.id;
-        this._service.get(this._game.id).subscribe(value => {
-            this._game = this._translator.fromApi(value);
-            this.config = [value.size, value.corners];
-        });
+        this.get(this._game.id);
+        this._events.subscribe(id => this.get(id));
+    }
+
+    private get(id: number): void {
+        if(this._game.id === id) {
+            this._service.get(id).subscribe(state => {
+                this._game = this._translator.fromApi(state);
+                this.config = [state.size, state.corners];
+            });
+        }
     }
 
     changeRotation(rotation: Rotation): void {
