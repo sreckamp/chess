@@ -18,6 +18,7 @@ namespace Chess.Model.Evaluation.Rules
             {
                 var squares = path.Squares.ToList();
                 CheckMarker marker = default;
+                var kingColor = Color.None;
 
                 var i = 0;
 
@@ -27,10 +28,21 @@ namespace Chess.Model.Evaluation.Rules
 
                     if (targetPiece.IsEmpty) continue;
 
-                    if (targetPiece.Color == path.Piece.Color ||
-                        targetPiece.Type != PieceType.King) break;
+                    if (kingColor == Color.None && targetPiece.Color != path.Piece.Color &&
+                        targetPiece.Type == PieceType.King)
+                    {
+                        kingColor = targetPiece.Color;
 
-                    marker = new CheckMarker(path.Start, path.Piece, target, path.Direction);
+                        marker = new CheckMarker(path.Start, path.Piece, target, path.Direction);
+                        continue;
+                    }
+                    // Stop on Piece of Kings Color
+                    if (targetPiece.Type != PieceType.King && targetPiece.Color == kingColor
+                        || targetPiece.Type == PieceType.King && targetPiece.Color != kingColor) break;
+                    // Include Piece Not of Kings color
+                    if (targetPiece.Type == PieceType.Empty || targetPiece.Color == kingColor) continue;
+                    i++;
+                    break;
                 }
 
                 if (marker != null)
