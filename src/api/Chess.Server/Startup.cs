@@ -39,6 +39,7 @@ namespace Chess.Server
                 configuration.RootPath = Path.Join(Directory.GetCurrentDirectory(), @"..\..\angular\dist\angular");
             });
 
+            services.AddSignalR();
             services.AddSingleton<IGameProviderService, LocalGameProviderService>();
             services.AddSingleton<IGameTranslator, GameTranslator>();
         }
@@ -58,6 +59,8 @@ namespace Chess.Server
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseEndpoints(endpoints => { endpoints.MapHub<GameEventHub>("/api/events"); });
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
