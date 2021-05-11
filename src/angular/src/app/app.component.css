@@ -7,10 +7,8 @@
     align-items: center;
 }
 
-img#back {
-    position: fixed;
-    bottom: -160px;
-    left: -230px;
-    z-index: -10;
-    width: 1920px;
+.back {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }

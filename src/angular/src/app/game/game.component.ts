@@ -8,7 +8,7 @@ import { GameTranslationService } from '../services/game.translation.service';
 import { Game } from '../model/game';
 import { Marker } from '../model/marker';
 import { ActivatedRoute } from '@angular/router';
-import { EventService } from "../services/event/event.service";
+import { EventService } from '../services/event/event.service';
 
 @Component({
     selector: 'app-game',
@@ -64,20 +64,16 @@ export class GameComponent implements OnInit {
     ngOnInit(): void {
         this._game.id = +this._route.snapshot.params.id;
         this.get(this._game.id);
-        this._events.subscribe(id => this.get(id));
+        this._events.onGameUpdated(this._game.id, id => this.get(id));
     }
 
     private get(id: number): void {
-        if(this._game.id === id) {
+        if (this._game.id === id) {
             this._service.get(id).subscribe(state => {
                 this._game = this._translator.fromApi(state);
                 this.config = [state.size, state.corners];
             });
         }
-    }
-
-    changeRotation(rotation: Rotation): void {
-        this.rotation = rotation;
     }
 
     changePlayers(players: number): void {
