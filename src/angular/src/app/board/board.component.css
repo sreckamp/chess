@@ -37,6 +37,8 @@
 .header {
     display: flex;
     flex-direction: row;
+    color: cyan;
+    text-shadow: 2px 2px darkslategray;
 }
 
 .header.counterclockwise, .header.upsidedown {
@@ -63,6 +65,8 @@
 .labels {
     display: flex;
     flex-direction: column-reverse;
+    color: cyan;
+    text-shadow: 2px 2px darkslategray;
 }
 
 .labels.clockwise, .labels.upsidedown {
