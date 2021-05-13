@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Net.Mime;
 using Chess.Model.Models;
 
 namespace Chess.Model.Extensions
@@ -57,9 +56,7 @@ namespace Chess.Model.Extensions
         // y(x1-x2) = x(y1-y2)+y1x1-y1x2-x1y1+x1y2
         // y(x1-x2) = x(y1-y2)-y1x2+x1y2
 
-        private static double Distance(Point start, Point end)
-        {
-            return Math.Sqrt(Math.Pow(end.X - start.X, 2) + Math.Pow(end.Y - start.Y, 2));
-        }
+        public static string ToChessPosition(this Point pt) => $"{(char)('a' + pt.X)}{pt.Y + 1}";
+
     }
 }

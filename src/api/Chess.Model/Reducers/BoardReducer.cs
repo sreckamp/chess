@@ -14,8 +14,14 @@ namespace Chess.Model.Reducers
             {
                 InitializeAction ia => ia.Board ?? BoardFactory.Instance.Create(ia.Version),
                 MoveAction ma => Move(store, ma.Move),
+                NextPlayerAction npa => RemoveKing(store, npa.CurrentColor),
                 _ => store
             };
+        }
+
+        private static GameBoard RemoveKing(GameBoard board, Color color)
+        {
+            return board.Filter((point, piece) => piece.Type != PieceType.King || piece.Color != color);
         }
 
         private static GameBoard Move(GameBoard board, IMove move)

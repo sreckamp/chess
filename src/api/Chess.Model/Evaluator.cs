@@ -37,12 +37,24 @@ namespace Chess.Model
 
             return move == null
                 ? store
-                : Evaluate(m_reducer.Apply(new MoveAction {Move = move.Move}, store));
+                : NextPlayer(m_reducer.Apply(new MoveAction {Move = move.Move}, store));
+        }
+
+        private GameStore NextPlayer(GameStore store)
+        {
+            var next = Evaluate(store);
+
+            if (!next.Markings.AvailableColors.Contains(next.CurrentColor))
+            {
+                next = NextPlayer(m_reducer.Apply(new NextPlayerAction{CurrentColor = next.CurrentColor}, next));
+            }
+
+            return next;
         }
 
         public GameStore Evaluate(GameStore store)
         {
-            var action = new EvaluateBoardAction {ActivePlayer = store.CurrentColor};
+            var action = new EvaluateBoardAction {CurrentColor = store.CurrentColor};
             return m_reducer.Apply(action, store);
         }
     }

@@ -31,7 +31,7 @@ export class ChessService {
 
     public getAvailable(id: number, point: Point): Observable<Point[]> {
         return this._http.get<any[]>(`${this.API_BASE}/games/${id}/moves?x=${point.x}&y=${point.y}`).pipe(
-            map(value => value.map(location => ({x: location.x, y: location.y})))
+            map(value => value && value.map(location => ({x: location.x, y: location.y})) || [])
         );
     }
 

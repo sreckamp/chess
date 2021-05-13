@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Chess.Model.Actions;
 using Chess.Model.Evaluation.Models;
 using Chess.Model.Evaluation.Rules;
@@ -13,11 +12,11 @@ namespace Chess.Model.Reducers
     public sealed class GameReducer : IReducer<GameStore>
     {
         private readonly IReducer<GameBoard> m_boardReducer;
-        private readonly IReducer<(Version, Color, IEnumerable<Color>)> m_playerReducer;
+        private readonly IReducer<(Version, Color)> m_playerReducer;
         private readonly IReducer<(IPieceEnumerationProvider, MarkingStore)> m_markingReducer;
 
         public GameReducer(IReducer<GameBoard> boardReducer = null,
-            IReducer<(Version, Color, IEnumerable<Color>)> playerReducer = null,
+            IReducer<(Version, Color)> playerReducer = null,
             IReducer<(IPieceEnumerationProvider, MarkingStore)> markingReducer = null)
         {
             m_boardReducer = boardReducer ?? new BoardReducer();
@@ -34,7 +33,7 @@ namespace Chess.Model.Reducers
                 return new GameStore
                 {
                     Version = action is InitializeAction ia ? ia.Version : store.Version,
-                    CurrentColor = m_playerReducer.Apply(action, (store.Version, store.CurrentColor, store.Markings.AvailableColors)).Item2,
+                    CurrentColor = m_playerReducer.Apply(action, (store.Version, store.CurrentColor)).Item2,
                     Board = m_boardReducer.Apply(action, store.Board),
                     Markings = m_markingReducer.Apply(action, (store.Board, store.Markings)).Item2,
                 };
