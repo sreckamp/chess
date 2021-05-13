@@ -16,13 +16,14 @@
         /// Rule chain to identify available moves.
         /// </summary>
         public static readonly IPathRule MoveRules =
-            new KingInCheckMoveRule(
-                new MoveIntoCheckPathRule(
-                    new PinMovePathRule(
-                        new CastleMovePathRule(
-                            new PawnOpenMovePathRule(
-                                new PawnPromotionMoveRule(
-                                    new EnPassantTakeMovePathRule(
-                                        new MovePathRule(NopPathRule.Instance))))))));
+            new FreezeWithNoKingRule(
+                new KingInCheckMoveRule(
+                    new MoveIntoCheckPathRule(
+                        new PinMovePathRule(
+                            new CastleMovePathRule(
+                                new PawnOpenMovePathRule(
+                                    new PawnPromotionMoveRule(
+                                        new EnPassantTakeMovePathRule(
+                                            new MovePathRule(NopPathRule.Instance)))))))));
     }
 }

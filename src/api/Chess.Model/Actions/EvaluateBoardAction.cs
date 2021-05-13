@@ -4,6 +4,6 @@ namespace Chess.Model.Actions
 {
     public sealed class EvaluateBoardAction: IAction
     {
-        public Color ActivePlayer { get; set; }
+        public Color CurrentColor { get; set; }
     }
 }

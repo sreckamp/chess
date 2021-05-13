@@ -12,6 +12,7 @@ namespace Chess.Model.Reducers
             return action switch
             {
                 InitializeAction _ => (version, Color.White),
+                NextPlayerAction _ => (version, m_nextMapPerVersion[version][color]),
                 MoveAction _ => (version, m_nextMapPerVersion[version][color]),
                 _ => (version, color)
             };

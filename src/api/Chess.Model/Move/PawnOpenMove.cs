@@ -35,5 +35,7 @@ namespace Chess.Model.Move
 
             return m_pawnMove.Apply(board);
         }
+
+        public override string ToString() => $"{m_pawnMove}";
     }
 }

@@ -19,7 +19,7 @@ namespace Chess.Model.Models
 
         public GameBoard Create(Version version)
         {
-            var template = m_templates[version];
+            var template = Templates[version];
 
             var board = new GameBoard(template.BoardSize, template.CornerSize);
 
@@ -31,7 +31,7 @@ namespace Chess.Model.Models
 
         public GameBoard CreateEmpty(Version version)
         {
-            var template = m_templates[version];
+            var template = Templates[version];
             var board = new GameBoard(template.BoardSize, template.CornerSize);
 
             return board;
@@ -93,7 +93,7 @@ namespace Chess.Model.Models
             new Side{ Color = Color.Gold, Edge = Direction.East},
         };
 
-        private readonly Dictionary<Version, Template> m_templates = new Dictionary<Version, Template>
+        internal static readonly Dictionary<Version, Template> Templates = new Dictionary<Version, Template>
         {
             {Version.None, new Template
             {
@@ -116,7 +116,7 @@ namespace Chess.Model.Models
             }
         };
 
-        private class Template
+        internal class Template
         {
             public IEnumerable<Color> Colors;
             public int CornerSize;

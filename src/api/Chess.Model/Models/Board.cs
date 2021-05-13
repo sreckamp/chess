@@ -59,30 +59,19 @@ namespace Chess.Model.Models
             }
         }
 
-        // public Piece GetSquare(Point p) => GetSquare(p.X,p.Y);
+        public GameBoard DeepCopy() => Filter();
 
-        // public Square GetSquare(int x, int y) => m_squares[y][x];
-
-        public GameBoard DeepCopy(Func<IMarker, bool> keepMarker = null)
+        public GameBoard Filter(Func<Point, Piece, bool> predicate = null)
         {
             var board = new GameBoard(Size, Corners);
-            foreach (var (point, piece) in this.Where((tuple) => !tuple.Item2.IsEmpty))
+            foreach (var (point, piece) in this.Where((tuple) => !tuple.Item2.IsEmpty
+                                           && (predicate == null || predicate(tuple.Item1, tuple.Item2)) ))
             {
                 board[point] = piece;
             }
 
             return board;
         }
-
-        // public IEnumerable<IMove> GetAvailable(Point location)
-        // {
-        //     return GetAvailable(location.X, location.Y);
-        // }
-
-        // public IEnumerable<IMove> GetAvailable(int x, int y)
-        // {
-        //     return IsOnBoard(x, y) ? GetSquare(x, y).Available : Enumerable.Empty<IMove>();
-        // }
 
         public IEnumerator<(Point, Piece)> GetEnumerator() =>
             new NestedArrayEnumerator<Piece>(m_pieces, (x, y) => IsOnBoard(x, y));

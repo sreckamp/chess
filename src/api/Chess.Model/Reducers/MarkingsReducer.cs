@@ -31,7 +31,7 @@ namespace Chess.Model.Reducers
             {
                 InitializeAction _ => (board, new MarkingStore()),
                 MoveAction ma => (board, MarkForMoves(board, ma.Move, markings)),
-                EvaluateBoardAction eba => (board, EvaluateBoard(board, eba.ActivePlayer, markings)),
+                EvaluateBoardAction eba => (board, EvaluateBoard(board, eba.CurrentColor, markings)),
                 _ => store
             };
         }
@@ -74,11 +74,18 @@ namespace Chess.Model.Reducers
                     }
                 }
             }
-        
+
+            next.AvailableColors = GetAvailableColors(board, next);
+
             sw.Stop();
             Console.WriteLine($"Updated Markings in {sw.ElapsedMilliseconds}mS");
         
             return next;
         }
+        
+        private IEnumerable<Color> GetAvailableColors(IPieceEnumerationProvider board, MarkingStore store)
+            => board.Where(tuple => store.GetMarkers<MoveMarker>(tuple.Item1).Any())
+                .GroupBy(tuple => tuple.Item2.Color)
+                .Select(group => group.Key).Distinct().Where(color => color != Color.None);
     }
 }

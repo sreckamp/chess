@@ -42,6 +42,11 @@ namespace Chess.Server.Controllers
                 return BadRequest($"({x}, {y}) is not on the board.");
             }
 
+            if (game.Markings.KingLocations.Count == 1)
+            {
+                return NoContent();
+            }
+
             return game.Markings
                 .GetMarkers<MoveMarker>(new Point(x,y)).Select(move => (Location)move.Move.To).ToList();
         }
