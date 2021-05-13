@@ -21,7 +21,7 @@
                               'selectable': visible && isSelectable(colIdx, rowIdx),
                               'check': isInCheck(colIdx, rowIdx)
                           }"
-                     (click)="clickSquare(colIdx, rowIdx)">
+                     (click)="clickSquare(colIdx, rowIdx); $event.stopPropagation();">
                     <app-piece [piece]="getPiece(colIdx, rowIdx)"></app-piece>
                     <app-analysis [visible]="showMarkers" [markers]="getMarkers(colIdx, rowIdx)"
                                   [moveColor]="moveColor" [rotation]="rotation"></app-analysis>

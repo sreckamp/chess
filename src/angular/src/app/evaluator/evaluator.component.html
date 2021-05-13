@@ -1,24 +1,24 @@
 <mat-card class="config">
-    Number of Players: <mat-select [(ngModel)]="playerCount">
+    Number of Players: <mat-select [(ngModel)]="playerCount" (click)="$event.stopPropagation();">
         <mat-option [value]="2">two player</mat-option>
         <mat-option [value]="4">four player</mat-option>
     </mat-select>
-    <p></p>Rotation:<mat-select [(ngModel)]="rotation">
+    <p></p>Rotation:<mat-select [(ngModel)]="rotation" (click)="$event.stopPropagation();">
         <mat-option *ngFor="let name of rotationKeys" [value]="rotations[name]">
             {{name}}
         </mat-option>
     </mat-select>
 </mat-card>
 <mat-card class="config">
-    <app-tray [playerCount]="playerCount" (pieceSelected)="pieceSelected($event)"></app-tray>
+    <app-tray [playerCount]="playerCount" (pieceSelected)="pieceSelected($event)" (click)="$event.stopPropagation();"></app-tray>
 </mat-card>
 <mat-card class="config">
-    <p></p>Current Player:<mat-select [(ngModel)]="activeColor">
+    <p></p>Current Player:<mat-select [(ngModel)]="activeColor" (click)="$event.stopPropagation();">
         <mat-option *ngFor="let name of colorKeys" [value]="colors[name]">
             {{name}}
         </mat-option>
     </mat-select>
-    <p></p><button mat-raised-button (click)="submit($event)">Evaluate</button>
+    <p></p><button mat-raised-button (click)="submit($event); $event.stopPropagation();">Evaluate</button>
 </mat-card>
 <app-board [rotation]="rotation"
            [theme]="'tan'"
