@@ -2,8 +2,8 @@
 
 namespace Chess.Model.Actions
 {
-    public sealed class UpdateAvailableMovesAction: IAction
+    public sealed class NextPlayerAction: IAction
     {
-        public Color ActivePlayer { get; set; }
+        public Color CurrentColor { get; set; }
     }
 }
