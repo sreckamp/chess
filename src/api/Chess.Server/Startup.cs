@@ -40,7 +40,7 @@ namespace Chess.Server
             });
 
             services.AddSignalR();
-            services.AddSingleton<IGameProviderService, MemoryGameProviderService>();
+            services.AddSingleton<IGameProviderService, FileGameProviderService>();
             services.AddSingleton<IGameTranslator, GameTranslator>();
         }
 
