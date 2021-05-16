@@ -13,8 +13,7 @@ namespace Chess.Server.Services
         private static int s_gameId = 10000;
         private static readonly IList<Game> Games;
 
-        static MemoryGameProviderService()
-        {
+        static MemoryGameProviderService() =>
             Games = new List<Game>
             {
                 new Game
@@ -22,12 +21,12 @@ namespace Chess.Server.Services
                     Id = 1,
                     Name = "Knight Test",
                     Store = Evaluator.Instance.Init(Version.FourPlayer, new GameBoard(5, 0)
-                        {
-                            [1, 0] = new Piece( PieceType.Knight, Color.Silver, Direction.West ),
-                            [3, 0] = new Piece( PieceType.Knight, Color.White, Direction.South ),
-                            [1, 4] = new Piece( PieceType.Knight, Color.Black, Direction.North ),
-                            [3, 4] = new Piece( PieceType.Knight, Color.Gold, Direction.East )
-                        })
+                    {
+                        [1, 0] = new Piece( PieceType.Knight, Color.Silver, Direction.West ),
+                        [3, 0] = new Piece( PieceType.Knight, Color.White, Direction.South ),
+                        [1, 4] = new Piece( PieceType.Knight, Color.Black, Direction.North ),
+                        [3, 4] = new Piece( PieceType.Knight, Color.Gold, Direction.East )
+                    })
                 },
                 new Game
                 {
@@ -53,7 +52,6 @@ namespace Chess.Server.Services
                     })
                 }
             };
-        }
 
         public GameStore GetGame(int id)
         {
