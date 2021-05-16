@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Chess.Model;
 using Chess.Model.Models;
 using Chess.Model.Stores;
@@ -31,7 +32,7 @@ namespace Chess.Server.Services
                 new Game
                 {
                     Id = 2,
-                    Name = "Knight Test",
+                    Name = "Pin Test",
                     Store = Evaluator.Instance.Init(Version.FourPlayer, new GameBoard(5, 0)
                     {
                         [2, 0] = new Piece(PieceType.King, Color.White, Direction.South),
@@ -43,7 +44,7 @@ namespace Chess.Server.Services
                 new Game
                 {
                     Id = 3,
-                    Name = "Knight Test",
+                    Name = "King In Check Twice",
                     Store = Evaluator.Instance.Init(Version.TwoPlayer, new GameBoard(5, 0)
                     {
                         [2, 4] = new Piece(PieceType.Queen, Color.Black, Direction.North),
@@ -53,37 +54,39 @@ namespace Chess.Server.Services
                 }
             };
 
-        public GameStore GetGame(int id)
+        public Task<GameStore> GetGame(int id)
         {
             lock (Games)
             {
-                return Games.FirstOrDefault(game => game.Id == id)?.Store;
+                return Task.FromResult(Games.FirstOrDefault(game => game.Id == id)?.Store);
             }
         }
 
-        public void Update(int id, GameStore store)
+        public Task Update(int id, GameStore store)
         {
-            if(store == default) return;
+            if(store == default) return Task.CompletedTask;
 
             lock (Games)
             {
                 var thisGame = Games.FirstOrDefault(g => g.Id == id);
 
-                if (thisGame == default) return;
+                if (thisGame == default) return Task.CompletedTask;
 
                 thisGame.Store = store;
+
+                return Task.CompletedTask;
             }
         }
 
-        public IEnumerable<Game> ListGames()
+        public Task<IEnumerable<Game>> ListGames()
         {
             lock (Games)
             {
-                return Games;
+                return Task.FromResult(Games as IEnumerable<Game>);
             }
         }
 
-        public int CreateGame(Version version, string name)
+        public Task<int> CreateGame(Version version, string name)
         {
             lock (Games)
             {
@@ -96,7 +99,7 @@ namespace Chess.Server.Services
 
                 Games.Add(game);
 
-                return game.Id;
+                return Task.FromResult(game.Id);
             }
         }
     }

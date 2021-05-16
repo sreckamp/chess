@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Chess.Server.Model;
 using Chess.Server.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -19,24 +20,25 @@ namespace Chess.Server.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] GameSummary request)
+        public async Task<IActionResult> Create([FromBody] GameSummary request)
         {
-            var id = m_gameService.CreateGame(request.Players, request.Name);
+            var id = await m_gameService.CreateGame(request.Players, request.Name);
 
             return Created(Url.RouteUrl("GetGame", new { id }), null);
         }
 
         [HttpGet]
-        public IEnumerable<GameSummary> ListGame() => m_gameService.ListGames().Select(item => new GameSummary
-        {
-            Id = item.Id,
-            Players = item.Store.Version
-        });
+        public async Task<IEnumerable<GameSummary>> ListGame() => (await m_gameService.ListGames())
+            .Select(item => new GameSummary
+                {
+                    Id = item.Id,
+                    Players = item.Store.Version
+                });
 
         [HttpGet("{id:int}", Name = "GetGame")]
-        public ActionResult<GameState> GetGame(int id)
+        public async Task<ActionResult<GameState>> GetGame(int id)
         {
-            var game = m_gameService.GetGame(id);
+            var game = await m_gameService.GetGame(id);
 
             if (game == null)
             {

@@ -28,9 +28,9 @@ namespace Chess.Server.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Location>> GetMoves(int gameId, int x, int y)
+        public async Task<ActionResult<IEnumerable<Location>>> GetMoves(int gameId, int x, int y)
         {
-            var store = m_gameService.GetGame(gameId);
+            var store = await m_gameService.GetGame(gameId);
 
             if (store == null)
             {
@@ -54,7 +54,7 @@ namespace Chess.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<GameState>> PostMove(int gameId, [FromBody] Move m)
         {
-            var store = m_gameService.GetGame(gameId);
+            var store = await m_gameService.GetGame(gameId);
 
             if (store == null)
             {
@@ -68,7 +68,7 @@ namespace Chess.Server.Controllers
                 return BadRequest($"{m} is not a valid move.");
             }
 
-            m_gameService.Update(gameId, store);
+            await m_gameService.Update(gameId, newState);
             await m_hubContext.Clients.All.GameUpdated(new GameUpdateMessage {Id = gameId});
 
             return m_translator.FromModel(gameId, newState);
