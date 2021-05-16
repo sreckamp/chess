@@ -21,7 +21,7 @@ namespace Chess.Server.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] GameSummary request)
         {
-            var id = m_gameService.CreateGame(request.Players);
+            var id = m_gameService.CreateGame(request.Players, request.Name);
 
             return Created(Url.RouteUrl("GetGame", new { id }), null);
         }
@@ -29,8 +29,8 @@ namespace Chess.Server.Controllers
         [HttpGet]
         public IEnumerable<GameSummary> ListGame() => m_gameService.ListGames().Select(item => new GameSummary
         {
-            Id = item.Item1,
-            Players = item.Item2.Version
+            Id = item.Id,
+            Players = item.Store.Version
         });
 
         [HttpGet("{id:int}", Name = "GetGame")]

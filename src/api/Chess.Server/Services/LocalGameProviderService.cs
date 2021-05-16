@@ -3,57 +3,103 @@ using System.Linq;
 using Chess.Model;
 using Chess.Model.Models;
 using Chess.Model.Stores;
-using Chess.Server.Model;
+using Chess.Server.Services.Model;
 using Piece = Chess.Model.Models.Piece;
 
 namespace Chess.Server.Services
 {
-    public class LocalGameProviderService : IGameProviderService
+    public class MemoryGameProviderService : IGameProviderService
     {
-        private static int _gameId = 10000;
-        private static readonly Dictionary<int, GameStore> GameStores = new Dictionary<int, GameStore>();
+        private static int s_gameId = 10000;
+        private static readonly IList<Game> Games;
 
-        static LocalGameProviderService()
+        static MemoryGameProviderService()
         {
-            GameStores[1] = Evaluator.Instance.Init(Version.FourPlayer, new GameBoard(5, 0)
+            Games = new List<Game>
             {
-                [1, 0] = new Piece( PieceType.Knight, Color.Silver, Direction.West ),
-                [3, 0] = new Piece( PieceType.Knight, Color.White, Direction.South ),
-                [1, 4] = new Piece( PieceType.Knight, Color.Black, Direction.North ),
-                [3, 4] = new Piece( PieceType.Knight, Color.Gold, Direction.East )
-            });
-            GameStores[2] = Evaluator.Instance.Init(Version.FourPlayer, new GameBoard(5, 0)
-            {
-                [2, 0] = new Piece(PieceType.King, Color.White, Direction.South),
-                [2, 1] = new Piece(PieceType.Knight, Color.White, Direction.South),
-                [2, 4] = new Piece(PieceType.Queen, Color.Black, Direction.North),
-                [0, 2] = new Piece(PieceType.Queen, Color.Silver, Direction.West)
-            });
-            GameStores[3] = Evaluator.Instance.Init(Version.TwoPlayer, new GameBoard(5, 0)
-            {
-                [2, 4] = new Piece(PieceType.Queen, Color.Black, Direction.North),
-                [3, 4] = new Piece(PieceType.Pawn, Color.Black, Direction.North),
-                [2, 3] = new Piece(PieceType.King, Color.White, Direction.South)
-            });
+                new Game
+                {
+                    Id = 1,
+                    Name = "Knight Test",
+                    Store = Evaluator.Instance.Init(Version.FourPlayer, new GameBoard(5, 0)
+                        {
+                            [1, 0] = new Piece( PieceType.Knight, Color.Silver, Direction.West ),
+                            [3, 0] = new Piece( PieceType.Knight, Color.White, Direction.South ),
+                            [1, 4] = new Piece( PieceType.Knight, Color.Black, Direction.North ),
+                            [3, 4] = new Piece( PieceType.Knight, Color.Gold, Direction.East )
+                        })
+                },
+                new Game
+                {
+                    Id = 2,
+                    Name = "Knight Test",
+                    Store = Evaluator.Instance.Init(Version.FourPlayer, new GameBoard(5, 0)
+                    {
+                        [2, 0] = new Piece(PieceType.King, Color.White, Direction.South),
+                        [2, 1] = new Piece(PieceType.Knight, Color.White, Direction.South),
+                        [2, 4] = new Piece(PieceType.Queen, Color.Black, Direction.North),
+                        [0, 2] = new Piece(PieceType.Queen, Color.Silver, Direction.West)
+                    })
+                },
+                new Game
+                {
+                    Id = 3,
+                    Name = "Knight Test",
+                    Store = Evaluator.Instance.Init(Version.TwoPlayer, new GameBoard(5, 0)
+                    {
+                        [2, 4] = new Piece(PieceType.Queen, Color.Black, Direction.North),
+                        [3, 4] = new Piece(PieceType.Pawn, Color.Black, Direction.North),
+                        [2, 3] = new Piece(PieceType.King, Color.White, Direction.South)
+                    })
+                }
+            };
         }
 
-        public GameStore GetGame(int id) => GameStores.ContainsKey(id) ? GameStores[id] : null;
-
-        public void Update(int id, GameStore game)
+        public GameStore GetGame(int id)
         {
-            GameStores[id] = game;
+            lock (Games)
+            {
+                return Games.FirstOrDefault(game => game.Id == id)?.Store;
+            }
         }
 
-        public IEnumerable<(int, GameStore)> ListGames() => GameStores.Select(pair => (pair.Key, pair.Value));
-
-        public int CreateGame(Version version)
+        public void Update(int id, GameStore store)
         {
-            var id = _gameId;
-            _gameId++;
-            var g = Evaluator.Instance.Init(version);
-            Update(id, g);
+            if(store == default) return;
 
-            return id;
+            lock (Games)
+            {
+                var thisGame = Games.FirstOrDefault(g => g.Id == id);
+
+                if (thisGame == default) return;
+
+                thisGame.Store = store;
+            }
+        }
+
+        public IEnumerable<Game> ListGames()
+        {
+            lock (Games)
+            {
+                return Games;
+            }
+        }
+
+        public int CreateGame(Version version, string name)
+        {
+            lock (Games)
+            {
+                var game = new Game
+                {
+                    Id = s_gameId++,
+                    Name = name,
+                    Store = Evaluator.Instance.Init(version)
+                };
+
+                Games.Add(game);
+
+                return game.Id;
+            }
         }
     }
 }

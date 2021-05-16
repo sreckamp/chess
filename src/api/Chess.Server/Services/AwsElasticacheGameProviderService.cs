@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Chess.Model.Models;
 using Chess.Model.Stores;
+using Chess.Server.Services.Model;
 
 namespace Chess.Server.Services
 {
@@ -11,12 +12,12 @@ namespace Chess.Server.Services
             throw new System.NotImplementedException();
         }
 
-        public IEnumerable<(int, GameStore)> ListGames()
+        public IEnumerable<Game> ListGames()
         {
             throw new System.NotImplementedException();
         }
 
-        public int CreateGame(Version version)
+        public int CreateGame(Version version, string name)
         {
             throw new System.NotImplementedException();
         }

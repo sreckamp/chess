@@ -30,45 +30,45 @@ namespace Chess.Server.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Location>> GetMoves(int gameId, int x, int y)
         {
-            var game = m_gameService.GetGame(gameId);
+            var store = m_gameService.GetGame(gameId);
 
-            if (game == null)
+            if (store == null)
             {
                 return NotFound($"Game {gameId} does not exist.");
             }
 
-            if (!game.Board.IsOnBoard(x, y))
+            if (!store.Board.IsOnBoard(x, y))
             {
                 return BadRequest($"({x}, {y}) is not on the board.");
             }
 
-            if (game.Markings.KingLocations.Count == 1)
+            if (store.Markings.KingLocations.Count == 1)
             {
                 return NoContent();
             }
 
-            return game.Markings
+            return store.Markings
                 .GetMarkers<MoveMarker>(new Point(x,y)).Select(move => (Location)move.Move.To).ToList();
         }
 
         [HttpPost]
         public async Task<ActionResult<GameState>> PostMove(int gameId, [FromBody] Move m)
         {
-            var game = m_gameService.GetGame(gameId);
+            var store = m_gameService.GetGame(gameId);
 
-            if (game == null)
+            if (store == null)
             {
                 return NotFound($"Game {gameId} does not exist.");
             }
 
-            var newState = Evaluator.Instance.Move(game, m.From, m.To);
+            var newState = Evaluator.Instance.Move(store, m.From, m.To);
 
-            if (newState == game)
+            if (newState == store)
             {
                 return BadRequest($"{m} is not a valid move.");
             }
 
-            m_gameService.Update(gameId, newState);
+            m_gameService.Update(gameId, store);
             await m_hubContext.Clients.All.GameUpdated(new GameUpdateMessage {Id = gameId});
 
             return m_translator.FromModel(gameId, newState);
