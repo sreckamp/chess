@@ -54,27 +54,25 @@ namespace Chess.Server.Services
                 }
             };
 
-        public Task<GameStore> GetGame(int id)
+        public Task<Game> GetGame(int id)
         {
             lock (Games)
             {
-                return Task.FromResult(Games.FirstOrDefault(game => game.Id == id)?.Store);
+                return Task.FromResult(Games.FirstOrDefault(game => game.Id == id));
             }
         }
 
-        public Task Update(int id, GameStore store)
+        public Task<Game> UpdateStore(int id, GameStore store)
         {
-            if(store == default) return Task.CompletedTask;
-
             lock (Games)
             {
-                var thisGame = Games.FirstOrDefault(g => g.Id == id);
+                var game = Games.FirstOrDefault(g => g.Id == id);
 
-                if (thisGame == default) return Task.CompletedTask;
+                if(store == default || game == default) return Task.FromResult(game);
 
-                thisGame.Store = store;
+                game.Store = store;
 
-                return Task.CompletedTask;
+                return Task.FromResult(game);
             }
         }
 

@@ -1,8 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Chess.Model.Evaluation.Models;
+using Chess.Model.Extensions;
 using Chess.Model.Models;
 using Chess.Model.Stores;
+using Chess.Server.Services.Model;
 using Version = Chess.Model.Models.Version;
 using ModelPiece = Chess.Model.Models.Piece;
 
@@ -10,42 +11,36 @@ namespace Chess.Server.Model
 {
     public class GameTranslator: IGameTranslator
     {
-        private static Color ToColor(string name)
-        {
-            name = char.ToUpper(name[0]) + name[1..];
-            return Enum.Parse<Color>(name);
-        }
-
-        private static PieceType ToPieceType(string name)
-        {
-            name = char.ToUpper(name[0]) + name[1..];
-            return Enum.Parse<PieceType>(name);
-        }
-
         /// <inheritdoc/>
-        public (int, GameStore) ToModel(GameState state)
+        public Game ToModel(GameState state)
         {
-            var store = new GameStore
-            {
-                Board = BoardFactory.Instance.CreateEmpty(state.Size > 8 ? Version.FourPlayer : Version.TwoPlayer),
-                Markings = new MarkingStore(),
-                Version = state.Size > 8 ? Version.FourPlayer : Version.TwoPlayer,
-                CurrentColor = ToColor(state.CurrentPlayer)
-            };
-
+            var builder = new BoardBuilder()
+                .SetSize(state.Size)
+                .SetCorners(state.Corners);
+            
             foreach (var piece in state.Pieces)
             {
-                var color = ToColor(piece.Color);
-                var edge = BoardFactory.Instance.DirectionFromColor(color);
-                store.Board[piece.Location.X, piece.Location.Y] = new ModelPiece(ToPieceType(piece.Type), color, edge);
+                builder.AddPiece(piece.Location.X, piece.Location.Y, piece.Color.ToColor(), piece.Type.ToPieceType());
             }
-            return (state.GameId, store);
+
+            return new Game
+            {
+                Id = state.GameId,
+                Name = state.Name,
+                Store = new GameStore
+                {
+                    Board = builder.Build(),
+                    Markings = new MarkingStore(),
+                    Version = state.Size > 8 ? Version.FourPlayer : Version.TwoPlayer,
+                    CurrentColor = state.CurrentPlayer.ToColor()
+                }
+            };
         }
 
         /// <inheritdoc/>
-        public GameState FromModel(int id, GameStore store, bool includeMoves)
+        public GameState FromModel(Game game, bool includeMoves)
         {
-            var markers = store.Board.SelectMany(square => store.Markings
+            var markers = game.Store.Board.SelectMany(square => game.Store.Markings
                     .GetMarkers<IDirectionalMarker>(square.Item1)
                     .Where(marker => includeMoves || marker.Type != MarkerType.Move)
                     .Select(marker => (marker is MoveMarker move ? move.Move.To : square.Item1, marker)))
@@ -54,13 +49,13 @@ namespace Chess.Server.Model
                  
             return new GameState
             {
-                GameId = id,
-                Name = $"Game {id}",
+                GameId = game.Id,
+                Name = game.Name,
 
-                CurrentPlayer = store.CurrentColor.ToString(),
+                CurrentPlayer = game.Store.CurrentColor.ToString(),
 
-                Pieces = store.Board.Where(square => !square.Item2.IsEmpty
-                                                     || markers.ContainsKey(square.Item1) && markers[square.Item1].Any()).Select(
+                Pieces = game.Store.Board.Where(square => !square.Item2.IsEmpty
+                                                          || markers.ContainsKey(square.Item1) && markers[square.Item1].Any()).Select(
                     square => new Piece
                         {
                             Location = new Location
@@ -74,8 +69,8 @@ namespace Chess.Server.Model
                                             new Marker
                                             {
                                                 Type = marker.Type.ToString().ToLower(),
-                                                SourceColor = store.Board[marker.Source].Color.ToString().ToLower(),
-                                                SourceType = store.Board[marker.Source].Type.ToString().ToLower(),
+                                                SourceColor = game.Store.Board[marker.Source].Color.ToString().ToLower(),
+                                                SourceType = game.Store.Board[marker.Source].Type.ToString().ToLower(),
                                                 Direction = marker.Direction.ToString().ToLower()
                                             })
                                         : Enumerable.Empty<Marker>()
@@ -85,8 +80,8 @@ namespace Chess.Server.Model
                             Type = square.Item2.Type.ToString().ToLower(),
                         }),
 
-                Corners = store.Board.Corners,
-                Size = store.Board.Size
+                Corners = game.Store.Board.Corners,
+                Size = game.Store.Board.Size
             };
         }
     }

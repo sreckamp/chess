@@ -10,6 +10,8 @@ namespace Chess.Model.Models
     /// </summary>
     public sealed class BoardFactory
     {
+        private static readonly IEnumerable<Color> SKingFlips = new[] {Color.White, Color.Gold};
+
         private static class Lazy
         {
             public static readonly BoardFactory BoardFactory = new BoardFactory();
@@ -21,79 +23,34 @@ namespace Chess.Model.Models
         {
             var template = Templates[version];
 
-            var board = new GameBoard(template.BoardSize, template.CornerSize);
+            var builder = new BoardBuilder()
+                .SetSize(template.BoardSize)
+                .SetCorners(template.CornerSize);
 
             foreach (var color in template.Colors.Where(color => color != Color.None))
-                PopulateColor(board, color, template.CornerSize, template.KingOnLeft);
+                PopulateColor(builder, color, template.KingOnLeft);
 
-            return board;
+            return builder.Build();
         }
 
-        public GameBoard CreateEmpty(Version version)
+        private static readonly PieceType[] SPower = new[]
         {
-            var template = Templates[version];
-            var board = new GameBoard(template.BoardSize, template.CornerSize);
+            PieceType.Rook, PieceType.Knight, PieceType.Bishop, PieceType.Queen,
+            PieceType.King, PieceType.Bishop, PieceType.Knight, PieceType.Rook
+        };
 
-            return board;
-        }
-
-        private static readonly Direction[] SKingFlips = new[] {Direction.South, Direction.East};
-        private static readonly Direction[] SOpposite = new[] {Direction.North, Direction.East};
-        private void PopulateColor(GameBoard board, Color color, int cornerSize, bool kingOnLeft)
+        private static void PopulateColor(BoardBuilder builder, Color color, bool kingOnLeft)
         {
-            var side = m_sides.First(s => s.Color == color);
-
-            var pieceFile = side.Edge.IsMember(SOpposite) ? board.Size - 1 : 0;
-            var pawnFile = side.Edge.IsMember(SOpposite) ? board.Size - 2 : 1;
-            var kingFile = side.Edge.IsMember(SKingFlips) && kingOnLeft ? 3 : 4;
-
-            for (var idx = 0; idx < 8; idx++)
+            for (var idx = 0; idx < SPower.Length; idx++)
             {
-                var pawn = new Piece(PieceType.Pawn, color, side.Edge);
-                Piece piece;
+                var pieceIdx = kingOnLeft && SKingFlips.Contains(color) ? SPower.Length - 1 - idx : idx;
             
-                switch (idx)
-                {
-                    case 0:
-                    case 7:
-                        piece = new Piece(PieceType.Rook, color, side.Edge);
-                        break;
-                    case 1:
-                    case 6:
-                        piece = new Piece(PieceType.Knight, color, side.Edge);
-                        break;
-                    case 2:
-                    case 5:
-                        piece = new Piece(PieceType.Bishop, color, side.Edge);
-                        break;
-                    default:
-                        piece = new Piece(idx == kingFile ? PieceType.King : PieceType.Queen, color, side.Edge);
-                        break;
-                }
-            
-                var rank = idx + cornerSize;
-            
-                var x = side.Edge.IsNorthSouth() ? rank : pieceFile;
-                var y = side.Edge.IsNorthSouth() ? pieceFile : rank;
-            
-                board[x,y] = piece;
-            
-                x = side.Edge.IsNorthSouth() ? rank : pawnFile;
-                y = side.Edge.IsNorthSouth() ? pawnFile : rank;
-            
-                board[x,y] = pawn;
+                builder.AddPieceRelativeToEdge(idx, 0, color, SPower[pieceIdx]);
+                builder.AddPieceRelativeToEdge(idx, 1, color, PieceType.Pawn);
             }
         }
 
-        private readonly IEnumerable<Side> m_sides = new List<Side>
-        {
-            new Side{ Color = Color.White, Edge = Direction.South},
-            new Side{ Color = Color.Black, Edge = Direction.North},
-            new Side{ Color = Color.Silver, Edge = Direction.West},
-            new Side{ Color = Color.Gold, Edge = Direction.East},
-        };
-
-        internal static readonly Dictionary<Version, Template> Templates = new Dictionary<Version, Template>
+        private static readonly Dictionary<Version, Template> Templates = new Dictionary<Version, Template>
         {
             {Version.None, new Template
             {
@@ -116,17 +73,12 @@ namespace Chess.Model.Models
             }
         };
 
-        internal class Template
+        private class Template
         {
             public IEnumerable<Color> Colors;
             public int CornerSize;
             public int BoardSize;
             public bool KingOnLeft => CornerSize > 0;
-        }
-
-        public Direction DirectionFromColor(Color color)
-        {
-            return m_sides.First(side => side.Color == color).Edge;
         }
     }
 }

@@ -8,9 +8,9 @@ namespace Chess.Server.Services
 {
     public interface IGameProviderService
     {
-        Task<GameStore> GetGame(int id);
+        Task<Game> GetGame(int id);
         Task<IEnumerable<Game>> ListGames();
         Task<int> CreateGame(Version version, string name);
-        Task Update(int id, GameStore store);
+        Task<Game> UpdateStore(int id, GameStore store);
     }
 }

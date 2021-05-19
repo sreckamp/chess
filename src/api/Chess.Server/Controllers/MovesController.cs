@@ -30,48 +30,48 @@ namespace Chess.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Location>>> GetMoves(int gameId, int x, int y)
         {
-            var store = await m_gameService.GetGame(gameId);
+            var game = await m_gameService.GetGame(gameId);
 
-            if (store == null)
+            if (game == null)
             {
                 return NotFound($"Game {gameId} does not exist.");
             }
 
-            if (!store.Board.IsOnBoard(x, y))
+            if (!game.Store.Board.IsOnBoard(x, y))
             {
                 return BadRequest($"({x}, {y}) is not on the board.");
             }
 
-            if (store.Markings.KingLocations.Count == 1)
+            if (game.Store.Markings.KingLocations.Count == 1)
             {
                 return NoContent();
             }
 
-            return store.Markings
+            return game.Store.Markings
                 .GetMarkers<MoveMarker>(new Point(x,y)).Select(move => (Location)move.Move.To).ToList();
         }
 
         [HttpPost]
         public async Task<ActionResult<GameState>> PostMove(int gameId, [FromBody] Move m)
         {
-            var store = await m_gameService.GetGame(gameId);
+            var game = await m_gameService.GetGame(gameId);
 
-            if (store == null)
+            if (game == null)
             {
                 return NotFound($"Game {gameId} does not exist.");
             }
 
-            var newState = Evaluator.Instance.Move(store, m.From, m.To);
+            var newStore = Evaluator.Instance.Move(game.Store, m.From, m.To);
 
-            if (newState == store)
+            if (newStore == game.Store)
             {
                 return BadRequest($"{m} is not a valid move.");
             }
 
-            await m_gameService.Update(gameId, newState);
+            var result = await m_gameService.UpdateStore(game.Id, newStore);
             await m_hubContext.Clients.All.GameUpdated(new GameUpdateMessage {Id = gameId});
 
-            return m_translator.FromModel(gameId, newState);
+            return m_translator.FromModel(result);
         }
     }
 }

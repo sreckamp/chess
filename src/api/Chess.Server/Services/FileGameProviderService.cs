@@ -24,28 +24,23 @@ namespace Chess.Server.Services
             }
         }
 
-        public async Task<GameStore> GetGame(int id)
+        public async Task<Game> GetGame(int id) => await ReadGame(id);
+
+        public async Task<Game> UpdateStore(int id, GameStore store)
         {
-            return (await ReadGame(id))?.Store;
+            var game = await GetGame(id);
+
+            if(store == default || game == default) return game;
+
+            game.Store = store;
+
+            await WriteGame(game);
+
+            return game;
         }
 
-        public async Task Update(int id, GameStore store)
-        {
-            if(store == default) return;
-            
-            var thisGame = await ReadGame(id);
-        
-            if (thisGame == default) return;
-        
-            thisGame.Store = store;
-
-            await WriteGame(thisGame);
-        }
-
-        public async Task<IEnumerable<Game>> ListGames()
-        {
-            return await Task.WhenAll(ListGameIds().Select(async id => await ReadGame(id)));
-        }
+        public async Task<IEnumerable<Game>> ListGames() =>
+            await Task.WhenAll(ListGameIds().Select(async id => await ReadGame(id)));
 
         public async Task<int> CreateGame(Version version, string name)
         {
@@ -75,7 +70,7 @@ namespace Chess.Server.Services
 
         private static IEnumerable<int> ListGameIds() =>
             Directory.GetFiles(GamePath.Length > 0 ? GamePath : ".", "*.chess.json")
-                .Select(path => Regex.Match(path, @"(?:[^\]+\\)?([0-9]+)\.chess\.json"))
+                .Select(path => Regex.Match(path, @"\\([0-9]+)\.chess\.json"))
                 .Where(match => match.Success)
                 .Select(match => int.Parse(match.Groups[1].Value));
 
@@ -90,14 +85,12 @@ namespace Chess.Server.Services
 
         private static async Task WriteGame(Game game)
         {
-            await using var stream = File.OpenWrite(GeneratePath(game.Id));
+            await using var stream = File.Create(GeneratePath(game.Id));
             await JsonSerializer.SerializeAsync(stream, game.ToStorage());
         }
 
-        private static string GeneratePath(int id)
-        {
-            return $"{(GamePath.Length > 0 ? $"{GamePath}\\" : "")}{id}.chess.json";
-        }
+        private static string GeneratePath(int id) =>
+            $"{(GamePath.Length > 0 ? $"{GamePath}\\" : "")}{id}.chess.json";
         
         private static int GetNextId()
         {

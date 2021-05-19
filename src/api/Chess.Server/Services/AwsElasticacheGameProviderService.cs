@@ -8,7 +8,7 @@ namespace Chess.Server.Services
 {
     public class AwsElasticacheGameProviderService : IGameProviderService
     {
-        public Task<GameStore> GetGame(int id)
+        public Task<Game> GetGame(int id)
         {
             throw new System.NotImplementedException();
         }
@@ -23,7 +23,7 @@ namespace Chess.Server.Services
             throw new System.NotImplementedException();
         }
         
-        public Task Update(int id, GameStore store)
+        public Task<Game> UpdateStore(int id, GameStore game)
         {
             throw new System.NotImplementedException();
         }
