@@ -10,6 +10,11 @@ import { Marker } from '../model/marker';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../services/event/event.service';
 
+/**
+ * https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
+ * https://www.npmjs.com/package/angular-page-visibility
+ * https://stackoverflow.com/questions/46751656/using-visibility-api-in-angular
+ */
 @Component({
     selector: 'app-game',
     templateUrl: './game.component.html',
