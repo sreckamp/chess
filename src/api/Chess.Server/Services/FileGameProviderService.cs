@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Chess.Model.Models;
+using Chess.Model;
 using Chess.Model.Stores;
 using Chess.Server.Services.Model;
 using Version = Chess.Model.Models.Version;
@@ -13,53 +13,66 @@ namespace Chess.Server.Services
 {
     public class FileGameProviderService : IGameProviderService
     {
-        private const string GAME_PATH = "game";
-        public async Task<GameStore> GetGame(int id)
+        private const int MinGameId = 10000;
+        private const string GamePath = "games";
+
+        static FileGameProviderService()
         {
-            return (await ReadGame(id))?.Store;
+            if (GamePath.Length > 0)
+            {
+                Directory.CreateDirectory(GamePath);
+            }
         }
 
-        public Task Update(int id, GameStore store)
+        public async Task<Game> GetGame(int id) => await ReadGame(id);
+
+        public async Task<Game> UpdateStore(int id, GameStore store)
         {
-            throw new NotImplementedException();
-            // if(store == default) return;
-            //
-            // lock (Games)
-            // {
-            //     var thisGame = Games.FirstOrDefault(g => g.Id == id);
-            //
-            //     if (thisGame == default) return;
-            //
-            //     thisGame.Store = store;
-            // }
+            var game = await GetGame(id);
+
+            if(store == default || game == default) return game;
+
+            game.Store = store;
+
+            await WriteGame(game);
+
+            return game;
         }
 
-        public Task<IEnumerable<Game>> ListGames()
+        public async Task<IEnumerable<Game>> ListGames() =>
+            await Task.WhenAll(ListGameIds().Select(async id => await ReadGame(id)));
+
+        public async Task<int> CreateGame(Version version, string name)
         {
-            throw new NotImplementedException();
-            // lock (Games)
-            // {
-            //     return Games;
-            // }
+            var game = new Game
+            {
+                Id = GetNextId(),
+                Name = name,
+                Store = Evaluator.Instance.Init(version)
+            };
+
+            var success = false;
+            do
+            {
+                try
+                {
+                    await WriteGame(game);
+                    success = true;
+                }
+                catch (IOException)
+                {
+                    game.Id++;
+                }
+            } while (!success);
+
+            return game.Id;
         }
 
-        public Task<int> CreateGame(Version version, string name)
-        {
-            throw new NotImplementedException();
-            // lock (Games)
-            // {
-            //     var game = new Game
-            //     {
-            //         Id = s_gameId++,
-            //         Name = name,
-            //         Store = Evaluator.Instance.Init(version)
-            //     };
-            //
-            //     Games.Add(game);
-            //
-            //     return game.Id;
-            // }
-        }
+        private static IEnumerable<int> ListGameIds() =>
+            Directory.GetFiles(GamePath.Length > 0 ? GamePath : ".", "*.chess.json")
+                .Select(path => Regex.Match(path, @"\\([0-9]+)\.chess\.json"))
+                .Where(match => match.Success)
+                .Select(match => int.Parse(match.Groups[1].Value));
 
         private static async Task<Game> ReadGame(int gameId)
         {
@@ -67,28 +80,27 @@ namespace Chess.Server.Services
 
             if (!File.Exists(path)) return default;
             await using var stream = File.OpenRead(path);
-            return await JsonSerializer.DeserializeAsync<Game>(stream);
-
+            return (await JsonSerializer.DeserializeAsync<GameFile>(stream)).ToModel();
         }
 
         private static async Task WriteGame(Game game)
         {
-            var path = GeneratePath(game.Id);
-            if (File.Exists(path))
-            {
-                await using var stream = File.OpenWrite(path);
-                await JsonSerializer.SerializeAsync(stream, game);
-            }
-            
+            await using var stream = File.Create(GeneratePath(game.Id));
+            await JsonSerializer.SerializeAsync(stream, game.ToStorage());
         }
 
-        private static string GeneratePath(int id)
+        private static string GeneratePath(int id) =>
+            $"{(GamePath.Length > 0 ? $"{GamePath}\\" : "")}{id}.chess.json";
+        
+        private static int GetNextId()
         {
-            if (GAME_PATH.Length > 0)
+            var maxId = ListGameIds().Append(MinGameId).Max();
+            while (File.Exists(GeneratePath(maxId)))
             {
-                Directory.CreateDirectory(GAME_PATH);
+                maxId++;
             }
-            return $"{(GAME_PATH.Length > 0 ? $"{GAME_PATH}\\" : "")}{id}.chess.json";
+
+            return maxId;
         }
     }
 }

@@ -4,10 +4,6 @@ namespace Chess.Server.Model
 {
     public class Location
     {
-        public Location()
-        {
-        }
-
         public int X { get; set; }
         public int Y { get; set; }
         

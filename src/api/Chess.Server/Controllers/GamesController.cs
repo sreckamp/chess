@@ -45,7 +45,7 @@ namespace Chess.Server.Controllers
                 return BadRequest();
             }
 
-            return m_translator.FromModel(id, game);
+            return m_translator.FromModel(game);
         }
     }
 }

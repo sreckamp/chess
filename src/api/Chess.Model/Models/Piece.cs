@@ -1,4 +1,6 @@
-﻿namespace Chess.Model.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Chess.Model.Models
 {
     public struct Piece
     {
@@ -16,6 +18,7 @@
 
         public Direction Edge { get; }
 
+        [JsonIgnore]
         public bool IsEmpty => Type == PieceType.Empty;
 
         public bool HasMoved { get; private set; }

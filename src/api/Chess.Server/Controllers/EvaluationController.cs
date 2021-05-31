@@ -17,8 +17,9 @@ namespace Chess.Server.Controllers
         [HttpPost]
         public GameState EvaluateBoard([FromBody] GameState state)
         {
-            var (id, store) = m_translator.ToModel(state);
-            return m_translator.FromModel(id, Evaluator.Instance.Evaluate(store), true);
+            var game = m_translator.ToModel(state);
+            game.Store = Evaluator.Instance.Evaluate(game.Store);
+            return m_translator.FromModel(game, true);
         }
     }
 }

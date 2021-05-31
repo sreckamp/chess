@@ -1,11 +1,11 @@
-﻿using Chess.Model.Stores;
+﻿using Chess.Server.Services.Model;
 
 namespace Chess.Server.Model
 {
     public interface IGameTranslator
     {
-        GameState FromModel(int id, GameStore store, bool includeMoves = false);
+        GameState FromModel(Game game, bool includeMoves = false);
 
-        (int, GameStore) ToModel(GameState state);
+        Game ToModel(GameState state);
     }
 }
