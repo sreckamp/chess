@@ -9,6 +9,8 @@ import { Game } from '../model/game';
 import { Marker } from '../model/marker';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../services/event/event.service';
+import { OnPageVisible, OnPageHidden } from 'angular-page-visibility';
+import { TitleBlinkerService } from '../services/title.blinker/title.blinker.service';
 
 /**
  * https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
@@ -18,7 +20,8 @@ import { EventService } from '../services/event/event.service';
 @Component({
     selector: 'app-game',
     templateUrl: './game.component.html',
-    styleUrls: ['./game.component.css']
+    styleUrls: ['./game.component.css'],
+    providers: [TitleBlinkerService]
 })
 export class GameComponent implements OnInit {
     private _game = {
@@ -62,7 +65,8 @@ export class GameComponent implements OnInit {
     constructor(private _service: ChessService,
                 private _translator: GameTranslationService,
                 private _route: ActivatedRoute,
-                private _events: EventService) {
+                private _events: EventService,
+                private _blinker: TitleBlinkerService) {
         this.rotationKeys = Object.keys(this.rotations);
     }
 
@@ -70,6 +74,16 @@ export class GameComponent implements OnInit {
         this._game.id = +this._route.snapshot.params.id;
         this.get(this._game.id);
         this._events.onGameUpdated(this._game.id, id => this.get(id));
+    }
+
+    @OnPageVisible()
+    logWhenPageVisible (): void {
+        this._blinker.stopBlink();
+    }
+
+    @OnPageHidden()
+    logWhenPageHidden (): void {
+        this._blinker.startBlink('Your turn!');
     }
 
     private get(id: number): void {
