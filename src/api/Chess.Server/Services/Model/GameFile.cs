@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Chess.Model.Models;
+using Chess.Server.Model;
 
 namespace Chess.Server.Services.Model
 {
@@ -21,5 +22,15 @@ namespace Chess.Server.Services.Model
         public string Color { get; set; }
         public string Piece { get; set; }
         public bool HasMoved { get; set; }
+        public IEnumerable<MarkerFile> Markers { get; set; }
+    }
+    
+    public class MarkerFile
+    {
+        public int SourceX { get; set; }
+        public int SourceY { get; set; }
+        public string Type { get; set; }
+        public string Color { get; set; }
+        public string Piece { get; set; }
     }
 }

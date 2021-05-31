@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using Chess.Model.Extensions;
 
 namespace Chess.Model.Models
 {
@@ -9,6 +10,7 @@ namespace Chess.Model.Models
 
         private static readonly Dictionary<Color, Direction> SDirectionForColor = new Dictionary<Color, Direction>
         {
+            {Color.None, Direction.None},
             {Color.White, Direction.South},
             {Color.Black, Direction.North},
             {Color.Silver, Direction.West},
@@ -51,15 +53,20 @@ namespace Chess.Model.Models
 
         public BoardBuilder AddPiece(int x, int y, Color color, PieceType type, bool hasMoved = false)
         {
+            m_placements[new Point(x, y)] = CreatePiece(color, type, hasMoved);
+            
+            return this;
+        }
+
+        public Piece CreatePiece(Color color, PieceType type, bool hasMoved = false)
+        {
             var piece = new Piece(type, color, SDirectionForColor[color]);
             if (hasMoved)
             {
                 piece.Moved();
             }
 
-            m_placements[new Point(x, y)] = piece;
-            
-            return this;
+            return piece;
         }
 
         public GameBoard Build()
