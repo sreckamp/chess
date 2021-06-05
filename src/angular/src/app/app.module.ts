@@ -23,6 +23,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatIconModule } from "@angular/material/icon";
 import {EventService} from "./services/event/event.service";
+import { LoginComponent } from './login/login.component';
+import { GameListComponent } from './game.list/game.list.component';
 
 const routes: Routes = [
     {path: '', redirectTo: '/welcome', pathMatch: 'full'},
@@ -39,7 +41,9 @@ const routes: Routes = [
         AnalysisComponent,
         EvaluatorComponent,
         GameComponent,
+        GameListComponent,
         TrayComponent,
+        LoginComponent,
         WelcomeComponent
     ],
     imports: [

@@ -1,0 +1,16 @@
+<div class="card-container">
+    <mat-card class="card" *ngFor="let game of games" (click)="joinGame(game.id)">
+        <mat-card-title>Game #{{game.id}}</mat-card-title>
+        <mat-card-subtitle>{{game.players === 2 ? 'Two' : 'Four'}}-Player Game</mat-card-subtitle>
+    </mat-card>
+
+    <mat-card class="card" (click)="newGame(2); $event.stopPropagation();">
+        <mat-card-title>New Game</mat-card-title>
+        <mat-card-subtitle>Two-Player Game</mat-card-subtitle>
+    </mat-card>
+
+    <mat-card class="card" (click)="newGame(4); $event.stopPropagation();">
+        <mat-card-title>New Game</mat-card-title>
+        <mat-card-subtitle>Four-Player Game</mat-card-subtitle>
+    </mat-card>
+</div>
