@@ -86,12 +86,9 @@ namespace Chess.Server.Services
                     return Color.None;
                 }
 
-                Console.WriteLine($"Adding: [{string.Join(',', map.AvailableColors)}]");
                 var color = map.AvailableColors[0];
                 map.AvailableColors.RemoveAt(0);
-                Console.WriteLine($"Added: [{string.Join(',', map.AvailableColors)}]");
                 map.Mapped[connectionId] = color;
-                Console.WriteLine($"{connectionId} => {color}");
                 return color;
             }
         }

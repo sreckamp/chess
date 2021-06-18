@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { Rotation } from '../model/rotation';
 import { Placement, Point } from '../model/placement';
 import { Piece } from '../model/piece';
-import {Color, parseColor} from '../model/color';
+import { Color, parseColor } from '../model/color';
 import { ChessService } from '../services/chess/chess.service';
 import { GameTranslationService } from '../services/game.translation.service';
 import { Game } from '../model/game';
 import { Marker } from '../model/marker';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../services/event/event.service';
-import { OnPageVisible } from 'angular-page-visibility';
+import { OnPageVisibilityChange } from 'angular-page-visibility';
 import { TitleBlinkerService } from '../services/title.blinker/title.blinker.service';
-import {switchMap, tap} from "rxjs/operators";
+import { switchMap, tap } from "rxjs/operators";
 
 /**
  * https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
@@ -25,6 +25,13 @@ import {switchMap, tap} from "rxjs/operators";
     providers: [TitleBlinkerService]
 })
 export class GameComponent implements OnInit {
+    private _rotationMap = {
+        none: Rotation.NONE,
+        white: Rotation.NONE,
+        silver: Rotation.COUNTERCLOCKWISE,
+        black: Rotation.UPSIDEDOWN,
+        gold: Rotation.CLOCKWISE
+    }
     private _game = {
         size: 8,
         corners: 0,
@@ -57,20 +64,16 @@ export class GameComponent implements OnInit {
     }
 
     rotation = Rotation.NONE;
-    rotations = Rotation;
     showMarkers = false;
-    rotationKeys = [];
     selected = new Point(-1, -1);
     highlighted = [];
     private _color = '';
-    private _defaultTitle = '';
 
     constructor(private _service: ChessService,
                 private _translator: GameTranslationService,
                 private _route: ActivatedRoute,
                 private _events: EventService,
                 private _blinker: TitleBlinkerService) {
-        this.rotationKeys = Object.keys(this.rotations);
     }
 
     ngOnInit(): void {
@@ -79,19 +82,24 @@ export class GameComponent implements OnInit {
         this._events.connect().pipe(
             tap(() => console.log('connectionId', this._events.connectionId)),
             switchMap(() => this._service.register(this._game.id, this._events.connectionId))
-        ).subscribe(value => {
-            console.log('register', value);
-            this._color = parseColor(value.color)
-            console.log('color', this._color);
-        });
+        ).subscribe(value => this.setColor(parseColor(value.color)));
 
         this._events.onGameUpdated(this._game.id, id => this.get(id));
         this._blinker.captureTitle();
     }
 
-    @OnPageVisible()
-    whenPageVisible (): void {
-        this._blinker.stopBlink();
+    @OnPageVisibilityChange()
+    whenPageVisibilityChanges (): void {
+        this.updateAlert();
+    }
+
+    private updateAlert(): void {
+        if (document.hidden && this._game.activeColor == this._color) {
+            this._blinker.startBlink('Your turn!');
+        }
+        else {
+            this._blinker.stopBlink();
+        }
     }
 
     private get(id: number): void {
@@ -99,14 +107,7 @@ export class GameComponent implements OnInit {
             this._service.get(id).subscribe(state => {
                 this._game = this._translator.fromApi(state);
                 this.config = [state.size, state.corners];
-                if (document.hidden) {
-                    if (this._game.activeColor == this._color) {
-                        this._blinker.startBlink('Your turn!');
-                    }
-                    else {
-                        this._blinker.stopBlink();
-                    }
-                }
+                this.updateAlert();
             });
         }
     }
@@ -134,7 +135,16 @@ export class GameComponent implements OnInit {
         }
     }
 
-    isSelectable = (x: number, y: number) => this.getPiece(new Point(x, y)).color === this._game.activeColor;
+    private setColor(color: Color): void {
+        this._color = color;
+        this.rotation = this._rotationMap[color];
+    }
+
+    isSelectable = (x: number, y: number) => {
+            const color = this.getPiece(new Point(x, y)).color
+            return color === this._game.activeColor &&
+                color === this._color;
+    }
 
     isOpponent = (piece: Piece) => piece.color !== Color.NONE && piece.color !== this._game.activeColor;
 

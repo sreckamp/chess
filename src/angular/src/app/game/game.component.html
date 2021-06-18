@@ -1,10 +1,4 @@
 <mat-card>
-    <mat-select [(ngModel)]="rotation" (click)="$event.stopPropagation();">
-        <mat-option *ngFor="let name of rotationKeys" [value]="rotations[name]">
-            {{name}}
-        </mat-option>
-    </mat-select>
-    <p></p>
     <mat-slide-toggle [(ngModel)]="showMarkers" (click)="$event.stopPropagation();">Show Analysis</mat-slide-toggle>
 </mat-card>
 <app-board [rotation]="rotation"
