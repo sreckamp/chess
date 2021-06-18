@@ -27,5 +27,10 @@ namespace Chess.Server.Services
         {
             throw new System.NotImplementedException();
         }
+
+        public Color ColorForConnectionId(int id, string mConnectionId)
+        {
+            return Color.None;
+        }
     }
 }

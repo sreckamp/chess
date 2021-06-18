@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Chess.Server.Controllers
 {
-    [Route("api/games/{gameId}/moves")]
+    [Route("api/games/{gameId:int}/moves")]
     public class MovesController : ControllerBase
     {
         private readonly IGameProviderService m_gameService;

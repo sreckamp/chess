@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Chess.Model;
+using Chess.Model.Models;
 using Chess.Model.Stores;
 using Chess.Server.Services.Model;
 using Version = Chess.Model.Models.Version;
@@ -15,6 +17,7 @@ namespace Chess.Server.Services
     {
         private const int MinGameId = 10000;
         private const string GamePath = "games";
+        private readonly Dictionary<int, ColorMap<string>> m_colorMap = new Dictionary<int, ColorMap<string>>();
 
         static FileGameProviderService()
         {
@@ -68,19 +71,53 @@ namespace Chess.Server.Services
             return game.Id;
         }
 
+        public Color ColorForConnectionId(int gameId, string connectionId)
+        {
+            var map = m_colorMap[gameId];
+            lock (map)
+            {
+                if (map.Mapped.ContainsKey(connectionId))
+                {
+                    return map.Mapped[connectionId];
+                }
+
+                if (map.IsFull)
+                {
+                    return Color.None;
+                }
+
+                Console.WriteLine($"Adding: [{string.Join(',', map.AvailableColors)}]");
+                var color = map.AvailableColors[0];
+                map.AvailableColors.RemoveAt(0);
+                Console.WriteLine($"Added: [{string.Join(',', map.AvailableColors)}]");
+                map.Mapped[connectionId] = color;
+                Console.WriteLine($"{connectionId} => {color}");
+                return color;
+            }
+        }
+
         private static IEnumerable<int> ListGameIds() =>
             Directory.GetFiles(GamePath.Length > 0 ? GamePath : ".", "*.chess.json")
                 .Select(path => Regex.Match(path, @"\\([0-9]+)\.chess\.json"))
                 .Where(match => match.Success)
                 .Select(match => int.Parse(match.Groups[1].Value));
 
-        private static async Task<Game> ReadGame(int gameId)
+        private async Task<Game> ReadGame(int gameId)
         {
             var path = GeneratePath(gameId);
 
             if (!File.Exists(path)) return default;
             await using var stream = File.OpenRead(path);
-            return (await JsonSerializer.DeserializeAsync<GameFile>(stream)).ToModel();
+            var game = (await JsonSerializer.DeserializeAsync<GameFile>(stream)).ToModel();
+            if (!m_colorMap.ContainsKey(gameId))
+            {
+                m_colorMap[gameId] = new ColorMap<string>
+                {
+                    AvailableColors = BoardFactory.GetAvailableColors(game.Store.Version)
+                        .Where(color => color != Color.None).ToList()
+                };
+            }
+            return game;
         }
 
         private static async Task WriteGame(Game game)
@@ -101,6 +138,13 @@ namespace Chess.Server.Services
             }
 
             return maxId;
+        }
+        
+        private class ColorMap<T>
+        {
+            public IList<Color> AvailableColors { get; set; } = new List<Color>();
+            public Dictionary<T, Color> Mapped { get; } = new Dictionary<T, Color>();
+            public bool IsFull => !AvailableColors.Any();
         }
     }
 }

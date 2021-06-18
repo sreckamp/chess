@@ -2,15 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { Rotation } from '../model/rotation';
 import { Placement, Point } from '../model/placement';
 import { Piece } from '../model/piece';
-import { Color } from '../model/color';
+import {Color, parseColor} from '../model/color';
 import { ChessService } from '../services/chess/chess.service';
 import { GameTranslationService } from '../services/game.translation.service';
 import { Game } from '../model/game';
 import { Marker } from '../model/marker';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../services/event/event.service';
-import { OnPageVisible, OnPageHidden } from 'angular-page-visibility';
+import { OnPageVisible } from 'angular-page-visibility';
 import { TitleBlinkerService } from '../services/title.blinker/title.blinker.service';
+import {switchMap, tap} from "rxjs/operators";
 
 /**
  * https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
@@ -61,6 +62,8 @@ export class GameComponent implements OnInit {
     rotationKeys = [];
     selected = new Point(-1, -1);
     highlighted = [];
+    private _color = '';
+    private _defaultTitle = '';
 
     constructor(private _service: ChessService,
                 private _translator: GameTranslationService,
@@ -73,17 +76,22 @@ export class GameComponent implements OnInit {
     ngOnInit(): void {
         this._game.id = +this._route.snapshot.params.id;
         this.get(this._game.id);
+        this._events.connect().pipe(
+            tap(() => console.log('connectionId', this._events.connectionId)),
+            switchMap(() => this._service.register(this._game.id, this._events.connectionId))
+        ).subscribe(value => {
+            console.log('register', value);
+            this._color = parseColor(value.color)
+            console.log('color', this._color);
+        });
+
         this._events.onGameUpdated(this._game.id, id => this.get(id));
+        this._blinker.captureTitle();
     }
 
     @OnPageVisible()
-    logWhenPageVisible (): void {
+    whenPageVisible (): void {
         this._blinker.stopBlink();
-    }
-
-    @OnPageHidden()
-    logWhenPageHidden (): void {
-        this._blinker.startBlink('Your turn!');
     }
 
     private get(id: number): void {
@@ -91,6 +99,14 @@ export class GameComponent implements OnInit {
             this._service.get(id).subscribe(state => {
                 this._game = this._translator.fromApi(state);
                 this.config = [state.size, state.corners];
+                if (document.hidden) {
+                    if (this._game.activeColor == this._color) {
+                        this._blinker.startBlink('Your turn!');
+                    }
+                    else {
+                        this._blinker.stopBlink();
+                    }
+                }
             });
         }
     }

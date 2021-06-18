@@ -100,5 +100,10 @@ namespace Chess.Server.Services
                 return Task.FromResult(game.Id);
             }
         }
+
+        public Color ColorForConnectionId(int id, string mConnectionId)
+        {
+            return Color.None;
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace Chess.Server.Model
 {
     public class GameState
     {
+        public bool OpenForPlayers { get; set; }
         public int GameId { get; set; }
         public string Name { get; set; }
         public string CurrentPlayer { get; set; }

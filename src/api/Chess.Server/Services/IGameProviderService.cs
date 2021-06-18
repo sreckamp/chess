@@ -12,5 +12,6 @@ namespace Chess.Server.Services
         Task<IEnumerable<Game>> ListGames();
         Task<int> CreateGame(Version version, string name);
         Task<Game> UpdateStore(int id, GameStore store);
+        Color ColorForConnectionId(int id, string mConnectionId);
     }
 }

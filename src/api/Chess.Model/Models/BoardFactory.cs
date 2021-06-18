@@ -50,6 +50,8 @@ namespace Chess.Model.Models
             }
         }
 
+        public static IEnumerable<Color> GetAvailableColors(Version version) => Templates[version].Colors;
+
         private static readonly Dictionary<Version, Template> Templates = new Dictionary<Version, Template>
         {
             {Version.None, new Template
