@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../services/event/event.service';
 import { OnPageVisibilityChange } from 'angular-page-visibility';
 import { TitleBlinkerService } from '../services/title.blinker/title.blinker.service';
-import { switchMap, tap } from "rxjs/operators";
+import { switchMap } from "rxjs/operators";
 import { BlockedStorageService } from "../services/storage/blocked.storage.service";
 
 /**
@@ -68,7 +68,7 @@ export class GameComponent implements OnInit {
     showMarkers = false;
     selected = new Point(-1, -1);
     highlighted = [];
-    private _color = '';
+    private _color = Color.NONE;
 
     constructor(private _service: ChessService,
                 private _translator: GameTranslationService,
@@ -82,7 +82,6 @@ export class GameComponent implements OnInit {
         this._game.id = +this._route.snapshot.params.id;
         this.get(this._game.id);
         this._events.connect().pipe(
-            tap(() => console.log('connectionId', this._events.connectionId)),
             switchMap(() => this._service
                 .register(this._game.id, this._storage.getConnectionId(this._game.id, this._events.connectionId))
             )
@@ -98,7 +97,7 @@ export class GameComponent implements OnInit {
     }
 
     private updateAlert(): void {
-        if (document.hidden && this._game.activeColor == this._color) {
+        if (document.hidden && this._game.activeColor === this._color) {
             this._blinker.startBlink('Your turn!');
         }
         else {
@@ -142,12 +141,12 @@ export class GameComponent implements OnInit {
     private setColor(color: Color): void {
         this._color = color;
         this.rotation = this._rotationMap[color];
+        console.log(`playing ${this._color}`);
     }
 
     isSelectable = (x: number, y: number) => {
-            const color = this.getPiece(new Point(x, y)).color
-            return color === this._game.activeColor &&
-                color === this._color;
+            const color = this.getPiece(new Point(x, y)).color;
+            return color !== Color.NONE && color === this._game.activeColor && color === this._color;
     }
 
     isOpponent = (piece: Piece) => piece.color !== Color.NONE && piece.color !== this._game.activeColor;
