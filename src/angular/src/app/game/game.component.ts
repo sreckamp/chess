@@ -12,6 +12,7 @@ import { EventService } from '../services/event/event.service';
 import { OnPageVisibilityChange } from 'angular-page-visibility';
 import { TitleBlinkerService } from '../services/title.blinker/title.blinker.service';
 import { switchMap, tap } from "rxjs/operators";
+import { BlockedStorageService } from "../services/storage/blocked.storage.service";
 
 /**
  * https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
@@ -73,6 +74,7 @@ export class GameComponent implements OnInit {
                 private _translator: GameTranslationService,
                 private _route: ActivatedRoute,
                 private _events: EventService,
+                private _storage: BlockedStorageService,
                 private _blinker: TitleBlinkerService) {
     }
 
@@ -81,7 +83,9 @@ export class GameComponent implements OnInit {
         this.get(this._game.id);
         this._events.connect().pipe(
             tap(() => console.log('connectionId', this._events.connectionId)),
-            switchMap(() => this._service.register(this._game.id, this._events.connectionId))
+            switchMap(() => this._service
+                .register(this._game.id, this._storage.getConnectionId(this._game.id, this._events.connectionId))
+            )
         ).subscribe(value => this.setColor(parseColor(value.color)));
 
         this._events.onGameUpdated(this._game.id, id => this.get(id));
