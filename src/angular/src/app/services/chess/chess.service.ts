@@ -5,6 +5,7 @@ import { Game } from './model/game';
 import { map } from 'rxjs/operators';
 import { Point } from '../../model/placement';
 import { GameSummary } from './model/game.summary';
+import {PlayerColorAssignment} from "./model/player.color.assignment";
 
 @Injectable({
     providedIn: 'root'
@@ -38,6 +39,11 @@ export class ChessService {
     public move(id: number, from: Point, to: Point): Observable<Game> {
         return this._http.post<Game>(`${this.API_BASE}/games/${id}/moves`,
             {from: {x: from.x, y: from.y}, to: {x: to.x, y: to.y}});
+    }
+
+    public register(id: number, connectionId: string): Observable<PlayerColorAssignment> {
+        return this._http.post<PlayerColorAssignment>(`${this.API_BASE}/games/${id}/players`,
+            {connectionId: connectionId});
     }
 
     public evaluate(game: Game): Observable<Game> {

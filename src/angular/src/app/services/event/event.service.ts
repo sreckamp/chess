@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { Subject, Subscription } from 'rxjs';
+import { from, Observable, of, Subject, Subscription } from 'rxjs';
 import { GameUpdateMessage } from './model/game.update.message';
 import { HubConnectionState } from '@microsoft/signalr';
-import { filter } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class EventService {
@@ -21,17 +21,24 @@ export class EventService {
         this.connect();
     }
 
-    private connect(): void {
+    public connect(): Observable<void> {
         if ([HubConnectionState.Disconnecting, HubConnectionState.Disconnected].includes(this._connection.state)) {
-            this._connection.start();
             this._connection.on('GameUpdated', (args: GameUpdateMessage) =>
                 this._receiver.next(args.id));
+            return of(true).pipe(
+                switchMap(() => from(this._connection.start())),
+            );
         }
+        return of(undefined);
     }
 
     public onGameUpdated(id: number, subscription: (_: number) => void): Subscription {
         return this._receiver.asObservable().pipe(
             filter(value => value === id)
         ).subscribe(subscription);
+    }
+
+    public get connectionId(): string {
+        return this._connection.connectionId;
     }
 }
